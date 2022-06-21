@@ -20,7 +20,7 @@ const routes: Routes = [
     HomeModule,
   ],
   exports: [
-    LayoutDefComponent
+    LayoutDefComponent,
   ]
 })
 export class LayoutDefModule { }
