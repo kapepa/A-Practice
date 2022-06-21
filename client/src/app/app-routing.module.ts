@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutDefComponent } from "./layout/layout-def/layout-def.component";
+import { ErrorComponent } from "./page/error/error.component";
 
 const routes: Routes = [
-  { path: '', children: [{ path: '', component: LayoutDefComponent }] },
+  { path: '', loadChildren: () => import('./layout/layout-def/layout-def.module').then(m => m.LayoutDefModule) },
   { path: '', redirectTo: '/', pathMatch: 'full' },
-  // { path: '**', component: <component-name> }
+  { path: '**', component: ErrorComponent }
 ];
 
 @NgModule({
