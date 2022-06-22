@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DtoIngredient } from "../../dto/dto.recipe";
+import { RecipeService } from "../../service/recipe.service";
 
 @Component({
   selector: 'app-shopping-list',
@@ -6,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./shopping-list.component.scss']
 })
 export class ShoppingListComponent implements OnInit {
+  ingredients: DtoIngredient[] = [] as DtoIngredient[];
 
-  constructor() { }
+  constructor(
+    private recipeService: RecipeService,
+  ) { }
 
   ngOnInit(): void {
+    this.ingredients = this.recipeService.recipe.ingredients ? this.recipeService.recipe.ingredients : [];
   }
-
 }

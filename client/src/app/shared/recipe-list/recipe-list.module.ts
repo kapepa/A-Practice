@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RecipeListComponent } from './recipe-list.component';
 import { RecipeItemModule } from "../recipe-item/recipe-item.module";
+import {RouterModule} from "@angular/router";
 
 
 
@@ -11,7 +12,8 @@ import { RecipeItemModule } from "../recipe-item/recipe-item.module";
   ],
   imports: [
     CommonModule,
-    RecipeItemModule
+    RecipeItemModule,
+    RouterModule
   ],
   exports: [
     RecipeListComponent
