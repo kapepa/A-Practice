@@ -11,7 +11,7 @@ export class RecipeDetailComponent implements OnInit {
   recipe: DtoRecipe = {} as DtoRecipe;
 
   constructor(
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
   ) { }
 
   ngOnInit(): void {
