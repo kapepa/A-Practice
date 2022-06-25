@@ -1,1 +1,13 @@
-<p>recipe-item works!</p>
+<div class="list-group">
+  <a routerLink="recipe.name" class="list-group-item list-group-item-action recipe-list__link" >
+    <div class="recipe-list__content">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{ recipe.name }}</h5>
+      </div>
+      <p class="mb-1">{{ recipe.description }}</p>
+    </div>
+    <div class="recipe-list__image">
+      <img [src]="recipe.image" alt="" class="img-thumbnail" style="height: 100px">
+    </div>
+  </a>
+</div>
