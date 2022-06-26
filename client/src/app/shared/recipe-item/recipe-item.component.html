@@ -1,5 +1,10 @@
 <div class="list-group">
-  <a routerLink="recipe.name" class="list-group-item list-group-item-action recipe-list__link" >
+  <a
+    [routerLink]="['../']"
+    [queryParams]="{select: recipe.name}"
+    class="list-group-item list-group-item-action recipe-list__link"
+    (click)="selectClick()"
+  >
     <div class="recipe-list__content">
       <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">{{ recipe.name }}</h5>
