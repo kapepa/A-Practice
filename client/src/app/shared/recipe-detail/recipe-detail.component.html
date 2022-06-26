@@ -1,11 +1,11 @@
 <div class="row">
   <div class="col-lg-12">
-    <img src="{{ recipe.image }}" alt="{{ recipe.name }}" class="img-thumbnail">
+    <img src="{{ recipeSelect.image }}" alt="{{ recipeSelect.name }}" class="img-thumbnail">
   </div>
 </div>
 <div class="row">
   <div class="col-lg-12">
-    <h1>{{ recipe.name }}</h1>
+    <h1>{{ recipeSelect.name }}</h1>
   </div>
 </div>
 <div class="row">
@@ -25,11 +25,11 @@
 </div>
 <div class="row">
   <div class="col-lg-12">
-    Description
+    {{ recipeSelect.description }}
   </div>
 </div>
 <div class="row">
   <div class="col-lg-12">
-    Ingredient
+    <div *ngFor="let ingredients of recipeSelect.ingredients">{{ ingredients.name }}:{{ingredients.amount}}</div>
   </div>
 </div>

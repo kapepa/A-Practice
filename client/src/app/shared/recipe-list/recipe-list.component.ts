@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { DtoRecipe } from "../../dto/dto.recipe";
 import { RecipeService } from "../../service/recipe.service";
 
@@ -9,6 +9,7 @@ import { RecipeService } from "../../service/recipe.service";
 })
 export class RecipeListComponent implements OnInit {
   recipes!: DtoRecipe[];
+  @Output() selectRecipe = new EventEmitter<DtoRecipe>()
 
   constructor(
     private recipeService: RecipeService,
@@ -19,6 +20,6 @@ export class RecipeListComponent implements OnInit {
   }
 
   recipeSelected (recipe: DtoRecipe) {
-    console.log(recipe)
+    this.selectRecipe.emit(recipe)
   }
 }
