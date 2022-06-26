@@ -18,4 +18,7 @@ export class RecipeListComponent implements OnInit {
     this.recipes = this.recipeService.recipes
   }
 
+  recipeSelected (recipe: DtoRecipe) {
+    console.log(recipe)
+  }
 }
