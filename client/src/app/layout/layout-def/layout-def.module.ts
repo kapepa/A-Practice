@@ -4,9 +4,11 @@ import { LayoutDefComponent } from './layout-def.component';
 import { RouterModule, Routes } from "@angular/router";
 import { HomeComponent } from "../../page/home/home.component";
 import { HomeModule } from "../../page/home/home.module";
+import { ShoppingComponent } from "../../page/shopping/shopping.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'shopping', component: ShoppingComponent },
   { path: '', redirectTo: '/', pathMatch: 'full' },
 ];
 

@@ -9,3 +9,4 @@ export interface DtoIngredient {
   name: string,
   amount: number,
 }
+

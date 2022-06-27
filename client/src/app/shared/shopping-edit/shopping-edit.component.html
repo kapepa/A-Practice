@@ -4,17 +4,21 @@
       <div class="row">
         <div class="col-lg-5">
           <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name">
+          <input type="text" class="form-control" id="name" #shoppingName>
         </div>
         <div class="col-lg-2">
           <label for="amount" class="form-label">Amount</label>
-          <input type="text" class="form-control" id="amount">
+          <input type="number" class="form-control" id="amount" #shoppingAmount>
         </div>
       </div>
       <hr/>
       <div class="row">
         <div class="col-lg-12" style="display: flex; column-gap: 10px;">
-          <button type="button" class="btn btn-success">Add</button>
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="addShopping()"
+          >Add</button>
           <button type="button" class="btn btn-danger">Delete</button>
           <button type="button" class="btn btn-primary">Clear</button>
         </div>
