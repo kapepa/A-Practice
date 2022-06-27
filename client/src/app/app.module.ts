@@ -10,8 +10,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ErrorComponent } from "./page/error/error.component";
 import { HomeModule } from "./page/home/home.module";
-import { HeaderComponent } from "./shared/header/header.component";
-import {HeaderModule} from "./shared/header/header.module";
+import { HeaderModule } from "./shared/header/header.module";
+import { CreateModule } from "./page/create/create.module";
+import { ShoppingModule } from "./page/shopping/shopping.module";
 
 @NgModule({
   declarations: [
@@ -24,6 +25,8 @@ import {HeaderModule} from "./shared/header/header.module";
     LayoutDefModule,
     HomeModule,
     HeaderModule,
+    ShoppingModule,
+    CreateModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
