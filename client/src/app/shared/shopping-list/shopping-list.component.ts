@@ -19,6 +19,6 @@ export class ShoppingListComponent implements OnInit {
   }
 
   addIngredient(ingredient: DtoIngredient) {
-    console.log(ingredient)
-  }
+    this.ingredients.push(ingredient)
+  };
 }
