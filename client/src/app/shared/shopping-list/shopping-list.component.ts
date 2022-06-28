@@ -15,7 +15,8 @@ export class ShoppingListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.ingredients = this.recipeService.recipe.ingredients ? this.recipeService.recipe.ingredients : [];
+    const ingredients = this.recipeService.recipe.ingredients
+    if( !!ingredients ) this.ingredients = ingredients;
   }
 
   addIngredient(ingredient: DtoIngredient) {
