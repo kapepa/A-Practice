@@ -13,13 +13,12 @@ import { HomeModule } from "./page/home/home.module";
 import { HeaderModule } from "./shared/header/header.module";
 import { CreateModule } from "./page/create/create.module";
 import { ShoppingModule } from "./page/shopping/shopping.module";
-import { DropDirective } from './directive/drop.directive';
+import { DirectiveModule } from "./directive/directive.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     ErrorComponent,
-    // DropDirective,
   ],
   imports: [
     BrowserModule,
@@ -29,6 +28,7 @@ import { DropDirective } from './directive/drop.directive';
     HeaderModule,
     ShoppingModule,
     CreateModule,
+    DirectiveModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

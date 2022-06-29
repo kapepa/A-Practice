@@ -13,19 +13,14 @@
           <a class="nav-link" routerLinkActive="active" routerLink="/shopping">Shopping list</a>
         </li>
       </ul>
-      <ul class="navbar-nav d-flex" >
-        <li appDrop class="nav-item dropdown" data-bs-toggle="dropdown" #dropdown>
-          <button class="btn btn-link">
-            Dropdown
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-      </ul>
+      <div appDrop class="nav-item dropdown" data-bs-toggle="dropdown">
+        <button class="btn btn-link" > Dropdown </button>
+        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Another action</a></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>
