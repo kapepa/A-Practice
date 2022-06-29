@@ -13,12 +13,12 @@
           <a class="nav-link" routerLinkActive="active" routerLink="/shopping">Shopping list</a>
         </li>
       </ul>
-      <ul class="navbar-nav d-flex">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <ul class="navbar-nav d-flex" >
+        <li appDrop class="nav-item dropdown" data-bs-toggle="dropdown">
+          <button class="btn btn-link">
             Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" #ulDrop>
             <li><a class="dropdown-item" href="#">Action</a></li>
             <li><a class="dropdown-item" href="#">Another action</a></li>
             <li><hr class="dropdown-divider"></li>

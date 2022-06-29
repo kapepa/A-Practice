@@ -13,11 +13,13 @@ import { HomeModule } from "./page/home/home.module";
 import { HeaderModule } from "./shared/header/header.module";
 import { CreateModule } from "./page/create/create.module";
 import { ShoppingModule } from "./page/shopping/shopping.module";
+import { DropDirective } from './directive/drop.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     ErrorComponent,
+    // DropDirective,
   ],
   imports: [
     BrowserModule,
