@@ -2,18 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header.component';
 import { RouterModule } from "@angular/router";
-import { DropDirective } from "../../directive/drop.directive";
+import { DirectiveModule } from "../../directive/directive.module";
 
 
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    DropDirective,
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    DirectiveModule,
   ],
   exports: [
     HeaderComponent
