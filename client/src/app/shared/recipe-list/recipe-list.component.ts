@@ -9,7 +9,7 @@ import { RecipeService } from "../../service/recipe.service";
 })
 export class RecipeListComponent implements OnInit {
   recipes!: DtoRecipe[];
-  @Output() selectRecipe = new EventEmitter<DtoRecipe>()
+  // @Output() selectRecipe = new EventEmitter<DtoRecipe>()
 
   constructor(
     private recipeService: RecipeService,
@@ -20,6 +20,6 @@ export class RecipeListComponent implements OnInit {
   }
 
   recipeSelected (recipe: DtoRecipe) {
-    this.selectRecipe.emit(recipe)
+    this.recipeService.recipe.emit(recipe)
   }
 }
