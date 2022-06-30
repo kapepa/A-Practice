@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DtoIngredient } from "../../dto/dto.recipe";
+import {DtoIngredient, DtoRecipe} from "../../dto/dto.recipe";
 import { RecipeService } from "../../service/recipe.service";
 
 @Component({
@@ -15,8 +15,10 @@ export class ShoppingListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const ingredients = this.recipeService.recipe.ingredients
-    if( !!ingredients ) this.ingredients = ingredients;
+    this.recipeService.recipe.subscribe((recipe: DtoRecipe) => {
+      const ingredients = recipe.ingredients
+      if( !!ingredients ) this.ingredients = ingredients;
+    })
   }
 
   addIngredient(ingredient: DtoIngredient) {

@@ -1,5 +1,6 @@
 import {Component, EventEmitter, OnInit} from '@angular/core';
 import {DtoRecipe} from "../../dto/dto.recipe";
+import {RecipeService} from "../../service/recipe.service";
 
 @Component({
   selector: 'app-recipes',
@@ -8,10 +9,13 @@ import {DtoRecipe} from "../../dto/dto.recipe";
 })
 export class RecipesComponent implements OnInit {
   select: DtoRecipe = {} as DtoRecipe
-  constructor() { }
+  constructor(
+    private recipeService: RecipeService,
+  ) { }
 
   ngOnInit(): void {
     // this.selectRecipe.subscribe(data => console.log(data))
+
   }
 
   selectRecipe(recipe: DtoRecipe) {
