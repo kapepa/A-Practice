@@ -11,8 +11,18 @@ export class ShoppingService {
   ]
   ingredient: EventEmitter<DtoIngredient[]> = new EventEmitter<DtoIngredient[]>()
 
-  append(ingredient: DtoIngredient){
+  append(ingredient: DtoIngredient) {
     this.ingredientList.push(ingredient)
     this.ingredient.emit(this.ingredientList);
   }
+
+  addIngredient(ingredient: DtoIngredient[]) {
+    const exist = ingredient.some(
+      ( ing: DtoIngredient ) => this.ingredientList.some(( list: DtoIngredient ) => ing.name === list.name));
+    if(!exist) return;
+
+    this.ingredientList = this.ingredientList.concat(ingredient);
+    this.ingredient.emit(this.ingredientList);
+  }
+
 }
