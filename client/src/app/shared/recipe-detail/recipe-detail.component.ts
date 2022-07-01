@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { RecipeService } from "../../service/recipe.service";
-import {DtoRecipe} from "../../dto/dto.recipe";
+import {DtoIngredient, DtoRecipe} from "../../dto/dto.recipe";
+import {ShoppingService} from "../../service/shopping.service";
 
 @Component({
   selector: 'app-recipe-detail',
@@ -13,11 +14,16 @@ export class RecipeDetailComponent implements OnInit {
 
   constructor(
     private recipeService: RecipeService,
+    private shoppingService: ShoppingService,
   ) { }
 
   ngOnInit(): void {
     this.recipeService.recipe.subscribe((recipe: DtoRecipe) => {
       this.recipe = recipe;
     })
+  }
+
+  addRecipe(recipe: DtoIngredient[] | undefined) {
+    if(recipe) this.shoppingService.addIngredient(recipe);
   }
 }
