@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RecipeDetailComponent } from './recipe-detail.component';
 import { DirectiveModule } from "../../directive/directive.module";
+import {RouterModule} from "@angular/router";
 
 
 
@@ -12,6 +13,7 @@ import { DirectiveModule } from "../../directive/directive.module";
   imports: [
     CommonModule,
     DirectiveModule,
+    RouterModule,
   ],
   exports: [
     RecipeDetailComponent
