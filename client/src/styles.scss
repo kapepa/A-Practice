@@ -25,3 +25,12 @@
     }
   }
 }
+
+.select {
+  &__basic{
+
+  }
+  &--active{
+    background-color: gray;
+  }
+}
