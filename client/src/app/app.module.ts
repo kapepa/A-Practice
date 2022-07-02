@@ -14,6 +14,7 @@ import { HeaderModule } from "./shared/header/header.module";
 import { CreateModule } from "./page/create/create.module";
 import { ShoppingModule } from "./page/shopping/shopping.module";
 import { DirectiveModule } from "./directive/directive.module";
+import { EditModule } from "./shared/edit/edit.module";
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { DirectiveModule } from "./directive/directive.module";
     AppRoutingModule,
     LayoutDefModule,
     HomeModule,
+    EditModule,
     HeaderModule,
     ShoppingModule,
     CreateModule,

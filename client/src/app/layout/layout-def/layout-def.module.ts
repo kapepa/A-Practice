@@ -6,11 +6,15 @@ import { HomeComponent } from "../../page/home/home.component";
 import { HomeModule } from "../../page/home/home.module";
 import { ShoppingComponent } from "../../page/shopping/shopping.component";
 import { RecipeDetailComponent } from "../../shared/recipe-detail/recipe-detail.component";
+import { EditComponent } from "../../shared/edit/edit.component";
+import { EditModule } from "../../shared/edit/edit.module";
 
 const routes: Routes = [
   { path: 'recipe', component: HomeComponent, children:
     [
+      { path: 'new', component: EditComponent },
       { path: ':id', component: RecipeDetailComponent },
+      { path: ':id/edit', component: EditComponent }
     ]
   },
   { path: 'shopping', component: ShoppingComponent },
@@ -25,6 +29,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CommonModule,
     HomeModule,
+    EditModule,
   ],
   exports: [
     LayoutDefComponent,
