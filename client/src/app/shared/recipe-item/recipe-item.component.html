@@ -1,4 +1,7 @@
-<div class="list-group">
+<div
+  class="list-group  select__basic"
+  routerLinkActive="select--active"
+>
 <!--  <a-->
 <!--    [routerLink]="['../']"-->
 <!--    [queryParams]="{select: recipe.name}"-->
@@ -7,6 +10,7 @@
 <!--  >-->
   <a
     [routerLink]="['/recipe', recipe.id]"
+
     class="list-group-item list-group-item-action recipe-list__link"
   >
     <div class="recipe-list__content">
