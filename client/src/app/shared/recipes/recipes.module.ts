@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RecipesComponent } from './recipes.component';
 import { RecipeListModule } from "../recipe-list/recipe-list.module";
 import { RecipeDetailModule } from "../recipe-detail/recipe-detail.module";
+import { RouterModule } from "@angular/router";
 
 
 
@@ -14,6 +15,7 @@ import { RecipeDetailModule } from "../recipe-detail/recipe-detail.module";
     CommonModule,
     RecipeListModule,
     RecipeDetailModule,
+    RouterModule,
   ],
   exports: [
     RecipesComponent

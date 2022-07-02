@@ -5,11 +5,16 @@ import { RouterModule, Routes } from "@angular/router";
 import { HomeComponent } from "../../page/home/home.component";
 import { HomeModule } from "../../page/home/home.module";
 import { ShoppingComponent } from "../../page/shopping/shopping.component";
+import { RecipeDetailComponent } from "../../shared/recipe-detail/recipe-detail.component";
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: 'recipe', component: HomeComponent, children:
+    [
+      { path: ':id', component: RecipeDetailComponent },
+    ]
+  },
   { path: 'shopping', component: ShoppingComponent },
-  { path: '', redirectTo: '/', pathMatch: 'full' },
+  { path: '', redirectTo: '/recipe', pathMatch: 'full' },
 ];
 
 @NgModule({

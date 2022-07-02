@@ -1,4 +1,5 @@
 export interface DtoRecipe {
+  id: string;
   name: string;
   description: string;
   image: string;
