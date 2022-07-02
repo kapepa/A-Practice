@@ -6,12 +6,14 @@
 <!--    ></app-recipe-list>-->
   </div>
   <div class="col-lg-6">
-    <app-recipe-detail
-      *ngIf="select.name; else elseRecipe"
-      [recipeSelect]="select"
-    ></app-recipe-detail>
-    <ng-template #elseRecipe>
-      Please select recipe...
-    </ng-template>
+<!--    <app-recipe-detail-->
+<!--      *ngIf="select.name; else elseRecipe"-->
+<!--      [recipeSelect]="select"-->
+<!--    ></app-recipe-detail>-->
+    <router-outlet></router-outlet>
+<!--    <ng-template #elseRecipe>-->
+<!--      Please select recipe...-->
+<!--    </ng-template>-->
   </div>
 </div>
+

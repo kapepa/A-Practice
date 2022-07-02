@@ -15,18 +15,24 @@ export class RecipeService {
 
   private recipes: DtoRecipe[] = [
     {
+      id: '123aa1xc42',
       name: 'My Recipe',
       description: 'Description Recipe',
       image:'https://static01.nyt.com/images/2021/03/28/dining/mc-shakshuka/mc-shakshuka-articleLarge.jpg',
       ingredients: [{ name: 'ingredient-name', amount: 120 }]
     },
     {
+      id: '1aa231xc123123',
       name: 'Second Recipe',
       description: 'Second Recipe',
       image:'https://food.fnr.sndimg.com/content/dam/images/food/products/2022/3/11/rx_goldbelly-clinton-street-diner-zeus-burger.jpg.rend.hgtvcom.406.305.suffix/1647019464547.jpeg',
       ingredients: [{ name: 'ingredient-food', amount: 210 }]
     }
   ];
+
+  receiveRecipes(id: string){
+    return this.recipes.find((recipe: DtoRecipe) => recipe.id === id);
+  }
 
   get getRecipesAll() {
     return this.recipes;
