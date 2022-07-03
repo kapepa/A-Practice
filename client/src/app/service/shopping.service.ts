@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { DtoIngredient } from "../dto/dto.recipe";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,12 @@ export class ShoppingService {
     { name: 'ingredient-name', amount: 120 },
     { name: 'ingredient-alias', amount: 100 },
   ]
-  ingredient: EventEmitter<DtoIngredient[]> = new EventEmitter<DtoIngredient[]>()
+  // ingredient: EventEmitter<DtoIngredient[]> = new EventEmitter<DtoIngredient[]>()
+  ingredient: Subject<DtoIngredient[]> = new Subject<DtoIngredient[]>()
 
   append(ingredient: DtoIngredient) {
     this.ingredientList.push(ingredient)
-    this.ingredient.emit(this.ingredientList);
+    this.ingredient.next(this.ingredientList);
   }
 
   addIngredient(ingredient: DtoIngredient[]) {
@@ -22,7 +24,7 @@ export class ShoppingService {
     if(!exist) return;
 
     this.ingredientList = this.ingredientList.concat(ingredient);
-    this.ingredient.emit(this.ingredientList);
+    this.ingredient.next(this.ingredientList);
   }
 
 }
