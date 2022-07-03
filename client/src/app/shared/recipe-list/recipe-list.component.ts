@@ -23,7 +23,7 @@ export class RecipeListComponent implements OnInit {
   }
 
   recipeSelected (recipe: DtoRecipe) {
-    this.recipeService.recipe.emit(recipe)
+    this.recipeService.recipe.next(recipe)
   }
 
   newRouter() {

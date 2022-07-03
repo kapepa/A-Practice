@@ -1,5 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import { DtoRecipe } from "../dto/dto.recipe";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class RecipeService {
   //   image:'https://static01.nyt.com/images/2021/03/28/dining/mc-shakshuka/mc-shakshuka-articleLarge.jpg',
   //   ingredients: [{ name: 'ingredient-name', amount: 120 }]
   // };
-  recipe = new EventEmitter<DtoRecipe>();
+  // recipe = new EventEmitter<DtoRecipe>();
+  recipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
 
   private recipes: DtoRecipe[] = [
     {
