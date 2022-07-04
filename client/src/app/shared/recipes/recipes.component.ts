@@ -1,14 +1,17 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
 import {DtoRecipe} from "../../dto/dto.recipe";
 import {RecipeService} from "../../service/recipe.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-recipes',
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.scss']
 })
-export class RecipesComponent implements OnInit {
-  select: DtoRecipe = {} as DtoRecipe
+export class RecipesComponent implements OnInit, OnDestroy {
+  select: DtoRecipe = {} as DtoRecipe;
+  ngRecipe!: Subscription;
+
   constructor(
     private recipeService: RecipeService,
   ) { }
@@ -17,7 +20,10 @@ export class RecipesComponent implements OnInit {
     this.recipeService.recipe.subscribe((recipe: DtoRecipe) => {
       this.select = recipe;
     })
+  }
 
+  ngOnDestroy() {
+    this.ngRecipe.unsubscribe();
   }
 
   selectRecipe(recipe: DtoRecipe) {
