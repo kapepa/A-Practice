@@ -37,4 +37,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   addIngredient(ingredient: DtoIngredient) {
     this.shoppingService.append(ingredient)
   };
+
+  editIngredient(index: number) {
+    this.shoppingService.selectEdit(index)
+  }
 }
