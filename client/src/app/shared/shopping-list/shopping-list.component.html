@@ -6,8 +6,13 @@
 <div class="row">
   <div class="col-lg-12">
     <ul class="list-group">
-      <li class="list-group-item" *ngFor="let ingredient of ingredients">
-        <a>{{ ingredient.name }} ({{ ingredient.amount }})</a>
+      <li
+        class="list-group-item"
+        *ngFor="let ingredient of ingredients; let i = index"
+        style="cursor: pointer"
+        (click)="editIngredient(i)"
+      >
+        <span>{{ ingredient.name }} ({{ ingredient.amount }})</span>
       </li>
     </ul>
   </div>

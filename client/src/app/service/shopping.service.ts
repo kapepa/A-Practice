@@ -11,12 +11,19 @@ export class ShoppingService {
     { name: 'ingredient-alias', amount: 100 },
   ]
   // ingredient: EventEmitter<DtoIngredient[]> = new EventEmitter<DtoIngredient[]>()
-  ingredient: Subject<DtoIngredient[]> = new Subject<DtoIngredient[]>()
-
+  ingredient: Subject<DtoIngredient[]> = new Subject<DtoIngredient[]>();
+  editIngredient: Subject<DtoIngredient> = new Subject<DtoIngredient>();
+  editIndex: Subject<number | null> = new Subject<number | null>();
+  private editIndex$: number | null = null
 
   append(ingredient: DtoIngredient) {
-    this.ingredientList.push(ingredient)
-    this.ingredient.next(this.ingredientList);
+    if(this.editIndex$ === null){
+      this.ingredientList.push(ingredient)
+      this.ingredient.next(this.ingredientList);
+    } else {
+      this.ingredientList.splice(this.editIndex$,1, ingredient);
+      this.ingredient.next(this.ingredientList);
+    }
   }
 
   addIngredient(ingredient: DtoIngredient[]) {
@@ -26,6 +33,12 @@ export class ShoppingService {
 
     this.ingredientList = this.ingredientList.concat(ingredient);
     this.ingredient.next(this.ingredientList);
+  }
+
+  selectEdit(index: number) {
+    this.editIndex$ = index;
+    this.editIndex.next(index);
+    this.editIngredient.next(this.ingredientList[index]);
   }
 
 }
