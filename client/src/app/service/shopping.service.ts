@@ -13,6 +13,7 @@ export class ShoppingService {
   // ingredient: EventEmitter<DtoIngredient[]> = new EventEmitter<DtoIngredient[]>()
   ingredient: Subject<DtoIngredient[]> = new Subject<DtoIngredient[]>()
 
+
   append(ingredient: DtoIngredient) {
     this.ingredientList.push(ingredient)
     this.ingredient.next(this.ingredientList);

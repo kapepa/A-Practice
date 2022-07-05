@@ -9,7 +9,9 @@ import {Router} from "@angular/router";
 })
 export class RecipeItemComponent implements OnInit {
   @Input() recipe!: DtoRecipe;
+  @Input() index!: number;
   @Output() recipeSelected = new EventEmitter<DtoRecipe>()
+  @Output() addEdit = new EventEmitter<number>()
 
   constructor(
     private router: Router
@@ -19,8 +21,11 @@ export class RecipeItemComponent implements OnInit {
 
   }
 
+  selectEdit(){
+    this.addEdit.emit(this.index)
+  }
+
   selectClick () {
     this.recipeSelected.emit(this.recipe);
   }
-
 }

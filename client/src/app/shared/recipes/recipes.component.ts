@@ -23,7 +23,7 @@ export class RecipesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ngRecipe.unsubscribe();
+    if(!!this.ngRecipe) this.ngRecipe.unsubscribe();
   }
 
   selectRecipe(recipe: DtoRecipe) {

@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-lg-12">
-    <form>
+    <form (ngSubmit)="onSubmit()">
       <div class="row">
         <div class="col-lg-5">
           <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" #shoppingName>
+          <input id="name" type="text" class="form-control" #shoppingName>
         </div>
         <div class="col-lg-2">
           <label for="amount" class="form-label">Amount</label>
@@ -14,11 +14,8 @@
       <hr/>
       <div class="row">
         <div class="col-lg-12" style="display: flex; column-gap: 10px;">
-          <button
-            type="button"
-            class="btn btn-success"
-            (click)="addShopping()"
-          >Add</button>
+<!--          <button type="button" class="btn btn-success" (click)="addShopping() ">Add</button>-->
+          <button type="submit" class="btn btn-success">Add</button>
           <button type="button" class="btn btn-danger">Delete</button>
           <button type="button" class="btn btn-primary">Clear</button>
         </div>

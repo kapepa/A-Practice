@@ -14,7 +14,7 @@ const routes: Routes = [
     [
       { path: 'new', component: EditComponent },
       { path: ':id', component: RecipeDetailComponent },
-      { path: ':id/edit', component: EditComponent }
+      { path: ':id/edit', component: EditComponent },
     ]
   },
   { path: 'shopping', component: ShoppingComponent },

@@ -14,6 +14,7 @@ export class RecipeService {
   // };
   // recipe = new EventEmitter<DtoRecipe>();
   recipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
+  editRecipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
 
   private recipes: DtoRecipe[] = [
     {
@@ -34,6 +35,11 @@ export class RecipeService {
 
   receiveRecipes(id: string){
     return this.recipes.find((recipe: DtoRecipe) => recipe.id === id);
+  }
+
+  setEdit(index: number) {
+    const recipe: DtoRecipe = this.recipes[index];
+    this.editRecipe.next(recipe);
   }
 
   get getRecipesAll() {
