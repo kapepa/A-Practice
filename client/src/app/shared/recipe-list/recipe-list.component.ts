@@ -30,4 +30,8 @@ export class RecipeListComponent implements OnInit {
     // this.router.navigate(['/recipe','new'])
     this.router.navigate(['new'], {relativeTo: this.route});
   }
+
+  addEdit (index: number) {
+    this.recipeService.setEdit(index);
+  }
 };

@@ -15,6 +15,7 @@ import { CreateModule } from "./page/create/create.module";
 import { ShoppingModule } from "./page/shopping/shopping.module";
 import { DirectiveModule } from "./directive/directive.module";
 import { EditModule } from "./shared/edit/edit.module";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { EditModule } from "./shared/edit/edit.module";
     ShoppingModule,
     CreateModule,
     DirectiveModule,
+    FormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

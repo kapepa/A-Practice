@@ -7,9 +7,11 @@
 <div class="row">
   <div class="col-lg-12">
     <app-recipe-item
-      *ngFor="let recipe of recipes"
+      *ngFor="let recipe of recipes; let i = index"
       [recipe]="recipe"
       (recipeSelected)="recipeSelected(recipe)"
+      [index]="i"
+      (addEdit)="addEdit($event)"
     ></app-recipe-item>
   </div>
 </div>
