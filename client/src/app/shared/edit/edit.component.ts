@@ -29,11 +29,11 @@ export class EditComponent implements OnInit, OnDestroy {
       this.editRecipe = recipe;
     });
 
-    this.recipeForm = new FormGroup({
-      name: new FormControl(''),
-      imageUrl: new FormControl(''),
-      ingredients: new FormArray( [new FormControl('sdasd')])
-    })
+    this.recipeForm = this.fb.group({
+      name: [''],
+      imageUrl:[''],
+      ingredients: this.fb.array( [{name: '121', amount: 0} as DtoIngredient])
+    });
   }
 
   ngOnDestroy() {
@@ -44,10 +44,18 @@ export class EditComponent implements OnInit, OnDestroy {
 
   }
 
+  appendRecipe() {
+    this.ingredients.push(this.fb.control({name: '121', amount: 0}));
+  }
+
+  receiveIngredient(i: number, key: string) {
+    return this.recipeForm.get('ingredients')
+  }
 
 
   get ingredients() {
-    return (this.recipeForm.get('ingredients') as FormArray).value as DtoRecipe[];
+    return this.recipeForm.get('ingredients') as FormArray;
   }
+
 
 }
