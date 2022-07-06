@@ -1,31 +1,63 @@
-<form>
+<form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
   <div style="display: flex; column-gap: 10px; margin-bottom: 10px">
     <button type="submit" class="btn btn-success">Save</button>
     <button type="button" class="btn btn-danger">Cancel</button>
   </div>
   <div class="mb-3">
     <label for="name" class="form-label">Name</label>
-    <input type="email" class="form-control" id="name" aria-describedby="emailHelp">
+    <input
+      formControlName="name"
+      name="name"
+      type="text"
+      class="form-control"
+      id="name"
+      aria-describedby="emailHelp"
+    >
 <!--    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
   </div>
   <div class="mb-3">
     <label for="imageUrl" class="form-label">Image</label>
-    <input type="password" class="form-control" id="imageUrl">
+    <input
+      formControlName="imageUrl"
+      name="image"
+      type="text"
+      class="form-control"
+      id="imageUrl"
+    >
   </div>
   <div class="mb-3">
     <label for="exampleFormControlTextarea1" class="form-label">Description</label>
     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
   </div>
-  <div class="row">
+  <div formArrayName="ingredients" class="row"  *ngFor="let ingredient of ingredients; let i = index">
     <div class="col">
-      <input name="name" type="text" class="form-control" placeholder="First name" aria-label="Name">
+      <label for="name-{{ i }}">Name:</label>
+      <input
+        [formControlName]="ingredient.name"
+        id="name-{{ i }}"
+        name="name"
+        type="text"
+        class="form-control"
+        aria-label="Name"
+      >
     </div>
     <div class="col">
-      <input name="amount" type="number" class="form-control" placeholder="count" aria-label="Amount">
+        <!--      <label for="count-{{ i }}">Amount:</label>-->
+        <!--      <input-->
+        <!--        [formControlName]="ingredient.amount"-->
+        <!--        id="count-{{ i }}"-->
+        <!--        min="0"-->
+        <!--        name="amount"-->
+        <!--        type="number"-->
+        <!--        class="form-control"-->
+        <!--        aria-label="Amount"-->
+        <!--      >-->
     </div>
-    <div class="col" style="display: flex; column-gap: 10px">
-      <button type="button" class="btn btn-primary">Add</button>
-      <button type="button" class="btn btn-danger">Delete</button>
+    <div class="col" style="display: flex; align-items: end">
+      <div style="display: flex; column-gap: 10px">
+        <button type="button" class="btn btn-primary">Add</button>
+        <button type="button" class="btn btn-danger">Delete</button>
+      </div>
     </div>
   </div>
 </form>
