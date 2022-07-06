@@ -29,19 +29,19 @@
     <label for="exampleFormControlTextarea1" class="form-label">Description</label>
     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
   </div>
-  <div formArrayName="ingredients" class="row"  *ngFor="let ingredient of ingredients; let i = index">
-    <div class="col">
-      <label for="name-{{ i }}">Name:</label>
-      <input
-        [formControlName]="ingredient.name"
-        id="name-{{ i }}"
-        name="name"
-        type="text"
-        class="form-control"
-        aria-label="Name"
-      >
-    </div>
-    <div class="col">
+  <ng-container formArrayName="ingredients">
+    <div *ngFor="let ingredient of ingredients.controls; let i = index" formGroupName="{{ i }}" class="row">
+      <div class="col" >
+        <label for="name-{{ i }}">Name:</label>
+        <input
+          name="name"
+          id="name-{{ i }}"
+          type="text"
+          class="form-control"
+          aria-label="Name"
+        >
+      </div>
+      <div class="col">
         <!--      <label for="count-{{ i }}">Amount:</label>-->
         <!--      <input-->
         <!--        [formControlName]="ingredient.amount"-->
@@ -52,12 +52,13 @@
         <!--        class="form-control"-->
         <!--        aria-label="Amount"-->
         <!--      >-->
-    </div>
-    <div class="col" style="display: flex; align-items: end">
-      <div style="display: flex; column-gap: 10px">
-        <button type="button" class="btn btn-primary">Add</button>
-        <button type="button" class="btn btn-danger">Delete</button>
+      </div>
+      <div class="col" style="display: flex; align-items: end">
+        <div style="display: flex; column-gap: 10px">
+          <button (click)="appendRecipe()" type="button" class="btn btn-primary">Add</button>
+          <button type="button" class="btn btn-danger">Delete</button>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </form>
