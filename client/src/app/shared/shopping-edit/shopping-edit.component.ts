@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { DtoIngredient } from "../../dto/dto.recipe";
-import {FormControl, FormGroup, NgForm} from "@angular/forms";
-import {ShoppingService} from "../../service/shopping.service";
+import { FormControl, FormGroup, NgForm } from "@angular/forms";
+import { ShoppingService } from "../../service/shopping.service";
 
 @Component({
   selector: 'app-shopping-edit',
@@ -11,6 +11,7 @@ import {ShoppingService} from "../../service/shopping.service";
 export class ShoppingEditComponent implements OnInit {
   @ViewChild("shoppingName") shoppingName!: ElementRef;
   @ViewChild("shoppingAmount") shoppingAmount!: ElementRef;
+  @ViewChild("formIngredient") formIngredient!: ElementRef;
   @Output() addIngredient = new EventEmitter<DtoIngredient>()
   shoppingForm!: FormGroup;
   editIndex: number | null = null
@@ -37,6 +38,20 @@ export class ShoppingEditComponent implements OnInit {
     const name = this.shoppingName.nativeElement.value;
     const amount = this.shoppingAmount.nativeElement.value;
     this.addIngredient.emit({name, amount: Number(amount)});
+    this.shoppingName.nativeElement.value = '';
+    this.shoppingAmount.nativeElement.value = '';
+  }
+
+  onReset() {
+    const name = this.shoppingName.nativeElement.value;
+    const amount = this.shoppingAmount.nativeElement.value;
+    if(name.trim() !== '' || amount.trim() !== '') this.shoppingService.selectEdit(null);
+    this.formIngredient.nativeElement.reset();
+  }
+
+  onDelete() {
+    this.shoppingService.deleteIngredient();
+    this.onReset()
   }
 
 }

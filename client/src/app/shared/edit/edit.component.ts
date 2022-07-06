@@ -10,6 +10,7 @@ import {DtoRecipe} from "../../dto/dto.recipe";
 })
 export class EditComponent implements OnInit, OnDestroy {
   editMode: boolean = false;
+  editRecipe: DtoRecipe = {} as DtoRecipe;
   editSubject!: Subscription;
 
   constructor(
@@ -17,9 +18,10 @@ export class EditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.editRecipe = this.recipeService.editRecipe$;
     this.editSubject = this.recipeService.editRecipe.subscribe((recipe: DtoRecipe) => {
       this.editMode = false;
-      console.log(recipe)
+      this.editRecipe = recipe;
     })
   }
 
