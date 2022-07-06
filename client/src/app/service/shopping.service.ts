@@ -35,10 +35,19 @@ export class ShoppingService {
     this.ingredient.next(this.ingredientList);
   }
 
-  selectEdit(index: number) {
+  deleteIngredient() {
+     if( this.editIndex$ !== null ) {
+       this.selectEdit(null);
+       this.ingredientList.splice(this.editIndex$,1);
+       this.ingredient.next(this.ingredientList);
+       this.selectEdit(null);
+     }
+  }
+
+  selectEdit(index: number | null) {
     this.editIndex$ = index;
     this.editIndex.next(index);
-    this.editIngredient.next(this.ingredientList[index]);
+    this.editIngredient.next(index !== null ? this.ingredientList[index] : {} as DtoIngredient);
   }
 
 }

@@ -14,6 +14,7 @@ export class RecipeService {
   // };
   // recipe = new EventEmitter<DtoRecipe>();
   recipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
+  editRecipe$: DtoRecipe = {} as DtoRecipe;
   editRecipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
 
   private recipes: DtoRecipe[] = [
@@ -39,6 +40,7 @@ export class RecipeService {
 
   setEdit(index: number) {
     const recipe: DtoRecipe = this.recipes[index];
+    this.editRecipe$ = recipe;
     this.editRecipe.next(recipe);
   }
 

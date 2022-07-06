@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-12">
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" #formIngredient>
       <div class="row">
         <div class="col-lg-5">
           <label for="name" class="form-label">Name</label>
@@ -20,8 +20,13 @@
             <ng-template #editAdd>Add</ng-template>
           </button>
 <!--          <pre>{{ editIndex | json }}</pre>-->
-          <button type="button" class="btn btn-danger">Delete</button>
-          <button type="button" class="btn btn-primary">Clear</button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            *ngIf="editIndex !== null"
+            (click)="onDelete()"
+          >Delete</button>
+          <button (click)="onReset()" type="reset" class="btn btn-primary">Clear</button>
         </div>
       </div>
     </form>
