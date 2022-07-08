@@ -18,7 +18,7 @@
   <div class="mb-3">
     <label for="imageUrl" class="form-label">Image</label>
     <input
-      formControlName="imageUrl"
+      formControlName="image"
       name="image"
       type="text"
       class="form-control"
@@ -26,8 +26,13 @@
     >
   </div>
   <div class="mb-3">
-    <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    <label for="description" class="form-label">Description</label>
+    <textarea
+      formControlName="description"
+      class="form-control"
+      id="description"
+      rows="3"
+    ></textarea>
   </div>
   <div class="mb-3">
     <button (click)="appendRecipe()" type="button" class="btn btn-primary">Add</button> Add new ingredient.
@@ -59,28 +64,9 @@
       </div>
       <div class="col" style="display: flex; align-items: end">
         <div style="display: flex; column-gap: 10px">
-          <button type="button" class="btn btn-danger">Delete</button>
+          <button (click)="deleteRecipe(i)" type="button" class="btn btn-danger">Delete</button>
         </div>
       </div>
     </div>
   </ng-container>
 </form>
-
-
-<!--<button (click)="addNewCompany()">Add new Company</button><br><br>-->
-<!--<form [formGroup]="myForm">-->
-<!--  <div formArrayName="companies">-->
-<!--    <div *ngFor="let comp of companiesFormArr.controls; let i=index">-->
-<!--      <fieldset>-->
-<!--        <legend><h3>COMPANY {{i+1}}: </h3></legend>-->
-<!--        <div [formGroupName]="i">-->
-<!--          <label>Company Name: </label>-->
-<!--          <input formControlName="company" /><span><button (click)="deleteCompany(i)">Delete Company</button></span>-->
-<!--        </div>-->
-<!--      </fieldset>-->
-<!--    </div>-->
-<!--  </div><br>-->
-
-<!--</form>-->
-
-<!--<pre>{{myForm.value | json}}</pre>-->

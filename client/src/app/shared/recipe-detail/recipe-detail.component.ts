@@ -32,6 +32,6 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   addRecipe(recipe: DtoIngredient[] | undefined) {
-    if(recipe) this.shoppingService.addIngredient(recipe);
+    if(!!recipe) this.shoppingService.addIngredient(recipe);
   }
 }
