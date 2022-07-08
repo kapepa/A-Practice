@@ -11,72 +11,6 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
   styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit, OnDestroy {
-  // data = {
-  //   companies: [
-  //     {
-  //       company: 'example comany',
-  //     }
-  //   ]
-  // };
-  //
-  // myForm!: FormGroup;
-  //
-  // constructor(private fb: FormBuilder) {}
-  //
-  // ngOnInit(): void {
-  //   this.myForm = this.fb.group({
-  //     companies: this.fb.array([ this.fb.group({company: 'test'})])
-  //   });
-  //   // this.setCompanies();
-  // }
-  //
-  // get companiesFormArr(): FormArray {
-  //   return this.myForm.get('companies') as FormArray;
-  // }
-  //
-  // addNewCompany() {
-  //   this.companiesFormArr.push(
-  //     this.fb.group({
-  //       company: [''],
-  //       projects: this.fb.array([])
-  //     })
-  //   );
-  // }
-  //
-  // deleteCompany(index: any) {
-  //   this.companiesFormArr.removeAt(index);
-  // }
-  //
-  // addNewProject(control: any) {
-  //   control.push(
-  //     this.fb.group({
-  //       projectName: ['']
-  //     })
-  //   );
-  // }
-  //
-  // deleteProject(control: any, index: any) {
-  //   control.removeAt(index);
-  // }
-  //
-  // setCompanies() {
-  //   this.data.companies.forEach(x => {
-  //     this.companiesFormArr.push(
-  //       this.fb.group({
-  //         company: x.company,
-  //       })
-  //     );
-  //   });
-  // }
-  //
-  //
-  // setProjects(x: any) {
-  //   let arr = new FormArray([]);
-  //   return arr;
-  // }
-  //
-  // ngOnDestroy() {
-  // }
 
   editMode: boolean = false;
   editRecipe: DtoRecipe = {} as DtoRecipe;
@@ -98,7 +32,8 @@ export class EditComponent implements OnInit, OnDestroy {
 
     this.recipeForm = this.fb.group({
       name: '',
-      imageUrl: '',
+      image: 'https://www.myfoodtrip.com/wp-content/uploads/2020/05/Food-Blog-Directory.jpg',
+      description: '',
       ingredients: this.fb.array([this.fb.group({ name: '', amount: 0})] )
     });
   }
@@ -108,11 +43,16 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-
+    const id = Date.now().toString();
+    this.recipeService.newRecipes({ id, ...this.recipeForm.value })
   }
 
   appendRecipe() {
-    this.ingredientsArr.push(this.fb.group({name: '121', amount: 0}));
+    this.ingredientsArr.push(this.fb.group({name: '', amount: 0}));
+  }
+
+  deleteRecipe(i: number) {
+    this.ingredientsArr.removeAt(i)
   }
 
   receiveIngredient(i: number, key: string) {
@@ -122,6 +62,4 @@ export class EditComponent implements OnInit, OnDestroy {
   get ingredientsArr() {
     return this.recipeForm.get('ingredients') as FormArray;
   }
-
-
 }

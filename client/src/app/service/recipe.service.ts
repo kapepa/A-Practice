@@ -33,6 +33,7 @@ export class RecipeService {
       ingredients: [{ name: 'ingredient-food', amount: 210 }]
     }
   ];
+  recipesList = new Subject<DtoRecipe[]>();
 
   receiveRecipes(id: string){
     return this.recipes.find((recipe: DtoRecipe) => recipe.id === id);
@@ -42,6 +43,11 @@ export class RecipeService {
     const recipe: DtoRecipe = this.recipes[index];
     this.editRecipe$ = recipe;
     this.editRecipe.next(recipe);
+  }
+
+  newRecipes(recipes: DtoRecipe) {
+    this.recipes.push(recipes);
+    this.recipesList.next(this.recipes);
   }
 
   get getRecipesAll() {
