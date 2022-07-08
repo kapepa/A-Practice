@@ -1,8 +1,8 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import { DtoRecipe } from "../../dto/dto.recipe";
 import { RecipeService } from "../../service/recipe.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Subscription } from "rxjs";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {Subject, Subscription} from "rxjs";
 
 
 @Component({
@@ -12,7 +12,9 @@ import { Subscription } from "rxjs";
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
   recipes!: DtoRecipe[];
-  recipesSub!: Subscription
+  recipesSub!: Subscription;
+  editFlag: boolean = false;
+  editFlagSubject: Subject<boolean> = new Subject<boolean>()
   // @Output() selectRecipe = new EventEmitter<DtoRecipe>()
 
   constructor(
@@ -25,6 +27,16 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.recipes = this.recipeService.getRecipesAll;
     this.recipesSub = this.recipeService.recipesList.subscribe((recipes: DtoRecipe[]) => {
       this.recipes = recipes;
+    })
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const { urlAfterRedirects } = event;
+        const edit = urlAfterRedirects.split('/').pop() === 'edit';
+        if ( this.editFlag !== edit ) {
+          this.editFlag = ! this.editFlag;
+          this.editFlagSubject.next(this.editFlag)
+        }
+      };
     })
   }
 

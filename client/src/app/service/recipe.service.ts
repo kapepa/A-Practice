@@ -39,6 +39,11 @@ export class RecipeService {
     return this.recipes.find((recipe: DtoRecipe) => recipe.id === id);
   }
 
+  updateRecipes(recipes: DtoRecipe) {
+    this.recipes.splice( Number(this.editRecipe$),1, recipes);
+    this.recipesList.next(this.recipes);
+  }
+
   setEdit(index: number) {
     const recipe: DtoRecipe = this.recipes[index];
     this.editRecipe$ = recipe;

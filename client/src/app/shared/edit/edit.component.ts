@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import { RecipeService } from "../../service/recipe.service";
 import { Subscription } from "rxjs";
 import { DtoIngredient, DtoRecipe } from "../../dto/dto.recipe";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Params } from "@angular/router";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 
 @Component({
@@ -24,27 +24,50 @@ export class EditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.editRecipe = this.recipeService.editRecipe$;
-    this.editSubject = this.recipeService.editRecipe.subscribe((recipe: DtoRecipe) => {
-      this.editMode = false;
-      this.editRecipe = recipe;
-    });
+    // this.editRecipe = this.recipeService.editRecipe$;
 
-    this.recipeForm = this.fb.group({
-      name: '',
-      image: 'https://www.myfoodtrip.com/wp-content/uploads/2020/05/Food-Blog-Directory.jpg',
-      description: '',
-      ingredients: this.fb.array([this.fb.group({ name: '', amount: 0})] )
-    });
+    // this.editSubject = this.recipeService.editRecipe.subscribe((recipe: DtoRecipe) => {
+    //   this.editMode = false;
+    //   this.editRecipe = recipe;
+    //   console.log(recipe)
+    // });
+
+    this.route.params.subscribe((params: Params) => {
+      if(!!params){
+        const recipe = this.recipeService.receiveRecipes(params['id'])
+        this.recipeForm = this.fb.group({
+          id: recipe?.id,
+          name: recipe?.name,
+          image: recipe?.image,
+          description: recipe?.description,
+          ingredients: this.fb.array(recipe?.ingredients ? recipe.ingredients.map((ingredient: DtoIngredient) => {
+            return this.fb.group(ingredient);
+          }) : [])
+        });
+      } else {
+        this.recipeForm = this.fb.group({
+          id: '',
+          name: '',
+          image: 'https://www.myfoodtrip.com/wp-content/uploads/2020/05/Food-Blog-Directory.jpg',
+          description: '',
+          ingredients: this.fb.array([this.fb.group({ name: '', amount: 0})] )
+        });
+      }
+    })
   }
 
   ngOnDestroy() {
-    this.editSubject.unsubscribe()
+    // this.editSubject.unsubscribe()
   }
 
   onSubmit() {
-    const id = Date.now().toString();
-    this.recipeService.newRecipes({ id, ...this.recipeForm.value })
+    if(this.recipeForm.value.id.trim()){
+      this.recipeService.updateRecipes( this.recipeForm.value )
+    } else {
+      const id = Date.now().toString();
+      this.recipeService.newRecipes({ id, ...this.recipeForm.value })
+    }
+    this.recipeForm.reset();
   }
 
   appendRecipe() {
