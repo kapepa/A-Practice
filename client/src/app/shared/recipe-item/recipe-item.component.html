@@ -9,7 +9,7 @@
 <!--  >-->
   <a
     (click)="selectEdit()"
-    [routerLink]="['/recipe', recipe.id]"
+    [routerLink]="edit ? ['/recipe', recipe.id, 'edit'] : ['/recipe', recipe.id]"
     routerLinkActive="active"
     class="list-group-item list-group-item-action recipe-list__link"
   >

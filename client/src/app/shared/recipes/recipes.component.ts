@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnDestroy, OnInit} from '@angular/core';
 import {DtoRecipe} from "../../dto/dto.recipe";
 import {RecipeService} from "../../service/recipe.service";
 import {Subscription} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-recipes',
@@ -14,6 +15,7 @@ export class RecipesComponent implements OnInit, OnDestroy {
 
   constructor(
     private recipeService: RecipeService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {

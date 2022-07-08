@@ -3,7 +3,6 @@ import { RecipeService } from "../../service/recipe.service";
 import { DtoIngredient, DtoRecipe } from "../../dto/dto.recipe";
 import { ShoppingService } from "../../service/shopping.service";
 import { ActivatedRoute, ParamMap } from "@angular/router";
-import { switchMap } from "rxjs";
 
 
 @Component({
