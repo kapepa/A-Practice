@@ -19,7 +19,7 @@ import { RouterModule } from "@angular/router";
     ShoppingListModule,
   ],
   exports: [
-    HomeComponent
+    HomeComponent,
   ]
 })
 export class HomeModule { }
