@@ -13,6 +13,7 @@ export class RecipeService {
   //   ingredients: [{ name: 'ingredient-name', amount: 120 }]
   // };
   // recipe = new EventEmitter<DtoRecipe>();
+  selectIndex: number | null = null;
   recipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
   editRecipe$: DtoRecipe = {} as DtoRecipe;
   editRecipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
@@ -46,6 +47,7 @@ export class RecipeService {
 
   setEdit(index: number) {
     const recipe: DtoRecipe = this.recipes[index];
+    this.selectIndex = index;
     this.editRecipe$ = recipe;
     this.editRecipe.next(recipe);
   }
@@ -53,6 +55,15 @@ export class RecipeService {
   newRecipes(recipes: DtoRecipe) {
     this.recipes.push(recipes);
     this.recipesList.next(this.recipes);
+  }
+
+  deleteRecipes() {
+    if(this.selectIndex !== null) {
+      this.recipes.splice(this.selectIndex,1);
+      this.selectIndex = null;
+      this.recipesList.next(this.recipes);
+      this.editRecipe$ = {} as DtoRecipe;
+    }
   }
 
   get getRecipesAll() {

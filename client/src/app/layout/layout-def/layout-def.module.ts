@@ -12,6 +12,7 @@ import { EditModule } from "../../shared/edit/edit.module";
 const routes: Routes = [
   { path: 'recipe', component: HomeComponent, children:
     [
+      { path: '', component: RecipeDetailComponent },
       { path: 'new', component: EditComponent },
       { path: ':id', component: RecipeDetailComponent },
       { path: ':id/edit', component: EditComponent },

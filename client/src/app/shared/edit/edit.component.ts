@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import { RecipeService } from "../../service/recipe.service";
 import { Subscription } from "rxjs";
 import { DtoIngredient, DtoRecipe } from "../../dto/dto.recipe";
-import { ActivatedRoute, Params } from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 
 @Component({
@@ -11,7 +11,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
   styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit, OnDestroy {
-
+  currentID: string | undefined;
   editMode: boolean = false;
   editRecipe: DtoRecipe = {} as DtoRecipe;
   editSubject!: Subscription;
@@ -20,6 +20,7 @@ export class EditComponent implements OnInit, OnDestroy {
   constructor(
     private recipeService: RecipeService,
     private route: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
   ) { }
 
@@ -34,6 +35,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
     this.route.params.subscribe((params: Params) => {
       if(!!params){
+        this.currentID = params['id']
         const recipe = this.recipeService.receiveRecipes(params['id'])
         this.recipeForm = this.fb.group({
           id: recipe?.id,
@@ -68,6 +70,11 @@ export class EditComponent implements OnInit, OnDestroy {
       this.recipeService.newRecipes({ id, ...this.recipeForm.value })
     }
     this.recipeForm.reset();
+  }
+
+  cancelRecipes(e: Event) {
+    this.recipeForm.reset();
+    this.router.navigate(['/recipe', this.currentID]);
   }
 
   appendRecipe() {
