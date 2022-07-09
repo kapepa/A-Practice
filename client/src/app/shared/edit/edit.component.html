@@ -1,7 +1,7 @@
 <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
   <div style="display: flex; column-gap: 10px; margin-bottom: 10px">
     <button type="submit" class="btn btn-success">Save</button>
-    <button type="button" class="btn btn-danger">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="cancelRecipes($event)">Cancel</button>
   </div>
   <div class="mb-3">
     <label for="name" class="form-label">Name</label>

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { RecipeService } from "../../service/recipe.service";
 import { DtoIngredient, DtoRecipe } from "../../dto/dto.recipe";
 import { ShoppingService } from "../../service/shopping.service";
-import { ActivatedRoute, ParamMap } from "@angular/router";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 
 
 @Component({
@@ -19,6 +19,7 @@ export class RecipeDetailComponent implements OnInit {
     private recipeService: RecipeService,
     private shoppingService: ShoppingService,
     private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -33,4 +34,10 @@ export class RecipeDetailComponent implements OnInit {
   addRecipe(recipe: DtoIngredient[] | undefined) {
     if(!!recipe) this.shoppingService.addIngredient(recipe);
   }
+
+  deleteRecipe(e: Event) {
+    e.preventDefault();
+    this.recipeService.deleteRecipes();
+    this.router.navigate(['/recipe'])
+  };
 }
