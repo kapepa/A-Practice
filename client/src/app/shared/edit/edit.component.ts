@@ -82,11 +82,11 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   deleteRecipe(i: number) {
-    this.ingredientsArr.removeAt(i)
+    this.ingredientsArr.removeAt(i);
   }
 
   receiveIngredient(i: number, key: string) {
-    return this.recipeForm.get('ingredients')
+    return this.recipeForm.get('ingredients');
   }
 
   get ingredientsArr() {
