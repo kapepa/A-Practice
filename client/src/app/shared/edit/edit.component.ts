@@ -64,10 +64,10 @@ export class EditComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if(this.recipeForm.value.id.trim()){
-      this.recipeService.updateRecipes( this.recipeForm.value )
+      this.recipeService.updateRecipes( this.recipeForm.value );
     } else {
       const id = Date.now().toString();
-      this.recipeService.newRecipes({ id, ...this.recipeForm.value })
+      this.recipeService.newRecipes({ id, ...this.recipeForm.value });
     }
     this.recipeForm.reset();
   }
