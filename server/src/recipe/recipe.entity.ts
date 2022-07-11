@@ -1,7 +1,9 @@
-import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne} from 'typeorm';
 
-@Entity()
-export class User {
+@Entity(
+  { name: 'recipe' },
+)
+export class Recipe {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
@@ -9,14 +11,32 @@ export class User {
   name: string;
 
   @Column()
-  email: string;
+  description: string;
 
-  @Column( { select: false })
-  password: string
+  @Column()
+  image: string;
 
-  @Column({ default: true, select: false })
-  isActive: boolean;
+  @OneToMany(() => Ingredients, ingredients => ingredients.user)
+  ingredients: Ingredients[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
+  created_at: Date;
+}
+
+@Entity({ name: 'ingredients' })
+export class Ingredients {
+  @PrimaryGeneratedColumn('uuid')
+  id: number;
+
+  @Column()
+  name: string;
+
+  @Column()
+  amount: number;
+
+  @ManyToOne(() => Recipe, recipe => recipe.ingredients)
+  user: Recipe;
+
+  @CreateDateColumn({ select: false })
   created_at: Date;
 }
