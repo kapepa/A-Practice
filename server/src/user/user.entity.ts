@@ -1,11 +1,12 @@
-import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany} from 'typeorm';
+import {Recipe} from "../recipe/recipe.entity";
 
 @Entity(
   { name: 'user' }
 )
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   name: string;
@@ -14,11 +15,14 @@ export class User {
   email: string;
 
   @Column( { select: false })
-  password: string
+  password: string;
+
+  @OneToMany(() => Recipe, recipe => recipe.user)
+  recipe: Recipe[]
 
   @Column({ default: true, select: false })
   isActive: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn( { select: false } )
   created_at: Date;
 }
