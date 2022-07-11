@@ -1,11 +1,12 @@
 import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne} from 'typeorm';
+import {User} from "../user/user.entity";
 
 @Entity(
   { name: 'recipe' },
 )
 export class Recipe {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   name: string;
@@ -15,6 +16,9 @@ export class Recipe {
 
   @Column()
   image: string;
+
+  @ManyToOne(() => User, user => user.recipe)
+  user: User;
 
   @OneToMany(() => Ingredients, ingredients => ingredients.user)
   ingredients: Ingredients[];
@@ -26,7 +30,7 @@ export class Recipe {
 @Entity({ name: 'ingredients' })
 export class Ingredients {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   name: string;
