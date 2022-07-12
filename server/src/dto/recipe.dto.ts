@@ -3,7 +3,7 @@ import {UserDto} from "./user.dto";
 
 export class RecipeDto {
   @ApiProperty()
-  id: string;
+  id?: string;
 
   @ApiProperty()
   name: string;
@@ -15,7 +15,7 @@ export class RecipeDto {
   image: string;
 
   @ApiProperty({ required: false })
-  user: UserDto;
+  user?: UserDto;
 
   @ApiProperty()
   ingredients?: DtoIngredient[];
