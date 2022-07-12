@@ -26,10 +26,16 @@ export class RecipeDto {
 
 export class DtoIngredient {
   @ApiProperty()
+  id?: string;
+
+  @ApiProperty()
   name: string;
 
   @ApiProperty()
   amount: number;
+
+  @ApiProperty()
+  public: boolean
 
   @ApiProperty()
   created_at?: Date;

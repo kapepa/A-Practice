@@ -17,6 +17,9 @@ export class User {
   @Column( { select: false })
   password: string;
 
+  @Column()
+  avatar: string
+
   @OneToMany(() => Recipe, recipe => recipe.user)
   recipe: Recipe[]
 
