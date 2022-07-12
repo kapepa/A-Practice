@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { RecipeModule } from './recipe/recipe.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Ingredients, Recipe } from "./recipe/recipe.entity";
 import { User } from "./user/user.entity";
+import { FileModule } from './file/file.module';
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
+import { AuthModule } from './auth/auth.module';
 
 import * as dotenv from 'dotenv';
 
@@ -12,6 +15,9 @@ dotenv.config();
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static'),
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.MYSQL_HOST,
@@ -27,9 +33,11 @@ dotenv.config();
       synchronize: true,
     }),
     RecipeModule,
-    UserModule
+    UserModule,
+    FileModule,
+    AuthModule,
   ],
   controllers: [],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
