@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { RecipeDto } from "../dto/recipe.dto";
+import { DtoIngredient, RecipeDto } from "../dto/recipe.dto";
 import { UserDto } from "../dto/user.dto";
 import { Ingredients, Recipe } from "./recipe.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { FileService } from "../file/file.service";
-import {UserService} from "../user/user.service";
+import { UserService } from "../user/user.service";
 
 @Injectable()
 export class RecipeService {
@@ -13,14 +13,28 @@ export class RecipeService {
     @InjectRepository(Recipe)
     private recipeRepository: Repository<Recipe>,
     @InjectRepository(Ingredients)
-    private IngredientsRepository: Repository<Ingredients>,
+    private ingredientsRepository: Repository<Ingredients>,
     private fileService: FileService,
     private userService: UserService,
   ) {}
 
-  async createRecipe(recipe: RecipeDto, image: Express.Multer.File, userHash: UserDto) {
-    // const avatarUrl = !!image ? await this.fileService.writeFile(image) : '';
-    // const user = this.userService.findOne('id', userHash.id);
-    console.log(recipe.ingredients);
+  async createRecipe(recipe: RecipeDto, imageFile: Express.Multer.File, userHash: UserDto) {
+    const image = !!imageFile ? await this.fileService.writeFile(imageFile) : '';
+    const user = await this.userService.findOne('id', userHash.id);
+    const recipeDo = this.recipeRepository.create({...recipe, image, user})
+    const ingredients = await this.createIngredients(recipe.ingredients, recipeDo)
+
+    console.log(await this.recipeRepository.save({...recipeDo, ingredients}))
+
+  }
+
+  async createIngredients(ingredients: DtoIngredient[], recipe: any ) {
+    const listIngredients = ingredients.reduce((accum: DtoIngredient[], ingredient: DtoIngredient) => {
+      accum.push(this.ingredientsRepository.create({ ...ingredient, recipe }));
+      return accum;
+    }, [] as DtoIngredient[]);
+
+    console.log(listIngredients);
+    return await this.ingredientsRepository.save(listIngredients);
   }
 }

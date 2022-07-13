@@ -7,7 +7,11 @@ export interface DtoRecipe {
 }
 
 export interface DtoIngredient {
+  id?: string;
   name: string,
   amount: number,
+  public?: boolean
+  recipe?: DtoRecipe;
+  created_at?: Date;
 }
 
