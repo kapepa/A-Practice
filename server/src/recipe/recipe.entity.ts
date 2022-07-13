@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, ManyToOne} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany, JoinTable, ManyToOne, ManyToMany} from 'typeorm';
 import {User} from "../user/user.entity";
 import {IsBoolean, IsDate, IsInt, IsString, MinLength} from "class-validator";
 
@@ -25,7 +25,8 @@ export class Recipe {
   @ManyToOne(() => User, user => user.recipe)
   user: User;
 
-  @OneToMany(() => Ingredients, ingredients => ingredients.recipe)
+  @ManyToMany(() => Ingredients, ingredients => ingredients.recipe)
+  @JoinTable({ name: 'recipe_ingredients' })
   ingredients: Ingredients[];
 
   @CreateDateColumn({ select: false })
@@ -51,8 +52,8 @@ export class Ingredients {
   @IsBoolean()
   public: boolean
 
-  @ManyToOne(() => Recipe, recipe => recipe.ingredients)
-  recipe: Recipe;
+  @ManyToMany(() => Recipe, recipe => recipe.ingredients)
+  recipe: Recipe[];
 
   @CreateDateColumn({ select: false })
   @IsDate()
