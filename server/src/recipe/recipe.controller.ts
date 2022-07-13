@@ -3,14 +3,14 @@ import {
   Controller,
   Get,
   NotFoundException,
-  NotImplementedException,
-  Post,
+  NotImplementedException, Param, Patch,
+  Post, Query,
   Req, UploadedFile,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { RecipeDto } from "../dto/recipe.dto";
+import {DtoIngredient, RecipeDto} from "../dto/recipe.dto";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import {RecipeService} from "./recipe.service";
 import {FileInterceptor} from "@nestjs/platform-express";
@@ -36,14 +36,60 @@ export class RecipeController {
     }
   }
 
-  @Get('')
-  @ApiResponse({ status: 20, description: 'Recipe created successfully', type: RecipeDto })
+  @Get('/:id')
+  @ApiResponse({ status: 200, description: 'Get one Recipe', type: RecipeDto })
   @ApiResponse({ status: 404, description: 'Not found'})
-  async getRecipe(): Promise<RecipeDto | NotFoundException> {
+  async getOneRecipe(@Param() param): Promise<RecipeDto | NotFoundException> {
     try {
-      return {} as RecipeDto;
+      return this.recipeService.findOne('id', param.id, { relations: ['ingredients'] });
     } catch (e) {
-      return new NotFoundException();
+      return !!e ? e : new NotFoundException();
+    }
+  }
+
+  @Get('')
+  @ApiResponse({ status: 200, description: 'Get all Recipe', type: RecipeDto })
+  @ApiResponse({ status: 404, description: 'Not found'})
+  async getRecipe(@Query() query): Promise<RecipeDto[] | NotFoundException> {
+    try {
+      return this.recipeService.allRecipe(query);
+    } catch (e) {
+      return !!e ? e : new NotFoundException();
+    }
+  }
+
+  @Get('/ingredients')
+  @ApiResponse({ status: 200, description: 'Recipe created successfully', type: RecipeDto })
+  @ApiResponse({ status: 404, description: 'Not found'})
+  async getAllIngredients(@Query() query): Promise<DtoIngredient[] | NotFoundException> {
+    try {
+      return this.recipeService.allIngredient({...query, take: Number(query.take), skip: Number(query.skip)});
+    } catch (e) {
+      return !!e ? e : new NotFoundException();
+    }
+  }
+
+  @Patch('/ingredients/update')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 201, description: 'Recipe update successfully', type: RecipeDto })
+  @ApiResponse({ status: 501, description: 'Not Implemented'})
+  async updateIngredients(@Body() body, @Req() req): Promise<DtoIngredient>{
+    try {
+      return this.recipeService.updateIngredient(body, req.user);
+    } catch (e) {
+      return !!e ? e : new NotFoundException();
+    }
+  }
+
+  @Patch('/update')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 201, description: 'Recipe update successfully', type: RecipeDto })
+  @ApiResponse({ status: 501, description: 'Not Implemented'})
+  async updateRecipe(@Body() body, @Req() req): Promise<RecipeDto>{
+    try {
+      return this.recipeService.updateRecipe(body, req.user);
+    } catch (e) {
+      return !!e ? e : new NotFoundException();
     }
   }
 }
