@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
   NotFoundException,
   NotImplementedException, Param, Patch,
@@ -88,6 +88,30 @@ export class RecipeController {
   async updateRecipe(@Body() body, @Req() req): Promise<RecipeDto>{
     try {
       return this.recipeService.updateRecipe(body, req.user);
+    } catch (e) {
+      return !!e ? e : new NotFoundException();
+    }
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: 'Recipe delete successfully', type: RecipeDto })
+  @ApiResponse({ status: 501, description: 'Not Implemented'})
+  async deleteRecipe(@Param() param, @Req() req) {
+    try {
+      return await this.recipeService.deleteRecipe(param.id, req.user.id);
+    } catch (e) {
+      return !!e ? e : new NotFoundException();
+    }
+  }
+
+  @Delete('/ingredient/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: 'Recipe delete successfully', type: RecipeDto })
+  @ApiResponse({ status: 501, description: 'Not Implemented'})
+  async deleteIngredient(@Param() param, @Req() req) {
+    try {
+      return await this.recipeService.deleteRecipe(param.id, req.user.id);
     } catch (e) {
       return !!e ? e : new NotFoundException();
     }

@@ -1,4 +1,4 @@
-import {ConflictException, Injectable} from '@nestjs/common';
+import {ConflictException, ForbiddenException, Injectable} from '@nestjs/common';
 import { DtoIngredient, RecipeDto } from "../dto/recipe.dto";
 import { UserDto } from "../dto/user.dto";
 import { Ingredients, Recipe } from "./recipe.entity";
@@ -64,5 +64,22 @@ export class RecipeService {
 
   async findOne(key: string, val: string, options?: { relations?: string[], select?: string[] }): Promise<RecipeDto> {
     return this.recipeRepository.findOne({ where: { [key]: val }, ...options as {} });
+  }
+
+  async findOneIngredient(key: string, val: string, options?: { relations?: string[], select?: string[] }): Promise<DtoIngredient> {
+    return this.ingredientsRepository.findOne({ where: { [key]: val }, ...options as {} });
+  }
+
+  async deleteRecipe(id: string, userID: string): Promise<boolean> {
+    const recipe = await this.findOne('id', id, { relations: ['user'] } );
+    if( recipe.user.id !== userID ) throw new ForbiddenException();
+
+    return !! await this.recipeRepository.delete(recipe);
+  }
+
+  async deleteIngredient(id: string, userID: string): Promise<boolean> {
+    const ingredient = await this.findOneIngredient('id', id);
+
+    return !! await this.ingredientsRepository.delete(ingredient);
   }
 }
