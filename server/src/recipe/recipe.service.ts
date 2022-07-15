@@ -81,5 +81,5 @@ export class RecipeService {
     const ingredient = await this.findOneIngredient('id', id);
 
     return !! await this.ingredientsRepository.delete(ingredient);
-  }
+  };
 }
