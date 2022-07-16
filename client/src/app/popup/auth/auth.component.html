@@ -3,15 +3,16 @@
     <div class="popup__x-close"></div>
     <div class="popup-auth__frame">
       <h5 class="popup-auth__h popup-auth__h--large">
-        <ng-container *ngIf="mode === 'login'">Login</ng-container>
-        <ng-container *ngIf="mode === 'registration'">Registration</ng-container>
+        <ng-container *ngIf="popupLogin === 'login'">Login</ng-container>
+        <ng-container *ngIf="popupLogin === 'registration'">Registration</ng-container>
       </h5>
       <div class="row">
         <div class="popup-auth__cell-switch">
           <button (click)="switchMode('login')" type="button" class="btn btn-primary">Login</button>
           <button (click)="switchMode('registration')" type="button" class="btn btn-primary">Registration</button>
         </div>
-        <ng-container *ngIf="mode === 'login'">
+
+        <ng-container *ngIf="popupLogin === 'login'">
           <div class="mb-3">
             <label for="emailLogin" class="form-label">Email:</label>
             <input type="email" class="form-control" id="emailLogin" placeholder="name@example.com">
@@ -25,27 +26,68 @@
             <button type="button" class="btn btn-warning">Clean</button>
           </div>
         </ng-container>
-        <ng-container *ngIf="mode === 'registration'">
-          <div class="mb-3">
-            <label for="nameReg" class="form-label">Name:</label>
-            <input type="text" class="form-control" id="nameReg" placeholder="name">
-          </div>
-          <div class="mb-3">
-            <label for="emailReg" class="form-label">Email:</label>
-            <input type="email" class="form-control" id="emailReg" placeholder="name@example.com">
-          </div>
-          <div class="mb-3">
-            <label for="passwordReg" class="form-label">Password:</label>
-            <input type="password" class="form-control" id="passwordReg" placeholder="password">
-          </div>
-          <div class="mb-3">
-            <button type="button" class="btn btn-success">Avatar</button>
-          </div>
-          <div class="mb-3">
-            <button type="button" class="btn btn-success">Send</button>
-            <button type="button" class="btn btn-warning">Clean</button>
-          </div>
+
+        <ng-container *ngIf="popupLogin === 'registration'">
+          <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="nameReg" class="form-label">Name:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nameReg"
+                name="name"
+                placeholder="name"
+                formControlName="name"
+              >
+            </div>
+            <div class="mb-3">
+              <label for="emailReg" class="form-label">Email:</label>
+              <input
+                type="email"
+                class="form-control"
+                id="emailReg"
+                name="email"
+                placeholder="name@example.com"
+                formControlName="email"
+              >
+            </div>
+            <div class="mb-3">
+              <label for="passwordReg" class="form-label">Password:</label>
+              <input
+                type="password"
+                class="form-control"
+                id="passwordReg"
+                name="password"
+                placeholder="password"
+                formControlName="password"
+              >
+            </div>
+            <div class="mb-3">
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="loadAvatar(fileAvatar)"
+              >Avatar</button>
+              <input
+                type="file"
+                class="form-control"
+                name="avatar"
+                formControlName="avatar"
+                style="display: none"
+                #fileAvatar
+              >
+            </div>
+            <div class="mb-3">
+              <button
+                type="submit"
+                class="btn btn-success"
+                [disabled]="!profileForm.valid"
+              >Send</button>
+              <button type="button" class="btn btn-warning">Clean</button>
+            </div>
+          </form>
         </ng-container>
+
       </div>
     </div>
   </div>

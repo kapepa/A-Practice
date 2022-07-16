@@ -7,7 +7,7 @@ import {ActivatedRoute, Event, NavigationStart, Router} from "@angular/router";
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  popupLogin: boolean = false;
+  popupLogin: 'login' | 'registration' = 'login';
 
   constructor(
     private router: Router,
@@ -16,8 +16,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      const login = params['login'] ? JSON.parse(params['login']) : false;
-      if(login !== this.popupLogin) this.popupLogin = login;
+      if(params['login'] !== this.popupLogin) this.popupLogin = params['login'];
     });
   }
 

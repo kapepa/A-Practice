@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Router} from "@angular/router";
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
+import { FormControl, FormGroup } from "@angular/forms";
 
 @Component({
   selector: 'app-auth',
@@ -7,8 +8,13 @@ import {Router} from "@angular/router";
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  mode: 'login' | 'registration' = 'login';
-  @Input() popupLogin!:  boolean
+  @Input() popupLogin!: 'login' | 'registration';
+  profileForm = new FormGroup({
+    name: new FormControl(''),
+    email: new FormControl(''),
+    password: new FormControl(''),
+    avatar: new FormControl(''),
+  });
 
   constructor(
     private router: Router,
@@ -25,7 +31,15 @@ export class AuthComponent implements OnInit {
   }
 
   switchMode(mode: string) {
-    if(mode === 'login' || mode === 'registration') this.mode = mode;
+    if(mode === 'login' || mode === 'registration') this.router.navigate([], { queryParams: { login: mode }});
+  }
+
+  onSubmit() {
+    console.log(this.profileForm.value)
+  }
+
+  loadAvatar(inputFile: HTMLInputElement) {
+    inputFile.click();
   }
 
 }
