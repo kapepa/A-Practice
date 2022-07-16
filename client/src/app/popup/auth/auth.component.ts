@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
+  mode: 'login' | 'registration' = 'login';
   @Input() popupLogin!:  boolean
 
   constructor(
@@ -21,6 +22,10 @@ export class AuthComponent implements OnInit {
     if( elem.classList.contains('popup__zone') || elem.classList.contains('popup__x-close') ){
       this.router.navigate([], { queryParams: { }});
     }
+  }
+
+  switchMode(mode: string) {
+    if(mode === 'login' || mode === 'registration') this.mode = mode;
   }
 
 }
