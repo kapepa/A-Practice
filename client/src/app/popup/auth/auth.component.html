@@ -1,0 +1,28 @@
+<div *ngIf="popupLogin" class="popup__zone" (click)="closePopUp($event)">
+  <div class="popup popup-auth">
+    <div class="popup__x-close"></div>
+    <div class="popup-auth__frame">
+      <h5 class="popup-auth__h popup-auth__h--large">Login</h5>
+      <div class="row">
+        <div class="popup-auth__cell-switch">
+          <button type="button" class="btn btn-primary">Login</button>
+          <button type="button" class="btn btn-primary">Registration</button>
+        </div>
+        <div class="mb-3">
+          <label for="emailLogin" class="form-label">Email:</label>
+          <input type="email" class="form-control" id="emailLogin" placeholder="name@example.com">
+        </div>
+        <div class="mb-3">
+          <label for="passwordLogin" class="form-label">Password:</label>
+          <input type="password" class="form-control" id="passwordLogin" placeholder="password">
+        </div>
+        <div class="mb-3">
+          <button type="button" class="btn btn-success">Ok</button>
+          <button type="button" class="btn btn-warning">Clean</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

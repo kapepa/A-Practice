@@ -14,13 +14,15 @@
         </li>
       </ul>
       <div appDrop class="nav-item dropdown" data-bs-toggle="dropdown">
-        <button class="btn btn-link" > Dropdown </button>
+        <button class="btn btn-link" > Anction </button>
         <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-          <li><a class="dropdown-item" href="#">Action</a></li>
-          <li><a class="dropdown-item" href="#">Another action</a></li>
-          <li><a class="dropdown-item" href="#">Something else here</a></li>
+          <li><a class="nav-link" [routerLink]="[]" [queryParams]="{login: true}">Login</a></li>
+          <li><a class="nav-link" href="#">Action</a></li>
+          <li><a class="nav-link" href="#">Another action</a></li>
+          <li><a class="nav-link" href="#">Something else here</a></li>
         </ul>
       </div>
     </div>
   </div>
 </nav>
+<app-auth [popupLogin]=popupLogin></app-auth>

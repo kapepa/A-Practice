@@ -1,5 +1,5 @@
 import {Component,  OnInit,} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Event, NavigationStart, Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -7,9 +7,19 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  constructor() { }
+  popupLogin: boolean = false;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const login = params['login'] ? JSON.parse(params['login']) : false;
+      if(login !== this.popupLogin) this.popupLogin = login;
+    });
   }
+
 
 }
