@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header.component';
 import { RouterModule } from "@angular/router";
 import { DirectiveModule } from "../../directive/directive.module";
+import { AuthModule } from "../../popup/auth/auth.module";
+import { PipeModule } from "../../pipe/pipe.module";
 
 
 
@@ -14,6 +16,8 @@ import { DirectiveModule } from "../../directive/directive.module";
     CommonModule,
     RouterModule,
     DirectiveModule,
+    AuthModule,
+    PipeModule,
   ],
   exports: [
     HeaderComponent

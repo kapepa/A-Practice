@@ -1,0 +1,22 @@
+.popup-auth{
+  &__frame{
+
+  }
+  &__h{
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 15px;
+    &--large{
+      font-size: 28px;
+    }
+  }
+  &__cell-switch{
+    display: flex;
+    row-gap: 5px;
+    justify-content: center;
+    & > button{
+      min-width: 110px;
+    }
+  }
+}
