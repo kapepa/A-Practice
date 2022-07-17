@@ -15,11 +15,11 @@
         <ng-container *ngIf="popupLogin === 'login'">
           <div class="mb-3">
             <label for="emailLogin" class="form-label">Email:</label>
-            <input type="email" class="form-control" id="emailLogin" placeholder="name@example.com">
+            <input type="email" class="form-control" id="emailLogin" placeholder="Name@example.com">
           </div>
           <div class="mb-3">
             <label for="passwordLogin" class="form-label">Password:</label>
-            <input type="password" class="form-control" id="passwordLogin" placeholder="password">
+            <input type="password" class="form-control" id="passwordLogin" placeholder="Password">
           </div>
           <div class="mb-3">
             <button type="button" class="btn btn-success">Ok</button>
@@ -36,9 +36,18 @@
                 class="form-control"
                 id="nameReg"
                 name="name"
-                placeholder="name"
+                placeholder="Name"
                 formControlName="name"
               >
+              <div *ngIf="name?.invalid && (name?.dirty || name?.touched)"
+                   class="alert-danger">
+                <div *ngIf="name?.errors?.['required']">
+                  Name is required.
+                </div>
+                <div *ngIf="name?.errors?.['minlength']">
+                  Name must be at least 4 characters long.
+                </div>
+              </div>
             </div>
             <div class="mb-3">
               <label for="emailReg" class="form-label">Email:</label>
@@ -47,9 +56,19 @@
                 class="form-control"
                 id="emailReg"
                 name="email"
-                placeholder="name@example.com"
+                placeholder="Name@example.com"
                 formControlName="email"
               >
+              <div *ngIf="email?.invalid && (email?.dirty || email?.touched)"
+                   class="alert-danger">
+
+                <div *ngIf="email?.errors?.['required']">
+                  Email is required.
+                </div>
+                <div *ngIf="email?.errors?.['email']">
+                  Email must correct format.
+                </div>
+              </div>
             </div>
             <div class="mb-3">
               <label for="passwordReg" class="form-label">Password:</label>
@@ -58,24 +77,34 @@
                 class="form-control"
                 id="passwordReg"
                 name="password"
-                placeholder="password"
+                placeholder="Password"
                 formControlName="password"
               >
+              <div *ngIf="password?.invalid && (password?.dirty || password?.touched)"
+                   class="alert-danger">
+                <div *ngIf="password?.errors?.['required']">
+                  Password is required.
+                </div>
+                <div *ngIf="password?.errors?.['minlength']">
+                  Password must be at least 5 characters long.
+                </div>
+              </div>
             </div>
             <div class="mb-3">
               <button
                 type="button"
                 class="btn btn-success"
-                (click)="loadAvatar(fileAvatar)"
+                (click)="clickAvatar(fileAvatar)"
               >Avatar</button>
               <input
                 type="file"
                 class="form-control"
                 name="avatar"
-                formControlName="avatar"
                 style="display: none"
+                (change)=loadAvatar($event)
                 #fileAvatar
               >
+              <img [ngClass]="{ 'popup-auth__avatar--show': avatar }" #avatarImg alt="avatar" class="popup-auth__avatar">
             </div>
             <div class="mb-3">
               <button
@@ -83,7 +112,7 @@
                 class="btn btn-success"
                 [disabled]="!profileForm.valid"
               >Send</button>
-              <button type="button" class="btn btn-warning">Clean</button>
+              <button (click)="profileReset()" type="reset" class="btn btn-warning">Clean</button>
             </div>
           </form>
         </ng-container>

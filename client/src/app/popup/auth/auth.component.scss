@@ -19,4 +19,15 @@
       min-width: 110px;
     }
   }
+  &__avatar{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 20px;
+    visibility: hidden;
+    &--show{
+      visibility: visible;
+    }
+  }
 }

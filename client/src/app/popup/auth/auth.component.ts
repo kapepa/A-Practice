@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import { Router } from "@angular/router";
-import { FormControl, FormGroup } from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import { Subject } from "rxjs";
 
 @Component({
   selector: 'app-auth',
@@ -8,12 +9,13 @@ import { FormControl, FormGroup } from "@angular/forms";
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
+  avatar!: File;
+  @ViewChild('avatarImg') avatarImg!: ElementRef
   @Input() popupLogin!: 'login' | 'registration';
   profileForm = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl(''),
-    password: new FormControl(''),
-    avatar: new FormControl(''),
+    name: new FormControl('', [ Validators.required, Validators.minLength(3) ]),
+    email: new FormControl('', [ Validators.required, Validators.email ]),
+    password: new FormControl('', [ Validators.required, Validators.minLength(5) ]),
   });
 
   constructor(
@@ -35,11 +37,34 @@ export class AuthComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.profileForm.value)
+    const { name, email, password } = this.profileForm.value
+    const form = new FormData();
+    if( !!name ) form.append('name', name);
+    if( !!email ) form.append('email', email);
+    if( !!password ) form.append('password', password);
+    if( !!this.avatar ) form.append('avatar', this.avatar);
+
+    console.log(form)
   }
 
-  loadAvatar(inputFile: HTMLInputElement) {
-    inputFile.click();
+  clickAvatar(inputFile: HTMLInputElement) { inputFile.click(); };
+
+  profileReset() {
+    this.profileForm.reset();
   }
+
+  loadAvatar(e: Event) {
+    const file = e.target as HTMLInputElement;
+    if (file.files && file.files[0]){
+      this.avatarImg.nativeElement.src = URL.createObjectURL(file.files[0]);
+      this.avatar = file.files[0];
+    }
+  }
+
+  get name() { return this.profileForm.get('name'); }
+
+  get email() { return this.profileForm.get('email'); }
+
+  get password() { return this.profileForm.get('password'); }
 
 }
