@@ -15,7 +15,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @ApiResponse({ status: 200, description: 'Login user successfully, return token.', type: UserDto })
   @ApiResponse({ status: 401, description: 'Unauthorized'})
-  async loginUser(@Req() req): Promise<string | UnauthorizedException> {
+  async loginUser(@Req() req): Promise<{ access_token: string } | UnauthorizedException> {
     try {
       return this.authService.login(req.user);
     } catch (e) {

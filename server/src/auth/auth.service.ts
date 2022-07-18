@@ -25,9 +25,9 @@ export class AuthService {
     return await bcrypt.compareSync(password,hash);
   }
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<any> {
     const profile = await this.userService.findOne('email', email, { select: ['id', 'name', 'email', 'password', 'avatar'] });
-    const compare = await this.bcryptCompare(pass, profile.password);
+    const compare = await this.bcryptCompare(password, profile.password);
 
     if (profile && compare) {
       const { password, ...other } = profile;
@@ -36,8 +36,8 @@ export class AuthService {
     return null;
   }
 
-  async login(user: UserDto): Promise<string> {
+  async login(user: UserDto): Promise<{ access_token: string }> {
     const payload = { id: user.id, name: user.name };
-    return this.jwtService.sign(payload)
+    return { access_token: this.jwtService.sign(payload) }
   }
 }

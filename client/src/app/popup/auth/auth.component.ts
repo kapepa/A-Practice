@@ -1,7 +1,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import { Router } from "@angular/router";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import { Subject } from "rxjs";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { HttpService } from "../../service/http.service";
 
 @Component({
   selector: 'app-auth',
@@ -18,8 +18,14 @@ export class AuthComponent implements OnInit {
     password: new FormControl('', [ Validators.required, Validators.minLength(5) ]),
   });
 
+  profileLogin = new FormGroup({
+    email: new FormControl('kapepa@mail.ru', [ Validators.required, Validators.email ]),
+    password: new FormControl('123456', [ Validators.required, Validators.minLength(5) ]),
+  })
+
   constructor(
     private router: Router,
+    private httpService: HttpService,
   ) { }
 
   ngOnInit(): void {
@@ -36,6 +42,8 @@ export class AuthComponent implements OnInit {
     if(mode === 'login' || mode === 'registration') this.router.navigate([], { queryParams: { login: mode }});
   }
 
+  clickAvatar(inputFile: HTMLInputElement) { inputFile.click(); };
+
   onSubmit() {
     const { name, email, password } = this.profileForm.value
     const form = new FormData();
@@ -44,13 +52,25 @@ export class AuthComponent implements OnInit {
     if( !!password ) form.append('password', password);
     if( !!this.avatar ) form.append('avatar', this.avatar);
 
-    console.log(form)
+    this.httpService.createUser(form).subscribe(() => {
+      this.router.navigate([], { queryParams: { login: 'login' } })
+      this.profileReset();
+    })
   }
 
-  clickAvatar(inputFile: HTMLInputElement) { inputFile.click(); };
+  onLogin() {
+    const { email, password } = this.profileLogin.value
+    if(!!email && !!password) this.httpService.loginUser({ email, password }).subscribe((token) => {
+      console.log('success token')
+    })
+  }
 
   profileReset() {
     this.profileForm.reset();
+  }
+
+  loginReset() {
+    this.profileLogin.reset()
   }
 
   loadAvatar(e: Event) {
@@ -66,5 +86,9 @@ export class AuthComponent implements OnInit {
   get email() { return this.profileForm.get('email'); }
 
   get password() { return this.profileForm.get('password'); }
+
+  get emailLogin() { return this.profileLogin.get('email'); }
+
+  get passwordLogin() { return this.profileLogin.get('password'); }
 
 }
