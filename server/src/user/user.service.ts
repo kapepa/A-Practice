@@ -5,6 +5,7 @@ import { User } from "./user.entity";
 import { Repository } from "typeorm";
 import { FileService } from "../file/file.service";
 import { AuthService } from "../auth/auth.service";
+import {MailerService} from "../mailer/mailer.service";
 
 @Injectable()
 export class UserService {
@@ -13,6 +14,7 @@ export class UserService {
     private usersRepository: Repository<User>,
     private fileService: FileService,
     private authService: AuthService,
+    private mailerService: MailerService,
   ) {}
 
   async findOne(key: string, val: string, options?: { relations?: string[], select?: string[], withUnselected?: boolean }): Promise<UserDto> {
@@ -25,6 +27,7 @@ export class UserService {
 
     const avatarUrl = !!avatar ? await this.fileService.writeFile(avatar) : '';
     const password = await this.authService.bcryptHash(user.password);
+    // await this.mailerService.registrationMail(user.email, user.name);
 
     return !! await this.usersRepository.save(this.usersRepository.create({...user, password, avatar: avatarUrl}));
   }

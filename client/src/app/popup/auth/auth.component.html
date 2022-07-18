@@ -13,18 +13,51 @@
         </div>
 
         <ng-container *ngIf="popupLogin === 'login'">
-          <div class="mb-3">
-            <label for="emailLogin" class="form-label">Email:</label>
-            <input type="email" class="form-control" id="emailLogin" placeholder="Name@example.com">
-          </div>
-          <div class="mb-3">
-            <label for="passwordLogin" class="form-label">Password:</label>
-            <input type="password" class="form-control" id="passwordLogin" placeholder="Password">
-          </div>
-          <div class="mb-3">
-            <button type="button" class="btn btn-success">Ok</button>
-            <button type="button" class="btn btn-warning">Clean</button>
-          </div>
+          <form [formGroup]="profileLogin" (ngSubmit)="onLogin()">
+            <div class="mb-3">
+              <label for="emailLogin" class="form-label">Email:</label>
+              <input
+                type="email"
+                class="form-control"
+                id="emailLogin"
+                placeholder="Name@example.com"
+                formControlName="email"
+              >
+              <div *ngIf="emailLogin?.invalid && (emailLogin?.dirty || emailLogin?.touched)"
+                   class="alert-danger">
+
+                <div *ngIf="emailLogin?.errors?.['required']">
+                  Email is required.
+                </div>
+                <div *ngIf="emailLogin?.errors?.['email']">
+                  Email must correct format.
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="passwordLogin" class="form-label">Password:</label>
+              <input
+                type="password"
+                class="form-control"
+                id="passwordLogin"
+                placeholder="Password"
+                formControlName="password"
+              >
+              <div *ngIf="passwordLogin?.invalid && (passwordLogin?.dirty || passwordLogin?.touched)"
+                   class="alert-danger">
+                <div *ngIf="passwordLogin?.errors?.['required']">
+                  Password is required.
+                </div>
+                <div *ngIf="passwordLogin?.errors?.['minlength']">
+                  Password must be at least 5 characters long.
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <button type="submit" class="btn btn-success">Ok</button>
+              <button (click)="loginReset()" type="reset" class="btn btn-warning">Clean</button>
+            </div>
+          </form>
         </ng-container>
 
         <ng-container *ngIf="popupLogin === 'registration'">

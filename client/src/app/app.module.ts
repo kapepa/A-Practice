@@ -18,6 +18,8 @@ import { EditModule } from "./shared/edit/edit.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { PipeModule } from "./pipe/pipe.module";
+import { AuthInterceptorProviders } from "./interceptor/auth.interceptor";
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,10 @@ import { PipeModule } from "./pipe/pipe.module";
     }),
     BsDropdownModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    CookieService,
+    AuthInterceptorProviders
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

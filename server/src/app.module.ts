@@ -8,8 +8,10 @@ import { FileModule } from './file/file.module';
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { AuthModule } from './auth/auth.module';
+import { MailerModule } from './mailer/mailer.module';
 
 import * as dotenv from 'dotenv';
+
 
 dotenv.config();
 
@@ -36,6 +38,7 @@ dotenv.config();
     UserModule,
     FileModule,
     AuthModule,
+    MailerModule,
   ],
   controllers: [],
   providers: [],
