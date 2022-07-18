@@ -61,7 +61,7 @@ export class AuthComponent implements OnInit {
   onLogin() {
     const { email, password } = this.profileLogin.value
     if(!!email && !!password) this.httpService.loginUser({ email, password }).subscribe((token) => {
-      console.log('success token')
+      this.router.navigate(['/recipe']);
     })
   }
 

@@ -35,11 +35,12 @@ export class UserController {
   }
 
   @Get('/')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Get Profile', type: UserDto })
   @ApiResponse({ status: 404, description: 'Not Implemented'})
-  async getUser(): Promise<UserDto | NotFoundException> {
+  async getUser(@Req() req): Promise<UserDto | NotFoundException> {
     try {
-      return {} as UserDto;
+      return await this.userService.findOne('id', req.user.id);
     } catch (e) {
       return !!e ? e : new NotFoundException();
     }

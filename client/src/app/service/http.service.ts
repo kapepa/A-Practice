@@ -28,6 +28,12 @@ export class HttpService {
     )
   }
 
+  getOwnProfile() {
+    return this.http.get(`${this.url}/api/user`).pipe(
+      catchError(this.handleError)
+    )
+  }
+
   private setToken(token: string) {
     this.cookieService.set('token', token);
   }

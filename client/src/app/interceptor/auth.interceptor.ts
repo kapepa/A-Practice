@@ -3,7 +3,7 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor, HTTP_INTERCEPTORS
+  HttpInterceptor, HTTP_INTERCEPTORS, HttpHeaders
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CookieService } from "ngx-cookie-service";
@@ -17,7 +17,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.cookieService.get('token');
-    request.headers.set('Authorization',`Bearer ${token}`)
+    request = request.clone({
+      headers: request.headers.set('Authorization', `Bearer ${token}`)
+    });
     return next.handle(request);
   }
 }
