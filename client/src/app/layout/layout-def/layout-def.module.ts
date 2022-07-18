@@ -8,6 +8,7 @@ import { ShoppingComponent } from "../../page/shopping/shopping.component";
 import { RecipeDetailComponent } from "../../shared/recipe-detail/recipe-detail.component";
 import { EditComponent } from "../../shared/edit/edit.component";
 import { EditModule } from "../../shared/edit/edit.module";
+import { AccessEditGuard } from "../../guard/access-edit.guard";
 
 const routes: Routes = [
   { path: 'recipe', component: HomeComponent, children:
@@ -15,7 +16,7 @@ const routes: Routes = [
       { path: '', component: RecipeDetailComponent },
       { path: 'new', component: EditComponent },
       { path: ':id', component: RecipeDetailComponent },
-      { path: ':id/edit', component: EditComponent },
+      { path: ':id/edit', component: EditComponent, canActivate: [AccessEditGuard] },
     ]
   },
   { path: 'shopping', component: ShoppingComponent },
