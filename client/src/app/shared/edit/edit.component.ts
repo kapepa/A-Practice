@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { RecipeService } from "../../service/recipe.service";
-import { Subscription } from "rxjs";
+import {Subject, Subscription} from "rxjs";
 import { DtoIngredient, DtoRecipe } from "../../dto/dto.recipe";
-import {ActivatedRoute, Params, Router} from "@angular/router";
-import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { ActivatedRoute, Params, Router } from "@angular/router";
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-edit',
@@ -11,6 +11,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
   styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit, OnDestroy {
+  @ViewChild('imageForm') imageForm!: ElementRef;
+  imageRecipe!: undefined | File | ArrayBuffer | string | null;
   currentID: string | undefined;
   editMode: boolean = false;
   editRecipe: DtoRecipe = {} as DtoRecipe;
@@ -25,14 +27,6 @@ export class EditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    // this.editRecipe = this.recipeService.editRecipe$;
-
-    // this.editSubject = this.recipeService.editRecipe.subscribe((recipe: DtoRecipe) => {
-    //   this.editMode = false;
-    //   this.editRecipe = recipe;
-    //   console.log(recipe)
-    // });
-
     this.route.params.subscribe((params: Params) => {
       if(!!params){
         this.currentID = params['id']
@@ -40,18 +34,19 @@ export class EditComponent implements OnInit, OnDestroy {
         this.recipeForm = this.fb.group({
           id: recipe?.id,
           name: recipe?.name,
-          image: recipe?.image,
+          // image: recipe?.image,
           description: recipe?.description,
           ingredients: this.fb.array(recipe?.ingredients ? recipe.ingredients.map((ingredient: DtoIngredient) => {
             return this.fb.group(ingredient);
           }) : [])
         });
+        this.imageRecipe = recipe?.image;
       } else {
         this.recipeForm = this.fb.group({
-          id: '',
-          name: '',
-          image: 'https://www.myfoodtrip.com/wp-content/uploads/2020/05/Food-Blog-Directory.jpg',
-          description: '',
+          id: ['', Validators.required],
+          name: ['', Validators.required],
+          // image: ['', Validators.required],
+          description: ['', Validators.required],
           ingredients: this.fb.array([this.fb.group({ name: '', amount: 0})] )
         });
       }
@@ -72,7 +67,7 @@ export class EditComponent implements OnInit, OnDestroy {
     this.recipeForm.reset();
   }
 
-  cancelRecipes(e: Event) {
+  cancelRecipes(e: MouseEvent) {
     this.recipeForm.reset();
     this.router.navigate(['/recipe', this.currentID]);
   }
@@ -91,5 +86,20 @@ export class EditComponent implements OnInit, OnDestroy {
 
   get ingredientsArr() {
     return this.recipeForm.get('ingredients') as FormArray;
+  }
+
+  selectImage(elem: HTMLInputElement) { elem.click(); }
+
+  changeInputImage(e: Event) {
+    const elem = (e.target as HTMLInputElement);
+    if(elem.files && elem.files[0]){
+      const image = elem.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(elem.files[0]);
+      reader.onload = (filesText: ProgressEvent<FileReader>) => {
+        this.imageRecipe = (filesText.currentTarget as FileReader).result
+      }
+    }
+
   }
 }

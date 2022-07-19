@@ -1,18 +1,12 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import { DtoRecipe } from "../dto/dto.recipe";
 import {Subject} from "rxjs";
+import {HttpService} from "./http.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecipeService {
-  // private recipe: DtoRecipe = {
-  //   name: 'My Recipe',
-  //   description: 'Description Recipe',
-  //   image:'https://static01.nyt.com/images/2021/03/28/dining/mc-shakshuka/mc-shakshuka-articleLarge.jpg',
-  //   ingredients: [{ name: 'ingredient-name', amount: 120 }]
-  // };
-  // recipe = new EventEmitter<DtoRecipe>();
   selectIndex: number | null = null;
   recipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
   editRecipe$: DtoRecipe = {} as DtoRecipe;
@@ -35,6 +29,10 @@ export class RecipeService {
     }
   ];
   recipesList = new Subject<DtoRecipe[]>();
+
+  constructor(
+    private httpService: HttpService
+  ) {}
 
   receiveRecipes(id: string){
     return this.recipes.find((recipe: DtoRecipe) => recipe.id === id);
@@ -74,11 +72,8 @@ export class RecipeService {
     return this.recipe;
   }
 
-
-  // constructor(name: string, description: string, image: string) {
-  //   this.name = name;
-  //   this.description = description;
-  //   this.image = image;
-  // }
-
+  getAllRecipe(query?: { take?: number, skip?: number, where?: string}) {
+    this.httpService.getAllRecipe(query).subscribe(( recipe: DtoRecipe[] ) => {
+    })
+  }
 }

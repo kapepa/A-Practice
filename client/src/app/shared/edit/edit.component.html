@@ -15,15 +15,19 @@
     >
 <!--    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>-->
   </div>
-  <div class="mb-3">
-    <label for="imageUrl" class="form-label">Image</label>
+  <div class="mb-3 edit__frame-picture">
+<!--    <label for="imageUrl" class="form-label">Image</label>-->
+    <button (click)="selectImage(imageInput)" type="button" class="btn btn-primary">Image</button>
     <input
-      formControlName="image"
+      #imageInput
       name="image"
-      type="text"
+      type="file"
       class="form-control"
       id="imageUrl"
+      (change)="changeInputImage($event)"
+      style="display: none"
     >
+    <img *ngIf="imageRecipe" [src]="imageRecipe" alt="image" #imageForm class="edit__image">
   </div>
   <div class="mb-3">
     <label for="description" class="form-label">Description</label>

@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
+import {DtoRecipe} from "../dto/dto.recipe";
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,19 @@ export class HttpService {
       console.error(`Backend returned code ${error.status}, body was: `, error.error);
     }
     return throwError(() => new Error('Something bad happened; please try again later.'));
+  }
+
+  getOneRecipe(id: string) {
+    return this.http.get(`${this.url}/api/recipe/${id}`).pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  getAllRecipe(query?: { take?: number, skip?: number, where?: string}) {
+    const compileQuery = query && !!Object.keys(query).length ? '' : '';
+    return this.http.get<DtoRecipe[]>(`${this.url}/api/recipe/${compileQuery}`).pipe(
+      catchError(this.handleError)
+    )
   }
 
 }
