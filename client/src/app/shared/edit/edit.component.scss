@@ -1,0 +1,12 @@
+.edit{
+  &__frame-picture{
+    display: flex;
+    column-gap: 5px;
+  }
+  &__image{
+    min-width: 45px;
+    width: 100%;
+    object-fit: contain;
+    max-height: 45px;
+  }
+}
