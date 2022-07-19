@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DtoRecipe } from "../../dto/dto.recipe";
-import { Router} from "@angular/router";
-import {Subject} from "rxjs";
+import { Router } from "@angular/router";
+import { Subject } from "rxjs";
+import { environment } from "../../../environments/environment";
 
 @Component({
   selector: 'app-recipe-item',
@@ -9,6 +10,7 @@ import {Subject} from "rxjs";
   styleUrls: ['./recipe-item.component.scss']
 })
 export class RecipeItemComponent implements OnInit {
+  url: string = environment.configUrl
   edit: boolean = false;
   @Input() editFlagSubject!: Subject<boolean>;
   @Input() recipe!: DtoRecipe;

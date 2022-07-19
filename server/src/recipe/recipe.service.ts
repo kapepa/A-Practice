@@ -24,7 +24,7 @@ export class RecipeService {
     const recipeDo = this.recipeRepository.create({...recipe, image, user})
     const ingredients = await this.createIngredients(recipe.ingredients, recipeDo)
 
-    await this.recipeRepository.save({...recipeDo, ingredients});
+    return await this.recipeRepository.save({...recipeDo, ingredients});
   }
 
   async createIngredients(ingredients: DtoIngredient[], recipe: any ) {

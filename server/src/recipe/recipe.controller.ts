@@ -29,8 +29,7 @@ export class RecipeController {
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async createRecipe(@Body() body, @UploadedFile() image: Express.Multer.File, @Req() req): Promise<RecipeDto |  NotImplementedException> {
     try {
-      await this.recipeService.createRecipe(JSON.parse(JSON.stringify(body)), image, req.user);
-      return {} as RecipeDto
+      return await this.recipeService.createRecipe(JSON.parse(JSON.stringify(body)), image, req.user);
     } catch (e) {
       return new NotImplementedException();
     }

@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
-import {DtoRecipe} from "../dto/dto.recipe";
+import { DtoRecipe } from "../dto/dto.recipe";
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +57,12 @@ export class HttpService {
   getAllRecipe(query?: { take?: number, skip?: number, where?: string}) {
     const compileQuery = query && !!Object.keys(query).length ? '' : '';
     return this.http.get<DtoRecipe[]>(`${this.url}/api/recipe/${compileQuery}`).pipe(
+      catchError(this.handleError)
+    )
+  }
+
+  createRecipe(data: FormData) {
+    return this.http.post<DtoRecipe>(`${this.url}/api/recipe/create`, data).pipe(
       catchError(this.handleError)
     )
   }
