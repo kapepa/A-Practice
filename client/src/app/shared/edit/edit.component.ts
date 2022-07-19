@@ -11,8 +11,9 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@ang
   styleUrls: ['./edit.component.scss']
 })
 export class EditComponent implements OnInit, OnDestroy {
-  @ViewChild('imageForm') imageForm!: ElementRef;
-  imageRecipe!: undefined | File | ArrayBuffer | string | null;
+  imageFile!: undefined | File | string | null;
+  imageRecipe!: undefined | ArrayBuffer | string | null;
+
   currentID: string | undefined;
   editMode: boolean = false;
   editRecipe: DtoRecipe = {} as DtoRecipe;
@@ -58,11 +59,23 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    if(this.recipeForm.value.id.trim()){
-      this.recipeService.updateRecipes( this.recipeForm.value );
+    const { name, description, ingredients } = this.recipeForm.value;
+    const form = new FormData();
+    if( !!name ) form.append('name', name);
+    if( this.imageFile ) form.append('image', this.imageFile);
+    if( !!description ) form.append('description', description);
+    if( !!ingredients ){
+      // form.append('ingredients', JSON.stringify(ingredients));
+      for (let i = 0; i < ingredients.length; i++) {
+        form.append('ingredients['+ i +'][name]', ingredients[i]['name']);
+        form.append('ingredients['+ i +'][amount]', ingredients[i]['amount']);
+      }
+    }
+
+    if(this.recipeForm.value.id){
+      this.recipeService.updateRecipes( form );
     } else {
-      const id = Date.now().toString();
-      this.recipeService.newRecipes({ id, ...this.recipeForm.value });
+      this.recipeService.newRecipes( form );
     }
     this.recipeForm.reset();
   }
@@ -93,11 +106,11 @@ export class EditComponent implements OnInit, OnDestroy {
   changeInputImage(e: Event) {
     const elem = (e.target as HTMLInputElement);
     if(elem.files && elem.files[0]){
-      const image = elem.files[0];
+      this.imageFile = elem.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(elem.files[0]);
       reader.onload = (filesText: ProgressEvent<FileReader>) => {
-        this.imageRecipe = (filesText.currentTarget as FileReader).result
+        this.imageRecipe = (filesText.currentTarget as FileReader).result;
       }
     }
 

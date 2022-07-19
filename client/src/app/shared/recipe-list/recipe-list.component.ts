@@ -25,20 +25,20 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.recipeService.getAllRecipe();
-    // this.recipes = this.recipeService.getRecipesAll;
-    // this.recipesSub = this.recipeService.recipesList.subscribe((recipes: DtoRecipe[]) => {
-    //   this.recipes = recipes;
-    // })
-    // this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationEnd) {
-    //     const { urlAfterRedirects } = event;
-    //     const edit = urlAfterRedirects.split('/').pop() === 'edit';
-    //     if ( this.editFlag !== edit ) {
-    //       this.editFlag = ! this.editFlag;
-    //       this.editFlagSubject.next(this.editFlag)
-    //     }
-    //   };
-    // })
+    this.recipes = this.recipeService.getRecipesAll;
+    this.recipesSub = this.recipeService.recipesList.subscribe((recipes: DtoRecipe[]) => {
+      this.recipes = recipes;
+    })
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const { urlAfterRedirects } = event;
+        const edit = urlAfterRedirects.split('/').pop() === 'edit';
+        if ( this.editFlag !== edit ) {
+          this.editFlag = ! this.editFlag;
+          this.editFlagSubject.next(this.editFlag)
+        }
+      };
+    })
   }
 
   ngOnDestroy() {
