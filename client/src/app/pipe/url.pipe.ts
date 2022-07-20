@@ -1,16 +1,15 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Router } from "@angular/router";
+import { environment } from "../../environments/environment";
 
 @Pipe({
   name: 'url'
 })
 export class UrlPipe implements PipeTransform {
+  url = environment.configUrl;
 
-  constructor(private router: Router) {}
-
-  transform(value: unknown, ...args: unknown[]): unknown {
-    console.log(this.router.url)
-    return null;
+  transform(value: string | undefined | ArrayBuffer ): string | ArrayBuffer {
+    if(!value) return '';
+    const image = typeof value === 'string' && /^data:image\.*/.test(value);
+    return image ? value : `${this.url}/${value}`;
   }
-
 };
