@@ -1,6 +1,6 @@
 <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
   <div style="display: flex; column-gap: 10px; margin-bottom: 10px">
-    <button type="submit" class="btn btn-success">Save</button>
+    <button type="submit" class="btn btn-success" [disabled]="!recipeForm.valid">Save</button>
     <button type="button" class="btn btn-danger" (click)="cancelRecipes($event)">Cancel</button>
   </div>
   <div class="mb-3">
@@ -27,7 +27,7 @@
       (change)="changeInputImage($event)"
       style="display: none"
     >
-    <img *ngIf="imageRecipe" [src]="imageRecipe" alt="image" #imageForm class="edit__image">
+    <img *ngIf="imageRecipe" [src]="imageRecipe | url" alt="image" #imageForm class="edit__image">
   </div>
   <div class="mb-3">
     <label for="description" class="form-label">Description</label>

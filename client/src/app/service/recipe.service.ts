@@ -2,6 +2,7 @@ import {EventEmitter, Injectable} from '@angular/core';
 import { DtoRecipe } from "../dto/dto.recipe";
 import {Subject} from "rxjs";
 import {HttpService} from "./http.service";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class RecipeService {
   recipesList = new Subject<DtoRecipe[]>();
 
   constructor(
-    private httpService: HttpService
+    private httpService: HttpService,
+    private router: Router,
   ) {}
 
   receiveRecipes(id: string){
@@ -24,15 +26,21 @@ export class RecipeService {
   }
 
   updateRecipes(recipes: FormData) {
-    // this.recipes.splice( Number(this.editRecipe$),1, recipes);
-    // this.recipesList.next(this.recipes);
+    this.httpService.updateRecipe(recipes).subscribe(() => {
+      console.log(recipes)
+
+      // console.log(this.selectIndex)
+      // this.recipes.splice( Number(this.editRecipe$),1, recipes);
+      // this.recipesList.next(this.recipes);
+      // this.router.navigate([ '/recipe', '' ])
+    })
   }
 
-  setEdit(index: number) {
-    const recipe: DtoRecipe = this.recipes[index];
-    this.selectIndex = index;
-    this.editRecipe$ = recipe;
-    this.editRecipe.next(recipe);
+  setEdit(id: string) {
+    this.httpService.getOneRecipe(id).subscribe((recipe: DtoRecipe) => {
+      this.editRecipe$ = recipe;
+      this.editRecipe.next(recipe);
+    })
   }
 
   newRecipes(data: FormData) {

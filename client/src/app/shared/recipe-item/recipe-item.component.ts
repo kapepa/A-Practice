@@ -10,13 +10,12 @@ import { environment } from "../../../environments/environment";
   styleUrls: ['./recipe-item.component.scss']
 })
 export class RecipeItemComponent implements OnInit {
-  url: string = environment.configUrl
   edit: boolean = false;
   @Input() editFlagSubject!: Subject<boolean>;
   @Input() recipe!: DtoRecipe;
   @Input() index!: number;
   @Output() recipeSelected = new EventEmitter<DtoRecipe>()
-  @Output() addEdit = new EventEmitter<number>()
+  @Output() addEdit = new EventEmitter<string>()
 
   constructor(
     private router: Router,
@@ -29,7 +28,7 @@ export class RecipeItemComponent implements OnInit {
   }
 
   selectEdit(){
-    this.addEdit.emit(this.index)
+    this.addEdit.emit(this.recipe.id)
   }
 
   selectClick () {

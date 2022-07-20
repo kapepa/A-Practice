@@ -49,7 +49,7 @@ export class HttpService {
   }
 
   getOneRecipe(id: string) {
-    return this.http.get(`${this.url}/api/recipe/${id}`).pipe(
+    return this.http.get<DtoRecipe>(`${this.url}/api/recipe/${id}`).pipe(
       catchError(this.handleError)
     )
   }
@@ -64,6 +64,12 @@ export class HttpService {
   createRecipe(data: FormData) {
     return this.http.post<DtoRecipe>(`${this.url}/api/recipe/create`, data).pipe(
       catchError(this.handleError)
+    )
+  }
+
+  updateRecipe(data: FormData) {
+    return this.http.patch<DtoRecipe>(`${this.url}/api/recipe/update`, data).pipe(
+      catchError(throwError)
     )
   }
 

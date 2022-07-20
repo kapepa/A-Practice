@@ -36,7 +36,10 @@ export class RecipeService {
     return await this.ingredientsRepository.save(listIngredients);
   }
 
-  async updateRecipe( recipe: RecipeDto, user: UserDto ): Promise<RecipeDto> {
+  async updateRecipe( recipe: RecipeDto, imageFile: Express.Multer.File, user: UserDto ): Promise<RecipeDto> {
+    //need update recipe and replace image, delete old image!
+
+
     const currentRecipe = await this.findOne('id', recipe.id, { relations: ['user'] } )
     if (currentRecipe.user.id !== user.id) throw new ConflictException();
 

@@ -1,7 +1,7 @@
 <div *ngIf="recipeSelect?.name; else elseRecipe">
   <div class="row">
     <div class="col-lg-12">
-          <img src="{{ recipeSelect?.image }}" alt="{{ recipeSelect?.name }}" class="img-thumbnail" style="height: 300px">
+      <img [src]="recipeSelect?.image | url"  alt="{{ recipeSelect?.name }}" class="img-thumbnail" style="height: 300px">
     </div>
   </div>
   <div class="row">

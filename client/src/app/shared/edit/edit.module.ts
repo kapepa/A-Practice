@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EditComponent } from './edit.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { PipeModule } from "../../pipe/pipe.module";
 
 
 
@@ -13,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    PipeModule,
   ],
   exports: [
     EditComponent,
