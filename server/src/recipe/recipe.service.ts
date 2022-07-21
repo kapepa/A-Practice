@@ -37,13 +37,16 @@ export class RecipeService {
   }
 
   async updateRecipe( recipe: RecipeDto, imageFile: Express.Multer.File, user: UserDto ): Promise<RecipeDto> {
-    //need update recipe and replace image, delete old image!
+    const currentRecipe = await this.findOne('id', recipe.id, { relations: ['user'] } );
+    const updateRecipe = {...currentRecipe, ...recipe};
 
-
-    const currentRecipe = await this.findOne('id', recipe.id, { relations: ['user'] } )
     if (currentRecipe.user.id !== user.id) throw new ConflictException();
+    if( !!imageFile ) {
+      await this.fileService.deleteFile(currentRecipe.image);
+      updateRecipe.image = await this.fileService.writeFile(imageFile)
+    }
 
-    return await this.recipeRepository.save({...currentRecipe, ...recipe})
+    return await this.recipeRepository.save(updateRecipe)
   }
 
   async updateIngredient( recipe: RecipeDto, user: UserDto ): Promise<DtoIngredient> {
@@ -53,8 +56,12 @@ export class RecipeService {
     return await this.ingredientsRepository.save({...currentRecipe, ...recipe})
   }
 
-  async allRecipe(query: { take?: number, skip?: number, where?: string }): Promise<RecipeDto[]> {
-    const options = { take: query.take ? Number(query.take) : 5, skip: query.skip ? Number(query.skip) : 0, };
+  async allRecipe(query: { take?: number, skip?: number, where?: string, order?: 'DESC' | 'ASC' }): Promise<RecipeDto[]> {
+    const options = {
+      take: query.take ? Number(query.take) : 5,
+      skip: query.skip ? Number(query.skip) : 0,
+      order: { created_at: "DESC" }
+    };
     const where = !!query.where ? { where: { name: query.where } } : {}
     return await this.recipeRepository.find({ ...where, ...options as {}, relations: ['ingredients'] });
   }

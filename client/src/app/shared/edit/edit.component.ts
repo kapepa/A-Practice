@@ -34,9 +34,9 @@ export class EditComponent implements OnInit, OnDestroy {
         const recipe = this.recipeService.receiveRecipes(params['id'])
         this.recipeForm = this.fb.group({
           id: [recipe?.id, Validators.required],
-          name: [recipe?.name, Validators.required],
+          name: [recipe?.name, Validators.required, Validators.minLength(3)],
           // image: recipe?.image,
-          description: [recipe?.description, Validators.required],
+          description: [recipe?.description, Validators.required, Validators.minLength(3)],
           ingredients: this.fb.array(recipe?.ingredients ? recipe.ingredients.map((ingredient: DtoIngredient) => {
             return this.fb.group(ingredient);
           }) : [])
@@ -59,8 +59,9 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const { name, description, ingredients } = this.recipeForm.value;
+    const { id, name, description, ingredients } = this.recipeForm.value;
     const form = new FormData();
+    if( !!id ) form.append('id', id);
     if( !!name ) form.append('name', name);
     if( this.imageFile ) form.append('image', this.imageFile);
     if( !!description ) form.append('description', description);
@@ -121,6 +122,13 @@ export class EditComponent implements OnInit, OnDestroy {
         this.imageRecipe = (filesText.currentTarget as FileReader).result;
       }
     }
+  }
 
+  get name () {
+    return this.recipeForm.get('name')
+  }
+
+  get description() {
+    return this.recipeForm.get('description');
   }
 }

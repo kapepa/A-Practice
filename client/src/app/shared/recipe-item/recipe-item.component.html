@@ -1,12 +1,6 @@
 <div
   class="list-group"
 >
-<!--  <a-->
-<!--    [routerLink]="['../']"-->
-<!--    [queryParams]="{select: recipe.name}"-->
-<!--    class="list-group-item list-group-item-action recipe-list__link"-->
-<!--    (click)="selectClick()"-->
-<!--  >-->
   <a
     (click)="selectEdit()"
     [routerLink]="edit ? ['/recipe', recipe.id, 'edit'] : ['/recipe', recipe.id]"
@@ -20,7 +14,6 @@
       <p class="mb-1">{{ recipe.description }}</p>
     </div>
     <div class="recipe-list__image">
-<!--      <img [src]="url + '/' + recipe.image" alt="image" class="img-thumbnail" style="height: 50px">-->
       <img [src]="recipe.image | url" alt="image" class="img-thumbnail" style="height: 50px">
     </div>
   </a>

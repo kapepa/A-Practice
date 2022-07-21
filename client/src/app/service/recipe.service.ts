@@ -1,8 +1,9 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { DtoRecipe } from "../dto/dto.recipe";
-import {Subject} from "rxjs";
-import {HttpService} from "./http.service";
-import {Router} from "@angular/router";
+import { Subject } from "rxjs";
+import { HttpService } from "./http.service";
+import { Router } from "@angular/router";
+import { DtoQuery } from "../dto/dto.query";
 
 @Injectable({
   providedIn: 'root'
@@ -26,13 +27,10 @@ export class RecipeService {
   }
 
   updateRecipes(recipes: FormData) {
-    this.httpService.updateRecipe(recipes).subscribe(() => {
-      console.log(recipes)
-
-      // console.log(this.selectIndex)
-      // this.recipes.splice( Number(this.editRecipe$),1, recipes);
-      // this.recipesList.next(this.recipes);
-      // this.router.navigate([ '/recipe', '' ])
+    this.httpService.updateRecipe(recipes).subscribe((recipes: DtoRecipe) => {
+      this.recipes.splice( Number(this.editRecipe$),1, recipes);
+      this.recipesList.next(this.recipes);
+      this.router.navigate([ '/recipe', recipes.id ])
     })
   }
 
@@ -41,6 +39,10 @@ export class RecipeService {
       this.editRecipe$ = recipe;
       this.editRecipe.next(recipe);
     })
+  }
+
+  setIndex(index: number | null) {
+    this.selectIndex = index;
   }
 
   newRecipes(data: FormData) {
@@ -67,7 +69,7 @@ export class RecipeService {
     return this.recipe;
   }
 
-  getAllRecipe(query?: { take?: number, skip?: number, where?: string}) {
+  getAllRecipe(query?: DtoQuery) {
     this.httpService.getAllRecipe(query).subscribe(( recipe: DtoRecipe[] ) => {
       this.recipes = recipe;
       this.recipesList.next(this.recipes);

@@ -29,7 +29,7 @@ export class Recipe {
   @JoinTable({ name: 'recipe_ingredients' })
   ingredients: Ingredients[];
 
-  @CreateDateColumn({ select: false })
+  @CreateDateColumn({ select: true })
   @IsDate()
   created_at: Date;
 }
