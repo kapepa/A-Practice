@@ -20,6 +20,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { PipeModule } from "./pipe/pipe.module";
 import { AuthInterceptorProviders } from "./interceptor/auth.interceptor";
 import { CookieService } from 'ngx-cookie-service';
+import { ErrorModule } from "./popup/error/error.module";
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { CookieService } from 'ngx-cookie-service';
     FormsModule,
     HttpClientModule,
     PipeModule,
+    ErrorModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

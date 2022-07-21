@@ -9,6 +9,7 @@ import { RecipeDetailComponent } from "../../shared/recipe-detail/recipe-detail.
 import { EditComponent } from "../../shared/edit/edit.component";
 import { EditModule } from "../../shared/edit/edit.module";
 import { AccessEditGuard } from "../../guard/access-edit.guard";
+import { ErrorModule } from "../../popup/error/error.module";
 
 const routes: Routes = [
   { path: 'recipe', component: HomeComponent, children:
@@ -32,6 +33,7 @@ const routes: Routes = [
     CommonModule,
     HomeModule,
     EditModule,
+    ErrorModule,
   ],
   exports: [
     LayoutDefComponent,

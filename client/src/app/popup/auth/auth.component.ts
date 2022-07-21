@@ -52,9 +52,11 @@ export class AuthComponent implements OnInit {
     if( !!password ) form.append('password', password);
     if( !!this.avatar ) form.append('avatar', this.avatar);
 
-    this.httpService.createUser(form).subscribe(() => {
-      this.router.navigate([], { queryParams: { login: 'login' } })
-      this.profileReset();
+    this.httpService.createUser(form).subscribe((data) => {
+      if( data.create ) {
+        this.router.navigate([], { queryParams: { login: 'login' } })
+        this.profileReset();
+      }
     })
   }
 

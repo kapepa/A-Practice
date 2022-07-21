@@ -5,7 +5,7 @@ import { RouterModule } from "@angular/router";
 import { DirectiveModule } from "../../directive/directive.module";
 import { AuthModule } from "../../popup/auth/auth.module";
 import { PipeModule } from "../../pipe/pipe.module";
-
+import { ErrorModule } from "../../popup/error/error.module";
 
 
 @NgModule({
@@ -18,6 +18,7 @@ import { PipeModule } from "../../pipe/pipe.module";
     DirectiveModule,
     AuthModule,
     PipeModule,
+    ErrorModule,
   ],
   exports: [
     HeaderComponent

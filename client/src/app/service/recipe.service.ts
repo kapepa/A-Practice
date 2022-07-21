@@ -54,10 +54,15 @@ export class RecipeService {
 
   deleteRecipes() {
     if(this.selectIndex !== null) {
-      this.recipes.splice(this.selectIndex,1);
-      this.selectIndex = null;
-      this.recipesList.next(this.recipes);
-      this.editRecipe$ = {} as DtoRecipe;
+      const id = this.recipes[this.selectIndex].id;
+      this.httpService.deleteRecipe(id).subscribe(() => {
+        if(this.selectIndex !== null){
+          this.recipes.splice(this.selectIndex,1);
+          this.selectIndex = null;
+          this.recipesList.next(this.recipes);
+          this.editRecipe$ = {} as DtoRecipe;
+        }
+      })
     }
   }
 

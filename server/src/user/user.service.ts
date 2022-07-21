@@ -1,4 +1,4 @@
-import {Injectable, NotImplementedException, UnauthorizedException} from '@nestjs/common';
+import {ConflictException, Injectable} from '@nestjs/common';
 import { UserDto } from "../dto/user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
@@ -23,7 +23,8 @@ export class UserService {
 
   async createUser(user: UserDto, avatar: Express.Multer.File): Promise<boolean> {
     const existUser = await this.findOne('email', user.email);
-    if(!!existUser) throw new UnauthorizedException()
+
+    if(!!existUser) throw new ConflictException()
 
     const avatarUrl = !!avatar ? await this.fileService.writeFile(avatar) : '';
     const password = await this.authService.bcryptHash(user.password);
