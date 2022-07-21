@@ -24,7 +24,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.recipeService.getAllRecipe();
+    this.recipeService.getAllRecipe({take: 5, skip: 0});
     this.recipes = this.recipeService.getRecipesAll;
     this.recipesSub = this.recipeService.recipesList.subscribe((recipes: DtoRecipe[]) => {
       this.recipes = recipes;
@@ -50,11 +50,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   newRouter() {
-    // this.router.navigate(['/recipe','new'])
     this.router.navigate(['new'], {relativeTo: this.route});
   }
 
-  addEdit (id: string) {
-    this.recipeService.setEdit(id);
+  addEdit (data: {id: string, index: number | null}) {
+    this.recipeService.setIndex(data.index);
+    this.recipeService.setEdit(data.id);
   }
 };

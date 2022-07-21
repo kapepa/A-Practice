@@ -15,7 +15,7 @@ export class RecipeItemComponent implements OnInit {
   @Input() recipe!: DtoRecipe;
   @Input() index!: number;
   @Output() recipeSelected = new EventEmitter<DtoRecipe>()
-  @Output() addEdit = new EventEmitter<string>()
+  @Output() addEdit = new EventEmitter<{id: string, index: number}>()
 
   constructor(
     private router: Router,
@@ -28,11 +28,6 @@ export class RecipeItemComponent implements OnInit {
   }
 
   selectEdit(){
-    this.addEdit.emit(this.recipe.id)
+    this.addEdit.emit({id: this.recipe.id, index: this.index})
   }
-
-  selectClick () {
-    this.recipeSelected.emit(this.recipe);
-  }
-
 }
