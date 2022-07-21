@@ -84,7 +84,7 @@ export class RecipeService {
     const recipe = await this.findOne('id', id, { relations: ['user'] } );
     if( recipe.user.id !== userID ) throw new ForbiddenException();
 
-    return !! await this.recipeRepository.delete(recipe);
+    return !! await this.recipeRepository.delete({id});
   }
 
   async deleteIngredient(id: string, userID: string): Promise<boolean> {

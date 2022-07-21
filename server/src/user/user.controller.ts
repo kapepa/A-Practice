@@ -25,10 +25,10 @@ export class UserController {
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiResponse({ status: 201, description: 'Profile created successfully', type: UserDto })
   @ApiResponse({ status: 501, description: 'Not Implemented'})
-  async createUser(@UploadedFile() avatar: Express.Multer.File, @Body() body: UserDto): Promise<boolean |  NotImplementedException> {
+  async createUser(@UploadedFile() avatar: Express.Multer.File, @Body() body: UserDto): Promise<{create: boolean} |  NotImplementedException> {
     try {
       const user = JSON.parse(JSON.stringify(body));
-      return await this.userService.createUser(user, avatar);
+      return { create: await this.userService.createUser(user, avatar) }
     } catch (e) {
       return !!e ? e : new NotImplementedException();
     }

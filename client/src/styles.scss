@@ -89,5 +89,31 @@ h1,h2,h3,h4,h5,h6{
     align-items: center;
     justify-content: center;
   }
+  &__frame{
+    display: flex;
+    flex-direction: column;
+  }
+  &__header{
+    padding: 10px 0 ;
+  }
+  &__middle{
+
+  }
+  &__footer{
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+  }
+  &__h{
+    font-size: 25px;
+    font-weight: bold;
+    color: indianred;
+    text-align: center;
+  }
+  &__span{
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+  }
 }
 

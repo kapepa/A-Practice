@@ -74,9 +74,9 @@ export class RecipeController {
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Recipe delete successfully', type: RecipeDto })
   @ApiResponse({ status: 501, description: 'Not Implemented'})
-  async deleteRecipe(@Param() param, @Req() req) {
+  async deleteRecipe(@Param() param, @Req() req): Promise<{ delete: boolean }> {
     try {
-      return await this.recipeService.deleteRecipe(param.id, req.user.id);
+      return { delete: await this.recipeService.deleteRecipe(param.id, req.user.id) };
     } catch (e) {
       return !!e ? e : new NotFoundException();
     }

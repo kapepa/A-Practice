@@ -1,0 +1,16 @@
+<div *ngIf="isError.open" class="popup__zone" (click)="closePopUp($event)">
+  <div class="popup">
+    <div class="popup__x-close"></div>
+    <div class="popup__frame">
+      <div class="popup__header">
+        <h5 class="popup__h">{{isError.title}}</h5>
+      </div>
+      <div class="popup__middle">
+        <span class="popup__span">{{isError.desc}}</span>
+      </div>
+      <div class="popup__footer">
+        <button (click)="closePopUp($event)" type="button" class="btn btn-primary">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
