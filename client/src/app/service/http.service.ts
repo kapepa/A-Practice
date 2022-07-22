@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
-import { DtoRecipe } from "../dto/dto.recipe";
+import {DtoIngredient, DtoRecipe} from "../dto/dto.recipe";
 import { DtoQuery } from "../dto/dto.query";
 import { ErrorService } from "./error.service";
 import { DtoErrorResponse } from "../dto/dto.common";
@@ -58,7 +58,7 @@ export class HttpService {
     return this.http.post<{access_token: string} & DtoErrorResponse>(`${this.url}/api/auth/login`,data).pipe(
       tap({
         next: (data) => {
-          if(data.access_token) this.setToken(data.access_token)
+          if(data.access_token) this.setToken(data.access_token);
           if(data.response) this.clientError(data.response)
         },
         error: (error) => this.clientError(error),
@@ -75,9 +75,12 @@ export class HttpService {
   }
 
   getOneRecipe(id: string): Observable<DtoRecipe & DtoErrorResponse> {
-    return this.http.get<DtoRecipe & DtoErrorResponse>(`${this.url}/api/recipe/${id}`).pipe(
+    return this.http.get<DtoRecipe & DtoErrorResponse>(`${this.url}/api/recipe/one/${id}`).pipe(
       tap({
-        next: (data) => { if(data.response) this.clientError(data.response) },
+        next: (data) => {
+          if(data.response) this.clientError(data.response);
+          return data
+        },
         error: (error) => this.clientError(error)
       }),
       catchError(this.handleError)
@@ -86,7 +89,7 @@ export class HttpService {
 
   getAllRecipe(query?: DtoQuery): Observable<DtoRecipe[]> {
     const compileQuery = query && !!Object.keys(query).length ? this.createQuery(query) : '';
-    return this.http.get<DtoRecipe[] & DtoErrorResponse>(`${this.url}/api/recipe/${compileQuery}`).pipe(
+    return this.http.get<DtoRecipe[] & DtoErrorResponse>(`${this.url}/api/recipe${compileQuery}`).pipe(
       tap({
         error: (error) => this.clientError(error)
       }),
@@ -122,5 +125,15 @@ export class HttpService {
       }),
       catchError(this.handleError)
     );
+  }
+
+  getAllIngredient(query?: DtoQuery): Observable<DtoIngredient[] & DtoErrorResponse> {
+    const compileQuery = query && !!Object.keys(query).length ? this.createQuery(query) : '';
+    return this.http.get<DtoIngredient[] & DtoErrorResponse>(`${this.url}/api/recipe/ingredients${compileQuery}`).pipe(
+      tap({
+        error: (error) => this.clientError(error)
+      }),
+      catchError(this.handleError)
+    )
   }
 }

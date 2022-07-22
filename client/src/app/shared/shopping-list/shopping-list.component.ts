@@ -9,29 +9,35 @@ import {Subscription} from "rxjs";
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.scss']
 })
-export class ShoppingListComponent implements OnInit, OnDestroy {
+export class ShoppingListComponent implements OnInit {
   ingredients: DtoIngredient[] = [] as DtoIngredient[];
   private ngIngredient!: Subscription;
 
   constructor(
     private recipeService: RecipeService,
     private shoppingService: ShoppingService
-  ) { }
+  ) {
+    this.shoppingService.ingredient.subscribe((ingredients: DtoIngredient[]) => {
+      this.ingredients = ingredients;
+    })
+  }
 
   ngOnInit(): void {
-    this.ingredients = this.shoppingService.ingredientList;
-    this.ngIngredient = this.shoppingService.ingredient.subscribe((ingredient: DtoIngredient[]) => {
-      this.ingredients = ingredient;
-    })
+    this.shoppingService.getAllIngredient();
+
+    // this.ingredients = this.shoppingService.ingredientList;
+    // this.ngIngredient = this.shoppingService.ingredient.subscribe((ingredient: DtoIngredient[]) => {
+    //   this.ingredients = ingredient;
+    // })
     // this.recipeService.recipe.subscribe((recipe: DtoRecipe) => {
     //   const ingredients = recipe.ingredients
     //   if( !!ingredients ) this.ingredients = ingredients;
     // })
   }
 
-  ngOnDestroy() {
-    this.ngIngredient.unsubscribe();
-  }
+  // ngOnDestroy() {
+  //   this.ngIngredient.unsubscribe();
+  // }
 
 
   addIngredient(ingredient: DtoIngredient) {
