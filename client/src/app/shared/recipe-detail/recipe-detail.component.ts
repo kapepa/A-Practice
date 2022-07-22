@@ -11,8 +11,6 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
   styleUrls: ['./recipe-detail.component.scss']
 })
 export class RecipeDetailComponent implements OnInit {
-  // recipe: DtoRecipe = {} as DtoRecipe;
-  // @Input() recipeSelect!: DtoRecipe;
   recipeSelect!: DtoRecipe | undefined;
 
   constructor(
@@ -23,9 +21,6 @@ export class RecipeDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.recipeService.recipe.subscribe((recipe: DtoRecipe) => {
-    //   this.recipe = recipe;
-    // })
     this.route.params.subscribe(params => {
       this.recipeSelect = this.recipeService.receiveRecipes(params['id'])
     })

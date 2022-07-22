@@ -1,20 +1,29 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { DtoIngredient } from "../dto/dto.recipe";
 import {Subject} from "rxjs";
+import {HttpService} from "./http.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingService {
-  ingredientList: DtoIngredient[] = [
-    { name: 'ingredient-name', amount: 120 },
-    { name: 'ingredient-alias', amount: 100 },
-  ]
-  // ingredient: EventEmitter<DtoIngredient[]> = new EventEmitter<DtoIngredient[]>()
+  ingredientList: DtoIngredient[] = []
   ingredient: Subject<DtoIngredient[]> = new Subject<DtoIngredient[]>();
+
   editIngredient: Subject<DtoIngredient> = new Subject<DtoIngredient>();
   editIndex: Subject<number | null> = new Subject<number | null>();
   private editIndex$: number | null = null
+
+  constructor(
+    private httpService: HttpService
+  ) {}
+
+  getAllIngredient(take = 5, skip = 0) {
+    this.httpService.getAllIngredient({ take, skip }).subscribe((ingredients: DtoIngredient[]) => {
+      this.ingredientList.push(...ingredients);
+      this.ingredient.next(this.ingredientList);
+    })
+  }
 
   append(ingredient: DtoIngredient) {
     if(this.editIndex$ === null){

@@ -36,6 +36,10 @@ export class RecipeService {
     return await this.ingredientsRepository.save(listIngredients);
   }
 
+  async createIngredient(ingredients: DtoIngredient): Promise<DtoIngredient> {
+    return await this.ingredientsRepository.save(this.ingredientsRepository.create(ingredients));
+  }
+
   async updateRecipe( recipe: RecipeDto, imageFile: Express.Multer.File, user: UserDto ): Promise<RecipeDto> {
     const currentRecipe = await this.findOne('id', recipe.id, { relations: ['user'] } );
     const updateRecipe = {...currentRecipe, ...recipe};
@@ -66,8 +70,12 @@ export class RecipeService {
     return await this.recipeRepository.find({ ...where, ...options as {}, relations: ['ingredients'] });
   }
 
-  async allIngredient(query:  { take?: number, skip?: number, where?: string }): Promise<DtoIngredient[]> {
-    const options = { take: query.take ? Number(query.take) : 5, skip: query.skip ? Number(query.skip) : 0, };
+  async allIngredient(query:  { take?: number, skip?: number, where?: string, order?: 'DESC' | 'ASC' }): Promise<DtoIngredient[]> {
+    const options = {
+      take: query.take ? Number(query.take) : 5,
+      skip: query.skip ? Number(query.skip) : 0,
+      order: { created_at: "DESC" }
+    };
     const where = !!query.where ? { where: { name: query.where } } : {}
     return await this.ingredientsRepository.find({ ...where, ...options as {} });
   }

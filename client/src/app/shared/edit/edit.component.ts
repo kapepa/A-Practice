@@ -33,10 +33,10 @@ export class EditComponent implements OnInit, OnDestroy {
         this.currentID = params['id']
         const recipe = this.recipeService.receiveRecipes(params['id'])
         this.recipeForm = this.fb.group({
-          id: [recipe?.id, Validators.required],
-          name: [recipe?.name, Validators.required, Validators.minLength(3)],
+          id: [recipe?.id],
+          name: [recipe?.name, [Validators.required, Validators.minLength(3)]],
           // image: recipe?.image,
-          description: [recipe?.description, Validators.required, Validators.minLength(3)],
+          description: [recipe?.description, [ Validators.required, Validators.minLength(3)]],
           ingredients: this.fb.array(recipe?.ingredients ? recipe.ingredients.map((ingredient: DtoIngredient) => {
             return this.fb.group(ingredient);
           }) : [])
@@ -45,10 +45,11 @@ export class EditComponent implements OnInit, OnDestroy {
       } else {
         this.recipeForm = this.fb.group({
           id: [''],
-          name: ['', Validators.required],
+          name: ['', [Validators.required, Validators.minLength(3 )]],
           // image: ['', Validators.required],
-          description: ['', Validators.required],
-          ingredients: this.fb.array([this.fb.group({ name: '', amount: 0})] )
+          description: ['', [Validators.required,  Validators.minLength(3)]],
+          ingredients: this.fb.array([] )
+          // ingredients: this.fb.array([this.fb.group({ name: '', amount: 0})] )
         });
       }
     })
@@ -86,6 +87,7 @@ export class EditComponent implements OnInit, OnDestroy {
   resetForm() {
     this.imageFile = undefined;
     this.imageRecipe = undefined;
+    this.deleteRecipeAll();
     this.recipeForm.reset();
   }
 
@@ -100,6 +102,10 @@ export class EditComponent implements OnInit, OnDestroy {
 
   deleteRecipe(i: number) {
     this.ingredientsArr.removeAt(i);
+  }
+
+  deleteRecipeAll() {
+    this.ingredientsArr.clear()
   }
 
   receiveIngredient(i: number, key: string) {

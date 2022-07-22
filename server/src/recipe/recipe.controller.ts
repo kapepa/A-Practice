@@ -1,7 +1,7 @@
 import {
   Body,
   Controller, Delete,
-  Get,
+  Get, NotAcceptableException,
   NotFoundException,
   NotImplementedException, Param, Patch,
   Post, Query,
@@ -35,7 +35,7 @@ export class RecipeController {
     }
   }
 
-  @Get('/:id')
+  @Get('/one/:id')
   @ApiResponse({ status: 200, description: 'Get one Recipe', type: RecipeDto })
   @ApiResponse({ status: 404, description: 'Not found'})
   async getOneRecipe(@Param() param): Promise<RecipeDto | NotFoundException> {
@@ -83,13 +83,25 @@ export class RecipeController {
   }
 
   @Get('/ingredients')
-  @ApiResponse({ status: 200, description: 'Recipe created successfully', type: RecipeDto })
+  @ApiResponse({ status: 200, description: 'Recipe created successfully', type: DtoIngredient })
   @ApiResponse({ status: 404, description: 'Not found'})
   async getAllIngredients(@Query() query): Promise<DtoIngredient[] | NotFoundException> {
     try {
-      return this.recipeService.allIngredient({...query, take: Number(query.take), skip: Number(query.skip)});
+      return this.recipeService.allIngredient(query);
     } catch (e) {
       return !!e ? e : new NotFoundException();
+    }
+  }
+
+  @Post('/ingredients/create')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 201, description: 'Ingredient created successfully', type: RecipeDto })
+  @ApiResponse({ status: 501, description: 'Not Implemented'})
+  async createIngredient(@Body() body): Promise<DtoIngredient> {
+    try {
+      return await this.recipeService.createIngredient(body);
+    } catch (e) {
+      return !!e ? e : new NotAcceptableException();
     }
   }
 
