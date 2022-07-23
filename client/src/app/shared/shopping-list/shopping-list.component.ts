@@ -33,5 +33,5 @@ export class ShoppingListComponent implements OnInit {
 
   editIngredient(index: number) {
     this.shoppingService.selectEdit(index)
-  };
+  }
 }
