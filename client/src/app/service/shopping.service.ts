@@ -33,6 +33,13 @@ export class ShoppingService {
     })
   }
 
+  updateIngredient(data: FormData, cd: () => void) {
+    this.httpService.updateIngredient(data).subscribe((ingredient: DtoIngredient) => {
+      console.log(this.editIndex$)
+      cd()
+    })
+  }
+
   append(ingredient: DtoIngredient) {
     if(this.editIndex$ === null){
       this.ingredientList.push(ingredient)
