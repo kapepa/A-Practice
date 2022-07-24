@@ -25,6 +25,14 @@ export class ShoppingService {
     })
   }
 
+  createIngredient(data: FormData, cd: () => void) {
+    this.httpService.createIngredient(data).subscribe((ingredient: DtoIngredient) => {
+      this.ingredientList.push(ingredient);
+      this.ingredient.next(this.ingredientList);
+      cd();
+    })
+  }
+
   append(ingredient: DtoIngredient) {
     if(this.editIndex$ === null){
       this.ingredientList.push(ingredient)

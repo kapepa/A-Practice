@@ -13,8 +13,7 @@
       id="name"
       aria-describedby="emailHelp"
     >
-    <div *ngIf="name?.invalid && (name?.dirty || name?.touched)"
-         class="alert-danger">
+    <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="alert-danger">
       <div *ngIf="name?.errors?.['required']">
         Name is required.
       </div>
@@ -46,8 +45,7 @@
       id="description"
       rows="3"
     ></textarea>
-    <div *ngIf="description?.invalid && (description?.dirty || description?.touched)"
-         class="alert-danger">
+    <div *ngIf="description?.invalid && (description?.dirty || description?.touched)" class="alert-danger">
       <div *ngIf="description?.errors?.['required']">
         Name is required.
       </div>

@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { DtoIngredient } from "../../dto/dto.recipe";
-import { FormControl, FormGroup, NgForm } from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import { ShoppingService } from "../../service/shopping.service";
 
 @Component({
@@ -9,10 +9,7 @@ import { ShoppingService } from "../../service/shopping.service";
   styleUrls: ['./shopping-edit.component.scss']
 })
 export class ShoppingEditComponent implements OnInit {
-  @ViewChild("shoppingName") shoppingName!: ElementRef;
-  @ViewChild("shoppingAmount") shoppingAmount!: ElementRef;
   @ViewChild("formIngredient") formIngredient!: ElementRef;
-  @Output() addIngredient = new EventEmitter<DtoIngredient>()
   shoppingForm!: FormGroup;
   editIndex: number | null = null
 
@@ -21,37 +18,40 @@ export class ShoppingEditComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.shoppingService.editIngredient.subscribe((ingredient: DtoIngredient) => {
-      this.shoppingName.nativeElement.value = ingredient.name;
-      this.shoppingAmount.nativeElement.value = ingredient.amount
-    })
-    this.shoppingService.editIndex.subscribe(( index: number | null) => this.editIndex = index );
+    this.shoppingForm = new FormGroup({
+        name: new FormControl('',[Validators.required, Validators.minLength(4)]),
+        amount: new FormControl('', [Validators.required]),
+    });
+
+    // this.shoppingService.editIndex.subscribe(( index: number | null) => this.editIndex = index );
   }
 
   addShopping() {
-    const name = this.shoppingName.nativeElement.value;
-    const amount = this.shoppingAmount.nativeElement.value;
-    this.addIngredient.emit({name, amount: Number(amount)});
+
+    // this.addIngredient.emit({name, amount: Number(amount)});
   }
 
   onSubmit() {
-    const name = this.shoppingName.nativeElement.value;
-    const amount = this.shoppingAmount.nativeElement.value;
-    this.addIngredient.emit({name, amount: Number(amount)});
-    this.shoppingName.nativeElement.value = '';
-    this.shoppingAmount.nativeElement.value = '';
+    if(!this.shoppingForm.valid) return;
+    const formData = new FormData();
+    const listData = this.shoppingForm.value;
+
+    for(let key in listData){ formData.append(key, listData[key]) };
+
+    this.shoppingService.createIngredient(formData, this.onReset.bind(this));
   }
 
   onReset() {
-    const name = this.shoppingName.nativeElement.value;
-    const amount = this.shoppingAmount.nativeElement.value;
-    if(name.trim() !== '' || amount.trim() !== '') this.shoppingService.selectEdit(null);
-    this.formIngredient.nativeElement.reset();
+    this.shoppingForm.reset();
   }
 
   onDelete() {
     this.shoppingService.deleteIngredient();
     this.onReset()
   }
+
+  get name() { return this.shoppingForm.get('name'); }
+
+  get amount() { return this.shoppingForm.get('amount'); }
 
 }

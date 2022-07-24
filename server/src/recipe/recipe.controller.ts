@@ -10,10 +10,10 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import {DtoIngredient, RecipeDto} from "../dto/recipe.dto";
+import { DtoIngredient, RecipeDto } from "../dto/recipe.dto";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import {RecipeService} from "./recipe.service";
-import {FileInterceptor} from "@nestjs/platform-express";
+import { RecipeService } from "./recipe.service";
+import {AnyFilesInterceptor, FileInterceptor} from "@nestjs/platform-express";
 
 @ApiTags('recipe')
 @Controller('/api/recipe')
@@ -93,13 +93,14 @@ export class RecipeController {
     }
   }
 
-  @Post('/ingredients/create')
+  @Post('/ingredient/create')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(AnyFilesInterceptor())
   @ApiResponse({ status: 201, description: 'Ingredient created successfully', type: RecipeDto })
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async createIngredient(@Body() body): Promise<DtoIngredient> {
     try {
-      return await this.recipeService.createIngredient(body);
+      return await this.recipeService.createIngredient(JSON.parse(JSON.stringify(body)));
     } catch (e) {
       return !!e ? e : new NotAcceptableException();
     }
