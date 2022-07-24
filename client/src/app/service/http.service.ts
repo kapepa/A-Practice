@@ -136,4 +136,13 @@ export class HttpService {
       catchError(this.handleError)
     )
   }
+
+  createIngredient(data: FormData):Observable<DtoIngredient & DtoErrorResponse> {
+    return this.http.post<DtoIngredient & DtoErrorResponse>(`${this.url}/api/recipe/ingredient/create`, data).pipe(
+      tap({
+        error: (error) => this.clientError(error)
+      }),
+      catchError(this.handleError)
+    );
+  }
 }
