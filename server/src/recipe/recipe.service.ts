@@ -55,7 +55,7 @@ export class RecipeService {
 
   async updateIngredient( recipe: RecipeDto, user: UserDto ): Promise<DtoIngredient> {
     const currentRecipe = await this.findOne('id', recipe.id, { relations: ['user'] } )
-    if (currentRecipe.user.id !== user.id) throw new ConflictException();
+    // if (currentRecipe.user && currentRecipe.user.id !== user.id) throw new ConflictException();
 
     return await this.ingredientsRepository.save({...currentRecipe, ...recipe})
   }

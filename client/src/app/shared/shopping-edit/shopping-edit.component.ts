@@ -18,17 +18,23 @@ export class ShoppingEditComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.shoppingForm = new FormGroup({
-        name: new FormControl('',[Validators.required, Validators.minLength(4)]),
-        amount: new FormControl('', [Validators.required]),
-    });
-
-    // this.shoppingService.editIndex.subscribe(( index: number | null) => this.editIndex = index );
+    this.shoppingForm = this.formCreate({id: null, name: '', amount: 0});
+    this.shoppingService.editIngredient.subscribe((ingredient: DtoIngredient) => {
+      this.shoppingForm = this.formCreate({id: ingredient.id, name: ingredient.name, amount: ingredient.amount});
+    })
   }
 
   addShopping() {
 
     // this.addIngredient.emit({name, amount: Number(amount)});
+  }
+
+  formCreate( form: {id?: string | null, name: string, amount: number} ): FormGroup {
+    return new FormGroup({
+      id: new FormControl(form.id),
+      name: new FormControl(form.name,[Validators.required, Validators.minLength(4)]),
+      amount: new FormControl(form.amount, [Validators.required]),
+    })
   }
 
   onSubmit() {
@@ -38,7 +44,11 @@ export class ShoppingEditComponent implements OnInit {
 
     for(let key in listData){ formData.append(key, listData[key]) };
 
-    this.shoppingService.createIngredient(formData, this.onReset.bind(this));
+    if( !!listData.id.trim() ){
+      this.shoppingService.updateIngredient( formData, this.onReset.bind(this));
+    } else {
+      this.shoppingService.createIngredient(formData, this.onReset.bind(this));
+    }
   }
 
   onReset() {

@@ -108,11 +108,12 @@ export class RecipeController {
 
   @Patch('/ingredients/update')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(AnyFilesInterceptor())
   @ApiResponse({ status: 201, description: 'Recipe update successfully', type: RecipeDto })
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async updateIngredients(@Body() body, @Req() req): Promise<DtoIngredient>{
     try {
-      return this.recipeService.updateIngredient(body, req.user);
+      return this.recipeService.updateIngredient(JSON.parse(JSON.stringify(body)), req.user);
     } catch (e) {
       return !!e ? e : new NotFoundException();
     }
