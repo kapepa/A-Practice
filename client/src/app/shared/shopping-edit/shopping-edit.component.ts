@@ -11,7 +11,6 @@ import { ShoppingService } from "../../service/shopping.service";
 export class ShoppingEditComponent implements OnInit {
   @ViewChild("formIngredient") formIngredient!: ElementRef;
   shoppingForm!: FormGroup;
-  editIndex: number | null = null
 
   constructor(
     private shoppingService: ShoppingService
@@ -56,12 +55,13 @@ export class ShoppingEditComponent implements OnInit {
   }
 
   onDelete() {
-    this.shoppingService.deleteIngredient();
-    this.onReset()
+    this.shoppingService.deleteIngredient(this.onReset.bind(this));
   }
 
   get name() { return this.shoppingForm.get('name'); }
 
   get amount() { return this.shoppingForm.get('amount'); }
+
+  get update() { return this.shoppingService.editIndex$ }
 
 }

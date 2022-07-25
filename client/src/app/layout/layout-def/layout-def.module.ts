@@ -20,7 +20,7 @@ const routes: Routes = [
       { path: ':id/edit', component: EditComponent, canActivate: [AccessEditGuard] },
     ]
   },
-  { path: 'shopping', component: ShoppingComponent },
+  { path: 'shopping', component: ShoppingComponent, canActivate: [AccessEditGuard] },
   { path: '', redirectTo: '/recipe', pathMatch: 'full' },
 ];
 

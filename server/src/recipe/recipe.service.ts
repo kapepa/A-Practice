@@ -55,7 +55,7 @@ export class RecipeService {
 
   async updateIngredient( recipe: RecipeDto, user: UserDto ): Promise<DtoIngredient> {
     const currentRecipe = await this.findOne('id', recipe.id, { relations: ['user'] } )
-    // if (currentRecipe.user && currentRecipe.user.id !== user.id) throw new ConflictException();
+    if (currentRecipe.user && currentRecipe.user.id !== user.id) throw new ConflictException();
 
     return await this.ingredientsRepository.save({...currentRecipe, ...recipe})
   }
@@ -98,6 +98,6 @@ export class RecipeService {
   async deleteIngredient(id: string, userID: string): Promise<boolean> {
     const ingredient = await this.findOneIngredient('id', id);
 
-    return !! await this.ingredientsRepository.delete(ingredient);
+    return !! await this.ingredientsRepository.delete({id});
   }
 }

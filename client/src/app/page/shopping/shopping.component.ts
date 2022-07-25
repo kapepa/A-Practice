@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from "@angular/platform-browser";
 import { ShoppingService } from "../../service/shopping.service";
 
 @Component({
@@ -7,13 +8,17 @@ import { ShoppingService } from "../../service/shopping.service";
   styleUrls: ['./shopping.component.scss']
 })
 export class ShoppingComponent implements OnInit {
+  title = 'Shopping';
 
   constructor(
-    private shoppingService: ShoppingService
-  ) { }
+    private shoppingService: ShoppingService,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle("Shopping");
+  }
 
   ngOnInit(): void {
-    this.shoppingService.getAllIngredient();
+    this.shoppingService.getIngredientPage();
   }
 
 }
