@@ -12,11 +12,19 @@ export class ShoppingService {
 
   editIngredient: Subject<DtoIngredient> = new Subject<DtoIngredient>();
   editIndex: Subject<number | null> = new Subject<number | null>();
-  private editIndex$: number | null = null
+  editIndex$: number | null = null
 
   constructor(
     private httpService: HttpService
   ) {}
+
+  getIngredientPage() {
+    if(!this.ingredientList.length) this.getAllIngredient()
+  }
+
+  getIngredientRequest() {
+    this.getAllIngredient(5,  this.ingredientList.length);
+  }
 
   getAllIngredient(take = 5, skip = 0) {
     this.httpService.getAllIngredient({ take, skip }).subscribe((ingredients: DtoIngredient[]) => {
@@ -35,8 +43,18 @@ export class ShoppingService {
 
   updateIngredient(data: FormData, cd: () => void) {
     this.httpService.updateIngredient(data).subscribe((ingredient: DtoIngredient) => {
-      console.log(this.editIndex$)
-      cd()
+      if( this.editIndex$ ) this.ingredientList.splice( this.editIndex$, 1, ingredient );
+      this.ingredient.next(this.ingredientList);
+      cd();
+    })
+  }
+
+  deleteIngredient(cb: () => void) {
+    const { id } = this.ingredientList[Number(this.editIndex$)]
+    if( id ) this.httpService.deleteIngredient(id).subscribe((data: { delete: boolean }) => {
+      this.ingredientList.splice(Number(this.editIndex$),1);
+      this.ingredient.next(this.ingredientList);
+      cb()
     })
   }
 
@@ -57,15 +75,6 @@ export class ShoppingService {
 
     this.ingredientList = this.ingredientList.concat(ingredient);
     this.ingredient.next(this.ingredientList);
-  }
-
-  deleteIngredient() {
-     if( this.editIndex$ !== null ) {
-       this.selectEdit(null);
-       this.ingredientList.splice(this.editIndex$,1);
-       this.ingredient.next(this.ingredientList);
-       this.selectEdit(null);
-     }
   }
 
   selectEdit(index: number | null) {

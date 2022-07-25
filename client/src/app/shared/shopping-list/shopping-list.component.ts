@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {DtoIngredient, DtoRecipe} from "../../dto/dto.recipe";
 import { RecipeService } from "../../service/recipe.service";
 import {ShoppingService} from "../../service/shopping.service";
@@ -19,6 +19,7 @@ export class ShoppingListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.ingredients = this.shoppingService.ingredientList;
     this.shoppingService.ingredient.subscribe((ingredients: DtoIngredient[]) => {
       this.ingredients = ingredients;
     })
@@ -27,4 +28,9 @@ export class ShoppingListComponent implements OnInit {
   editIngredient(index: number) {
     this.shoppingService.selectEdit(index)
   }
+
+  appendIngredient() {
+    this.shoppingService.getIngredientRequest();
+  }
+
 }

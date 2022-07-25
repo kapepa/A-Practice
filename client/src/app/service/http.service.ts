@@ -154,4 +154,13 @@ export class HttpService {
       catchError(this.handleError)
     )
   }
+
+  deleteIngredient(id: string):Observable<{ delete: boolean } & DtoErrorResponse> {
+    return this.http.delete<{ delete: boolean } & DtoErrorResponse>(`${this.url}/api/recipe/ingredient/${id}`).pipe(
+      tap({
+        error: (error) => this.clientError(error)
+      }),
+      catchError(this.handleError)
+    )
+  }
 }

@@ -3,6 +3,7 @@ import { RecipeService } from "../../service/recipe.service";
 import { DtoIngredient, DtoRecipe } from "../../dto/dto.recipe";
 import { ShoppingService } from "../../service/shopping.service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
+import {Title} from "@angular/platform-browser";
 
 
 @Component({
@@ -14,11 +15,14 @@ export class RecipeDetailComponent implements OnInit {
   recipeSelect!: DtoRecipe | undefined;
 
   constructor(
+    private titleService: Title,
     private recipeService: RecipeService,
     private shoppingService: ShoppingService,
     private route: ActivatedRoute,
     private router: Router,
-  ) { }
+  ) {
+    this.titleService.setTitle('Recipe')
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
