@@ -1,5 +1,5 @@
 import {
-  Body,
+  Body, ConflictException,
   Controller, Delete,
   Get, NotAcceptableException,
   NotFoundException,
@@ -40,7 +40,21 @@ export class RecipeController {
   @ApiResponse({ status: 404, description: 'Not found'})
   async getOneRecipe(@Param() param): Promise<RecipeDto | NotFoundException> {
     try {
-      return this.recipeService.findOne('id', param.id, { relations: ['ingredients'] });
+      return await this.recipeService.findOne('id', param.id, { relations: ['ingredients'] });
+    } catch (e) {
+      return !!e ? e : new NotFoundException();
+    }
+  }
+
+  @Get('/edit/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 200, description: 'Get one Recipe', type: RecipeDto })
+  @ApiResponse({ status: 404, description: 'Not found'})
+  async getEditRecipe(@Param() param, @Req() req): Promise<RecipeDto | NotFoundException> {
+    try {
+      const recipe = await this.recipeService.findOne('id', param.id, { relations: ['ingredients', 'user'] });
+      if(recipe.user.id !== req.user.id) throw new ConflictException();
+      return recipe;
     } catch (e) {
       return !!e ? e : new NotFoundException();
     }

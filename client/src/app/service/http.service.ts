@@ -7,6 +7,7 @@ import {DtoIngredient, DtoRecipe} from "../dto/dto.recipe";
 import { DtoQuery } from "../dto/dto.query";
 import { ErrorService } from "./error.service";
 import { DtoErrorResponse } from "../dto/dto.common";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class HttpService {
     private http: HttpClient,
     private cookieService: CookieService,
     private errorService: ErrorService,
+    private router: Router,
   ) { };
 
   private handleError(error: HttpErrorResponse) {
@@ -91,7 +93,7 @@ export class HttpService {
     return this.http.get<DtoRecipe & DtoErrorResponse>(`${this.url}/api/recipe/edit/${id}`).pipe(
       tap({
         next: (data) => {
-          if(data.response) this.clientError(data.response);
+          if(data.response) this.router.navigate(['/recipe'])
           return data
         },
         error: (error) => this.clientError(error)
