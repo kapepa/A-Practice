@@ -55,6 +55,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   addEdit (data: {id: string, index: number | null}) {
     this.recipeService.setIndex(data.index);
-    this.recipeService.setEdit(data.id);
+    this.recipeService.getRecipeEdit(data.id);
   }
 };

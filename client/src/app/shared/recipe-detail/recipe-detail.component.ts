@@ -26,12 +26,11 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.recipeSelect = this.recipeService.receiveRecipes(params['id'])
+      this.recipeService.receiveRecipes(params['id'])
     })
-  }
-
-  addRecipe(recipe: DtoIngredient[] | undefined) {
-    if(!!recipe) this.shoppingService.addIngredient(recipe);
+    this.recipeService.recipe.subscribe((recipe: DtoRecipe) => {
+      this.recipeSelect = recipe;
+    })
   }
 
   deleteRecipe(e: Event) {

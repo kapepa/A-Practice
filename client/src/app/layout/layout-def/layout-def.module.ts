@@ -10,6 +10,7 @@ import { EditComponent } from "../../shared/edit/edit.component";
 import { EditModule } from "../../shared/edit/edit.module";
 import { AccessEditGuard } from "../../guard/access-edit.guard";
 import { ErrorModule } from "../../popup/error/error.module";
+import { EditResolver } from "../../resolver/edit.resolver";
 
 const routes: Routes = [
   { path: 'recipe', component: HomeComponent, children:
@@ -17,7 +18,7 @@ const routes: Routes = [
       { path: '', component: RecipeDetailComponent },
       { path: 'new', component: EditComponent },
       { path: ':id', component: RecipeDetailComponent },
-      { path: ':id/edit', component: EditComponent, canActivate: [AccessEditGuard] },
+      { path: ':id/edit', component: EditComponent, resolve: { recipe: EditResolver } },
     ]
   },
   { path: 'shopping', component: ShoppingComponent, canActivate: [AccessEditGuard] },

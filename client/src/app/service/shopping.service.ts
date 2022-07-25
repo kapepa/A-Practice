@@ -68,15 +68,6 @@ export class ShoppingService {
     }
   }
 
-  addIngredient(ingredient: DtoIngredient[]) {
-    const exist = ingredient.some(
-      ( ing: DtoIngredient ) => this.ingredientList.some(( list: DtoIngredient ) => ing.name === list.name));
-    if(exist) return;
-
-    this.ingredientList = this.ingredientList.concat(ingredient);
-    this.ingredient.next(this.ingredientList);
-  }
-
   selectEdit(index: number | null) {
     this.editIndex$ = index;
     this.editIndex.next(index);

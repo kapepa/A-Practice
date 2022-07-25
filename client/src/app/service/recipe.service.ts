@@ -11,6 +11,7 @@ import { DtoQuery } from "../dto/dto.query";
 export class RecipeService {
   selectIndex: number | null = null;
   recipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
+
   editRecipe$: DtoRecipe = {} as DtoRecipe;
   editRecipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
 
@@ -23,7 +24,9 @@ export class RecipeService {
   ) {}
 
   receiveRecipes(id: string){
-    return this.recipes.find((recipe: DtoRecipe) => recipe.id === id);
+    this.httpService.getOneRecipe(id).subscribe((recipe: DtoRecipe) => {
+      this.recipe.next(recipe);
+    })
   }
 
   updateRecipes(recipes: FormData) {
@@ -34,11 +37,13 @@ export class RecipeService {
     })
   }
 
-  setEdit(id: string) {
-    this.httpService.getOneRecipe(id).subscribe((recipe: DtoRecipe) => {
-      this.editRecipe$ = recipe;
-      this.editRecipe.next(recipe);
-    })
+  getRecipeEdit(id: string) {
+    this.httpService.getEditRecipe(id).subscribe((recipe: DtoRecipe) => this.setEdit(recipe))
+  }
+
+  setEdit(recipe: DtoRecipe) {
+    this.editRecipe$ = recipe;
+    this.editRecipe.next(recipe);
   }
 
   setIndex(index: number | null) {

@@ -25,34 +25,36 @@ export class EditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-  ) { }
+  ) {
+
+  }
 
   ngOnInit(): void {
-    this.route.params.subscribe((params: Params) => {
-      if(!!params){
-        this.currentID = params['id']
-        const recipe = this.recipeService.receiveRecipes(params['id'])
-        this.recipeForm = this.fb.group({
-          id: [recipe?.id],
-          name: [recipe?.name, [Validators.required, Validators.minLength(3)]],
-          // image: recipe?.image,
-          description: [recipe?.description, [ Validators.required, Validators.minLength(3)]],
-          ingredients: this.fb.array(recipe?.ingredients ? recipe.ingredients.map((ingredient: DtoIngredient) => {
-            return this.fb.group(ingredient);
-          }) : [])
-        });
-        this.imageRecipe = recipe?.image;
-      } else {
-        this.recipeForm = this.fb.group({
-          id: [''],
-          name: ['', [Validators.required, Validators.minLength(3 )]],
-          // image: ['', Validators.required],
-          description: ['', [Validators.required,  Validators.minLength(3)]],
-          ingredients: this.fb.array([] )
-          // ingredients: this.fb.array([this.fb.group({ name: '', amount: 0})] )
-        });
-      }
+    const recipe = this.route.snapshot.data['recipe'];
+    if( recipe ) {
+      this.recipeForm = this.createForm(recipe);
+      this.recipeService.setEdit(recipe);
+    } else {
+      this.recipeForm = this.createForm({} as DtoRecipe);
+    }
+
+    this.recipeService.editRecipe.subscribe((recipe: DtoRecipe) => {
+      this.recipeForm = this.createForm(recipe);
     })
+  }
+
+  createForm(recipe: DtoRecipe) {
+    const { id, name, description, ingredients } = recipe;
+
+    if( recipe?.image ) this.imageRecipe = recipe?.image;
+    return  this.fb.group({
+      id: [id ? id : ''],
+      name: [ name ? recipe?.name : '', [Validators.required, Validators.minLength(3)]],
+      description: [ description ? recipe?.description : '', [ Validators.required, Validators.minLength(3)]],
+      ingredients: this.fb.array(ingredients ? ingredients.map((ingredient: DtoIngredient) => {
+        return this.fb.group(ingredient);
+      }) : [])
+    });
   }
 
   ngOnDestroy() {
