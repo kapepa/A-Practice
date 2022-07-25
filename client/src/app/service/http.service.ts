@@ -87,6 +87,19 @@ export class HttpService {
     )
   }
 
+  getEditRecipe(id: string): Observable<DtoRecipe & DtoErrorResponse> {
+    return this.http.get<DtoRecipe & DtoErrorResponse>(`${this.url}/api/recipe/edit/${id}`).pipe(
+      tap({
+        next: (data) => {
+          if(data.response) this.clientError(data.response);
+          return data
+        },
+        error: (error) => this.clientError(error)
+      }),
+      catchError(this.handleError)
+    )
+  }
+
   getAllRecipe(query?: DtoQuery): Observable<DtoRecipe[]> {
     const compileQuery = query && !!Object.keys(query).length ? this.createQuery(query) : '';
     return this.http.get<DtoRecipe[] & DtoErrorResponse>(`${this.url}/api/recipe${compileQuery}`).pipe(
