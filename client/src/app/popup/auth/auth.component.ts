@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { HttpService } from "../../service/http.service";
 import { UserService } from "../../service/user.service";
+import { ReCaptchaV3Service } from "ng-recaptcha";
 
 @Component({
   selector: 'app-auth',
@@ -28,6 +29,7 @@ export class AuthComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private httpService: HttpService,
+    private recaptchaV3Service: ReCaptchaV3Service
   ) { }
 
   ngOnInit(): void {
@@ -58,8 +60,14 @@ export class AuthComponent implements OnInit {
   }
 
   onLogin() {
-    const { email, password } = this.profileLogin.value
-    if(!!email && !!password) this.userService.loginUser({ email, password }, this.profileReset.bind(this))
+    console.log('login')
+    this.recaptchaV3Service.execute('importantAction')
+      .subscribe((token: string) => {
+        console.debug(`Token [${token}] generated`);
+      });
+
+    // const { email, password } = this.profileLogin.value
+    // if(!!email && !!password) this.userService.loginUser({ email, password }, this.profileReset.bind(this))
   }
 
   profileReset() {

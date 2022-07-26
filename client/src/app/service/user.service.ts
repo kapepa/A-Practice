@@ -34,6 +34,7 @@ export class UserService {
   }
 
   loginUser(login: { email: string, password: string }, cb: () => void){
+
     this.spinnerService.changeState();
     this.httpService.loginUser({ email: login.email, password: login.password }).subscribe((token) => {
       this.router.navigate(['/recipe']);
@@ -46,7 +47,7 @@ export class UserService {
   }
 
   getUser() {
-    this.httpService.getOwnProfile().subscribe(( profile: DtoUser ) => {
+    this.httpService.getOwnProfile().subscribe(( profile: DtoUser) => {
       this.user = profile;
       this.user$.next(this.user);
     })
