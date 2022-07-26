@@ -1,7 +1,8 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from "@angular/router";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { HttpService } from "../../service/http.service";
+import { UserService } from "../../service/user.service";
 
 @Component({
   selector: 'app-auth',
@@ -25,6 +26,7 @@ export class AuthComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private userService: UserService,
     private httpService: HttpService,
   ) { }
 
@@ -52,19 +54,12 @@ export class AuthComponent implements OnInit {
     if( !!password ) form.append('password', password);
     if( !!this.avatar ) form.append('avatar', this.avatar);
 
-    this.httpService.createUser(form).subscribe((data) => {
-      if( data.create ) {
-        this.router.navigate([], { queryParams: { login: 'login' } })
-        this.profileReset();
-      }
-    })
+    this.userService.createUser(form, this.profileReset.bind(this))
   }
 
   onLogin() {
     const { email, password } = this.profileLogin.value
-    if(!!email && !!password) this.httpService.loginUser({ email, password }).subscribe((token) => {
-      this.router.navigate(['/recipe']);
-    })
+    if(!!email && !!password) this.userService.loginUser({ email, password }, this.profileReset.bind(this))
   }
 
   profileReset() {

@@ -11,17 +11,18 @@ import { EditModule } from "../../shared/edit/edit.module";
 import { AccessEditGuard } from "../../guard/access-edit.guard";
 import { ErrorModule } from "../../popup/error/error.module";
 import { EditResolver } from "../../resolver/edit.resolver";
+import {UserResolver} from "../../resolver/user.resolver";
 
 const routes: Routes = [
   { path: 'recipe', component: HomeComponent, children:
     [
-      { path: '', component: RecipeDetailComponent },
+      { path: '', component: RecipeDetailComponent},
       { path: 'new', component: EditComponent },
       { path: ':id', component: RecipeDetailComponent },
       { path: ':id/edit', component: EditComponent, resolve: { recipe: EditResolver } },
-    ]
+    ],
   },
-  { path: 'shopping', component: ShoppingComponent, canActivate: [AccessEditGuard] },
+  { path: 'shopping', component: ShoppingComponent, canActivate: [ AccessEditGuard ] },
   { path: '', redirectTo: '/recipe', pathMatch: 'full' },
 ];
 

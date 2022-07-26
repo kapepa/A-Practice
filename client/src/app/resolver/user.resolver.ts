@@ -4,19 +4,19 @@ import {
   RouterStateSnapshot,
   ActivatedRouteSnapshot
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpService } from "../service/http.service";
-import { DtoRecipe } from "../dto/dto.recipe";
+import { DtoUser } from "../dto/dto.user";
 
 @Injectable({
   providedIn: 'root'
 })
-export class EditResolver implements Resolve<DtoRecipe> {
+export class UserResolver implements Resolve<DtoUser> {
   constructor(
     private httpService: HttpService,
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DtoRecipe> {
-    return this.httpService.getEditRecipe(route.params['id'])
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DtoUser> {
+    return this.httpService.getOwnProfile();
   }
 }
