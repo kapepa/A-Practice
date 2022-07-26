@@ -8,6 +8,7 @@ import { DtoQuery } from "../dto/dto.query";
 import { ErrorService } from "./error.service";
 import { DtoErrorResponse } from "../dto/dto.common";
 import {Router} from "@angular/router";
+import {DtoUser} from "../dto/dto.user";
 
 @Injectable({
   providedIn: 'root'
@@ -69,8 +70,8 @@ export class HttpService {
     )
   }
 
-  getOwnProfile(): Observable<any> {
-    return this.http.get<any>(`${this.url}/api/user`).pipe(
+  getOwnProfile(): Observable<DtoUser> {
+    return this.http.get<DtoUser>(`${this.url}/api/user`).pipe(
       tap({ error: (error) => this.clientError(error) }),
       catchError(this.handleError)
     )

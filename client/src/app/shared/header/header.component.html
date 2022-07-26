@@ -14,15 +14,24 @@
         </li>
       </ul>
       <div appDrop class="nav-item dropdown" data-bs-toggle="dropdown">
-        <button class="btn btn-link" > Anction </button>
-        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-          <li><a class="nav-link" [routerLink]="[]" [queryParams]="{login: 'login'}">Login</a></li>
-          <li><a class="nav-link" href="#">My Recipe</a></li>
-          <li><a class="nav-link" href="#">Another action</a></li>
-        </ul>
+        <a *ngIf="!user.name; else Userlogin" class="nav-link" [routerLink]="[]" [queryParams]="{login: 'login'}">Login</a>
+
+        <ng-template #Userlogin>
+          <button class="btn btn-link" >
+            <span style="padding-right: 15px">{{user.name}}</span>
+            <ng-container *ngIf="user.avatar">
+              <img width="25" height="25" style="{object-fit: cover}" [src]='user.avatar | url' alt="avatar">
+            </ng-container>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <li><a class="nav-link" href="#">My Recipe</a></li>
+            <li><button (click)="logoutUser($event)" type="button" class="btn btn-link">Logout</button></li>
+          </ul>
+        </ng-template>
       </div>
     </div>
   </div>
 </nav>
 <app-auth [popupLogin]=popupLogin></app-auth>
 <app-error></app-error>
+<app-spinner></app-spinner>

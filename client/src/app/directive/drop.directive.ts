@@ -1,4 +1,4 @@
-import {Directive, ElementRef, HostBinding, HostListener, ViewChild} from '@angular/core';
+import {Directive, ElementRef, HostBinding, HostListener} from '@angular/core';
 
 @Directive({
   selector: '[appDrop]',
@@ -7,10 +7,18 @@ import {Directive, ElementRef, HostBinding, HostListener, ViewChild} from '@angu
 export class DropDirective {
   @HostBinding('class.show') toggle = false;
 
-  constructor(private el: ElementRef) {}
+  constructor(
+    private el: ElementRef,
+  ) {}
 
-  @HostListener('click') onClick () {
+  @HostListener('click', ['$event']) onClick (event: Event) {
+    event.stopPropagation()
     this.toggle = !this.toggle;
+  }
+
+  @HostListener('window:click', ['$event'])
+  onWindow(event: Event) {
+    if(this.toggle) this.toggle = !this.toggle;
   }
 
 }

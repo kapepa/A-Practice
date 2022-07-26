@@ -4,9 +4,6 @@ import { HomeComponent } from './home.component';
 import { HeaderModule } from "../../shared/header/header.module";
 import { ShoppingListModule } from "../../shared/shopping-list/shopping-list.module";
 import { RecipesModule } from "../../shared/recipes/recipes.module";
-import { RouterModule } from "@angular/router";
-
-
 
 @NgModule({
   declarations: [
