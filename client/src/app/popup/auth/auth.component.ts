@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { HttpService } from "../../service/http.service";
 import { UserService } from "../../service/user.service";
 import { ReCaptchaV3Service } from "ng-recaptcha";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-auth',
@@ -12,6 +13,7 @@ import { ReCaptchaV3Service } from "ng-recaptcha";
 })
 export class AuthComponent implements OnInit {
   avatar!: File;
+  siteKey = environment.recaptcha.siteKey;
   @ViewChild('avatarImg') avatarImg!: ElementRef
   @Input() popupLogin!: 'login' | 'registration';
   profileForm = new FormGroup({
@@ -29,7 +31,7 @@ export class AuthComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private httpService: HttpService,
-    private recaptchaV3Service: ReCaptchaV3Service
+    private recaptchaV3Service: ReCaptchaV3Service,
   ) { }
 
   ngOnInit(): void {
@@ -59,15 +61,18 @@ export class AuthComponent implements OnInit {
     this.userService.createUser(form, this.profileReset.bind(this))
   }
 
-  onLogin() {
-    console.log('login')
-    this.recaptchaV3Service.execute('importantAction')
-      .subscribe((token: string) => {
-        console.debug(`Token [${token}] generated`);
-      });
+  public submitLogin(captchaResponse: string): void {
+    // if( captchaResponse ) form.click();
+  }
 
-    // const { email, password } = this.profileLogin.value
-    // if(!!email && !!password) this.userService.loginUser({ email, password }, this.profileReset.bind(this))
+  public submitProfile(captchaResponse: string): void {
+    // if( captchaResponse ) form.click();
+  }
+
+  public onLogin(e: Event) {
+    e.preventDefault();
+    const { email, password } = this.profileLogin.value
+    if(!!email && !!password) this.userService.loginUser({ email, password }, this.profileReset.bind(this))
   }
 
   profileReset() {

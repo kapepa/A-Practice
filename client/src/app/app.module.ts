@@ -22,7 +22,6 @@ import { AuthInterceptorProviders } from "./interceptor/auth.interceptor";
 import { CookieService } from 'ngx-cookie-service';
 import { ErrorModule } from "./popup/error/error.module";
 import { SpinnerModule } from "./shared/spinner/spinner.module";
-import { RecaptchaV3Module } from "ng-recaptcha";
 
 @NgModule({
   declarations: [
@@ -44,7 +43,6 @@ import { RecaptchaV3Module } from "ng-recaptcha";
     PipeModule,
     ErrorModule,
     SpinnerModule,
-    RecaptchaV3Module,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
