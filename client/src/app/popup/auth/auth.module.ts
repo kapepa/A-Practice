@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthComponent } from './auth.component';
-import { ReactiveFormsModule } from "@angular/forms";
-import { RECAPTCHA_V3_SITE_KEY, RecaptchaV3Module } from "ng-recaptcha";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaModule, RecaptchaV3Module } from "ng-recaptcha";
 import { environment } from "../../../environments/environment";
 
 @NgModule({
@@ -12,7 +12,9 @@ import { environment } from "../../../environments/environment";
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     RecaptchaV3Module,
+    RecaptchaModule,
   ],
   exports: [
     AuthComponent,
@@ -21,7 +23,6 @@ import { environment } from "../../../environments/environment";
     {
       provide: RECAPTCHA_V3_SITE_KEY,
       useValue: environment.recaptcha.siteKey,
-      // useValue: '6LcFjSIhAAAAANnj0zeJVzN1SpBPKXeKkXX2W4Z1',
     },
   ]
 })

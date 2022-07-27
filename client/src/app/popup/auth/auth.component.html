@@ -13,7 +13,7 @@
         </div>
 
         <ng-container *ngIf="popupLogin === 'login'">
-          <form [formGroup]="profileLogin" (ngSubmit)="onLogin()">
+          <form [formGroup]="profileLogin" (ngSubmit)="onLogin($event)">
             <div class="mb-3">
               <label for="emailLogin" class="form-label">Email:</label>
               <input
@@ -53,8 +53,15 @@
                 </div>
               </div>
             </div>
+<!--            <re-captcha formControlName="recaptchaReactive"></re-captcha>-->
+            <re-captcha
+              #captchaLogRef="reCaptcha"
+              [siteKey]="siteKey"
+              size="invisible"
+              (resolved)="$event && submitLogin($event)"
+            ></re-captcha>
             <div class="mb-3">
-              <button type="submit" class="btn btn-success">Ok</button>
+              <button [disabled]="!profileLogin.valid" (click)="captchaLogRef.execute()" class="btn btn-success">Ok</button>
               <button (click)="loginReset()" type="reset" class="btn btn-warning">Clean</button>
             </div>
           </form>
@@ -139,9 +146,15 @@
               >
               <img [ngClass]="{ 'popup-auth__avatar--show': avatar }" #avatarImg alt="avatar" class="popup-auth__avatar">
             </div>
+            <re-captcha
+              #captchaProfileRef="reCaptcha"
+              [siteKey]="siteKey"
+              size="invisible"
+              (resolved)="$event && submitProfile($event)"
+            ></re-captcha>
             <div class="mb-3">
               <button
-                type="submit"
+                (click)="captchaProfileRef.execute()"
                 class="btn btn-success"
                 [disabled]="!profileForm.valid"
               >Send</button>
