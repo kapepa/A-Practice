@@ -26,4 +26,4 @@ import { environment } from "../../../environments/environment";
     },
   ]
 })
-export class AuthModule { };
+export class AuthModule { }
