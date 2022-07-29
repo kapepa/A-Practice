@@ -37,7 +37,7 @@ export class UserService {
 
     this.spinnerService.changeState();
     this.httpService.loginUser({ email: login.email, password: login.password }).subscribe((token) => {
-      this.router.navigate(['/recipe']);
+      this.router.navigate(['/recipe'],{queryParams: {}});
       this.spinnerService.changeState();
       cb()
       this.getUser();
