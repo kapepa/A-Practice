@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { Router } from "@angular/router";
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { HttpService } from "../../service/http.service";
 import { UserService } from "../../service/user.service";
@@ -14,8 +14,9 @@ import {environment} from "../../../environments/environment";
 export class AuthComponent implements OnInit {
   avatar!: File;
   siteKey = environment.recaptcha.siteKey;
+  popupLogin: 'login' | 'registration' = 'login';
   @ViewChild('avatarImg') avatarImg!: ElementRef
-  @Input() popupLogin!: 'login' | 'registration';
+  @Output() close: EventEmitter<void> = new EventEmitter<void>();
   profileForm = new FormGroup({
     name: new FormControl('', [ Validators.required, Validators.minLength(3) ]),
     email: new FormControl('', [ Validators.required, Validators.email ]),
@@ -29,23 +30,28 @@ export class AuthComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private userService: UserService,
     private httpService: HttpService,
     private recaptchaV3Service: ReCaptchaV3Service,
   ) { }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if(params['login']) this.switchMode(params['login']);
+    });
   }
 
   closePopUp(e: Event) {
     const elem = e.target as HTMLDataElement;
-    if( elem.classList.contains('popup__zone') || elem.classList.contains('popup__x-close') ){
-      this.router.navigate([], { queryParams: { }});
-    }
+    if( elem.classList.contains('popup__zone') || elem.classList.contains('popup__x-close') ) this.close.emit();
   }
 
   switchMode(mode: string) {
-    if(mode === 'login' || mode === 'registration') this.router.navigate([], { queryParams: { login: mode }});
+    if(mode === 'login' || mode === 'registration'){
+      this.router.navigate([], { queryParams: { login: mode }});
+      this.popupLogin = mode;
+    }
   }
 
   clickAvatar(inputFile: HTMLInputElement) { inputFile.click(); };
