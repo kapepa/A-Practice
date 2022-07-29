@@ -6,6 +6,10 @@ import { AlertComponent } from "../../popup/alert/alert.component";
 import { Subscription } from "rxjs";
 import { AuthDirective } from "../../directive/auth.directive";
 import { AuthComponent } from "../../popup/auth/auth.component";
+import {DtoErrorPopup} from "../../dto/dto.common";
+import {ErrorService} from "../../service/error.service";
+import {ErrorDirective} from "../../directive/error.directive";
+import {ErrorComponent} from "../../popup/error/error.component";
 
 @Component({
   selector: 'app-header',
@@ -15,24 +19,39 @@ import { AuthComponent } from "../../popup/auth/auth.component";
 export class HeaderComponent implements OnInit, OnDestroy {
   alert!: Subscription;
   login!: Subscription;
+  error!: Subscription;
   @ViewChild(AuthDirective, {static: true}) appAuth!: AuthDirective;
+  @ViewChild(ErrorDirective, {static: true}) appError!: ErrorDirective;
   @ViewChild(AlertDirective, {static: true}) appAlert!: AlertDirective;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
+    private errorService: ErrorService,
   ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      if(params['login'] && !this.alert) this.clickAuth();
-      console.log(this.alert)
+      if(params['login'] && (!this.login || this.login?.closed)) this.invokeAuth();
     });
+    this.errorService.isErrorSubject.subscribe(( error: DtoErrorPopup ) => {
+      const errorRef = this.appError.viewContainerRef;
+      const errorComponent = errorRef.createComponent(ErrorComponent);
+
+      errorComponent.instance.isError = error;
+      this.error = errorComponent.instance.close.subscribe(() => {
+        this.error.unsubscribe();
+        this.errorService.restError();
+        errorRef.clear();
+      })
+    })
   }
 
   ngOnDestroy() {
-    if(this.alert) this.alert.unsubscribe();
+    if(!!this.alert) this.alert.unsubscribe();
+    if(!!this.login) this.login.unsubscribe();
+    if(!!this.error) this.error.unsubscribe();
   }
 
   logoutUser(e: Event) {
@@ -43,10 +62,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.userService.user
   }
 
-  clickAuth() {
+  invokeAuth() {
     const loginRef = this.appAuth.viewContainerRef;
-
     const authComponent = loginRef.createComponent(AuthComponent);
+
     this.login = authComponent.instance.close.subscribe(() => {
       this.login.unsubscribe();
       loginRef.clear();

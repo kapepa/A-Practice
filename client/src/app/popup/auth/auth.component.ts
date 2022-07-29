@@ -38,7 +38,7 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      if(params['login']) this.switchMode(params['login']);
+      if(params['login']) this.popupLogin = params['login'];
     });
   }
 
@@ -78,7 +78,10 @@ export class AuthComponent implements OnInit {
   public onLogin(e: Event) {
     e.preventDefault();
     const { email, password } = this.profileLogin.value
-    if(!!email && !!password) this.userService.loginUser({ email, password }, this.profileReset.bind(this))
+    if(!!email && !!password){
+      this.userService.loginUser({ email, password }, this.profileReset.bind(this));
+      this.close.emit();
+    }
   }
 
   profileReset() {
