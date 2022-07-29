@@ -12,6 +12,9 @@
         <li routerLinkActive="link--active" class="nav-item link__li">
           <a class="nav-link" routerLinkActive="active" routerLink="/shopping">Shopping list</a>
         </li>
+        <li routerLinkActive="link--active" class="nav-item link__li">
+          <button (click)="clickDynamic()" class="btn btn-link" >Dynamic Alert</button>
+        </li>
       </ul>
       <div appDrop class="nav-item dropdown" data-bs-toggle="dropdown">
         <a *ngIf="!user.name; else Userlogin" class="nav-link" [routerLink]="[]" [queryParams]="{login: 'login'}">Login</a>
@@ -35,3 +38,4 @@
 <app-auth [popupLogin]=popupLogin></app-auth>
 <app-error></app-error>
 <app-spinner></app-spinner>
+<ng-template appAlert></ng-template>
