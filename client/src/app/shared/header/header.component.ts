@@ -3,7 +3,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../../service/user.service";
 import { AlertDirective } from "../../directive/alert.directive";
 import { AlertComponent } from "../../popup/alert/alert.component";
-import {Subscription} from "rxjs";
+import { Subscription } from "rxjs";
+import { AuthDirective } from "../../directive/auth.directive";
+import { AuthComponent } from "../../popup/auth/auth.component";
 
 @Component({
   selector: 'app-header',
@@ -11,9 +13,10 @@ import {Subscription} from "rxjs";
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  alert!: Subscription
+  alert!: Subscription;
+  login!: Subscription;
+  @ViewChild(AuthDirective, {static: true}) appAuth!: AuthDirective;
   @ViewChild(AlertDirective, {static: true}) appAlert!: AlertDirective;
-  popupLogin: 'login' | 'registration' = 'login';
 
   constructor(
     private router: Router,
@@ -23,7 +26,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      if(params['login'] !== this.popupLogin) this.popupLogin = params['login'];
+      if(params['login'] && !this.alert) this.clickAuth();
+      console.log(this.alert)
     });
   }
 
@@ -37,6 +41,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   get user() {
     return this.userService.user
+  }
+
+  clickAuth() {
+    const loginRef = this.appAuth.viewContainerRef;
+
+    const authComponent = loginRef.createComponent(AuthComponent);
+    this.login = authComponent.instance.close.subscribe(() => {
+      this.login.unsubscribe();
+      loginRef.clear();
+      this.router.navigate([], { queryParams: { }});
+    })
   }
 
   clickDynamic() {
