@@ -10,6 +10,9 @@ import {DtoErrorPopup} from "../../dto/dto.common";
 import {ErrorService} from "../../service/error.service";
 import {ErrorDirective} from "../../directive/error.directive";
 import {ErrorComponent} from "../../popup/error/error.component";
+import {SpinnerService} from "../../service/spinner.service";
+import {SpinnerDirective} from "../../directive/spinner.directive";
+import {SpinnerComponent} from "../spinner/spinner.component";
 
 @Component({
   selector: 'app-header',
@@ -20,24 +23,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
   alert!: Subscription;
   login!: Subscription;
   error!: Subscription;
+  spinner!: Subscription;
   @ViewChild(AuthDirective, {static: true}) appAuth!: AuthDirective;
-  @ViewChild(ErrorDirective, {static: true}) appError!: ErrorDirective;
   @ViewChild(AlertDirective, {static: true}) appAlert!: AlertDirective;
+  @ViewChild(ErrorDirective, {static: true}) appError!: ErrorDirective;
+  @ViewChild(SpinnerDirective, {static: true}) appSpinner!: SpinnerDirective;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
     private errorService: ErrorService,
+    private spinnerService: SpinnerService,
   ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       if(params['login'] && (!this.login || this.login?.closed)) this.invokeAuth();
     });
+    this.spinnerService.spinner.subscribe(( bool: boolean ) => {
+      const spinner = this.appSpinner.viewContainerRef;
+      const spinnerComponent = spinner.createComponent<SpinnerComponent>;
+
+      // this.spinner = bool;
+    })
     this.errorService.isErrorSubject.subscribe(( error: DtoErrorPopup ) => {
       const errorRef = this.appError.viewContainerRef;
       const errorComponent = errorRef.createComponent(ErrorComponent);
+
 
       errorComponent.instance.isError = error;
       this.error = errorComponent.instance.close.subscribe(() => {
