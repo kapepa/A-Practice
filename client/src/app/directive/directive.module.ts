@@ -4,6 +4,7 @@ import { DropDirective } from "./drop.directive";
 import { AlertDirective } from './alert.directive';
 import { AuthDirective } from './auth.directive';
 import { ErrorDirective } from './error.directive';
+import { SpinnerDirective } from './spinner.directive';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { ErrorDirective } from './error.directive';
     AlertDirective,
     AuthDirective,
     ErrorDirective,
+    SpinnerDirective,
   ],
   imports: [
     CommonModule
@@ -20,6 +22,7 @@ import { ErrorDirective } from './error.directive';
     AlertDirective,
     AuthDirective,
     ErrorDirective,
+    SpinnerDirective,
   ]
 })
 export class DirectiveModule { }

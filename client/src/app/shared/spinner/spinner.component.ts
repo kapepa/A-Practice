@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {SpinnerService} from "../../service/spinner.service";
 
 @Component({
@@ -7,16 +7,13 @@ import {SpinnerService} from "../../service/spinner.service";
   styleUrls: ['./spinner.component.scss']
 })
 export class SpinnerComponent implements OnInit {
-  spinner!: boolean;
+  @Input() spinner!: boolean;
 
   constructor(
-    private spinnerService: SpinnerService,
   ) { }
 
   ngOnInit(): void {
-    this.spinnerService.spinner.subscribe(( bool: boolean ) => {
-      this.spinner = bool;
-    })
+
   }
 
 }
