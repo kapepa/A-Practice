@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ComponentFactoryResolver, ViewContainerRef} from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../../service/user.service";
 import { AlertDirective } from "../../directive/alert.directive";
@@ -28,6 +28,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild(AlertDirective, {static: true}) appAlert!: AlertDirective;
   @ViewChild(ErrorDirective, {static: true}) appError!: ErrorDirective;
   @ViewChild(SpinnerDirective, {static: true}) appSpinner!: SpinnerDirective;
+  spinnerRef!: ViewContainerRef;
 
   constructor(
     private router: Router,
@@ -42,10 +43,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if(params['login'] && (!this.login || this.login?.closed)) this.invokeAuth();
     });
     this.spinnerService.spinner.subscribe(( bool: boolean ) => {
-      const spinner = this.appSpinner.viewContainerRef;
-      const spinnerComponent = spinner.createComponent<SpinnerComponent>;
+      if(this.spinnerRef) this.spinnerRef.clear();
 
-      // this.spinner = bool;
+      if(bool){
+        this.spinnerRef = this.appSpinner.viewContainerRef;
+        const spinnerComponent = this.spinnerRef.createComponent(SpinnerComponent);
+        spinnerComponent.instance.spinner = true;
+      }
     })
     this.errorService.isErrorSubject.subscribe(( error: DtoErrorPopup ) => {
       const errorRef = this.appError.viewContainerRef;
