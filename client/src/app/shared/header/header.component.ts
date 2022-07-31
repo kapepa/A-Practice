@@ -76,7 +76,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   get user() {
-    return this.userService.user
+    return this.userService.user;
   }
 
   invokeAuth() {
