@@ -9,8 +9,7 @@ import {SpinnerService} from "../../service/spinner.service";
 export class SpinnerComponent implements OnInit {
   @Input() spinner!: boolean;
 
-  constructor(
-  ) { }
+  constructor() { };
 
   ngOnInit(): void {
 
