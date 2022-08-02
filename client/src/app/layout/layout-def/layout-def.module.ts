@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LayoutDefComponent } from './layout-def.component';
-import { RouterModule, Routes } from "@angular/router";
+import {PreloadAllModules, RouterModule, Routes} from "@angular/router";
 import { HomeComponent } from "../../page/home/home.component";
 import { HomeModule } from "../../page/home/home.module";
 import { ShoppingComponent } from "../../page/shopping/shopping.component";
@@ -22,7 +22,11 @@ const routes: Routes = [
       { path: ':id/edit', component: EditComponent, resolve: { recipe: EditResolver } },
     ],
   },
-  { path: 'shopping', component: ShoppingComponent, canActivate: [ AccessEditGuard ] },
+  {
+    path: 'shopping',
+    component: ShoppingComponent,
+    canActivate: [ AccessEditGuard ]
+  },
   { path: '', redirectTo: '/recipe', pathMatch: 'full' },
 ];
 
@@ -39,6 +43,7 @@ const routes: Routes = [
   ],
   exports: [
     LayoutDefComponent,
+    RouterModule,
   ]
 })
 export class LayoutDefModule { }

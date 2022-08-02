@@ -21,7 +21,7 @@ import { PipeModule } from "./pipe/pipe.module";
 import { AuthInterceptorProviders } from "./interceptor/auth.interceptor";
 import { CookieService } from 'ngx-cookie-service';
 import { ErrorModule } from "./popup/error/error.module";
-import { SpinnerModule } from "./shared/spinner/spinner.module";
+import { AuthModule } from "./popup/auth/auth.module";
 
 @NgModule({
   declarations: [
@@ -31,18 +31,16 @@ import { SpinnerModule } from "./shared/spinner/spinner.module";
   imports: [
     BrowserModule,
     AppRoutingModule,
-    LayoutDefModule,
     HomeModule,
     EditModule,
     HeaderModule,
-    ShoppingModule,
     CreateModule,
     DirectiveModule,
     FormsModule,
     HttpClientModule,
     PipeModule,
     ErrorModule,
-    SpinnerModule,
+    AuthModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable
