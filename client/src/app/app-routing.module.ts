@@ -12,7 +12,7 @@ const routes: Routes = [
     resolve: { user: UserResolver },
   },
   { path: '', redirectTo: '/', pathMatch: 'full', },
-  { path: '**', component: ErrorComponent }
+  { path: '**', component: ErrorComponent },
 ];
 
 @NgModule({
