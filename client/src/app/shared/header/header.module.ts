@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header.component';
 import { RouterModule } from "@angular/router";
 import { DirectiveModule } from "../../directive/directive.module";
-import { AuthModule } from "../../popup/auth/auth.module";
 import { PipeModule } from "../../pipe/pipe.module";
-import { ErrorModule } from "../../popup/error/error.module";
+import { AuthComponent } from "../../popup/auth/auth.component";
+import { SpinnerComponent } from "../spinner/spinner.component";
+import { ErrorComponent } from "../../popup/error/error.component";
 import { SpinnerModule } from "../spinner/spinner.module";
 
 
@@ -17,10 +18,13 @@ import { SpinnerModule } from "../spinner/spinner.module";
     CommonModule,
     RouterModule,
     DirectiveModule,
-    AuthModule,
     PipeModule,
-    ErrorModule,
     SpinnerModule,
+  ],
+  entryComponents: [
+    AuthComponent,
+    SpinnerComponent,
+    ErrorComponent,
   ],
   exports: [
     HeaderComponent

@@ -7,7 +7,7 @@ import {
 import { Observable, of } from 'rxjs';
 import { HttpService } from "../service/http.service";
 import { DtoUser } from "../dto/dto.user";
-import {CookieService} from "ngx-cookie-service";
+import { CookieService } from "ngx-cookie-service";
 
 @Injectable({
   providedIn: 'root'

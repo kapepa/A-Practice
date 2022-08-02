@@ -5,8 +5,6 @@ import { RecipeListModule } from "../recipe-list/recipe-list.module";
 import { RecipeDetailModule } from "../recipe-detail/recipe-detail.module";
 import { RouterModule } from "@angular/router";
 
-
-
 @NgModule({
   declarations: [
     RecipesComponent
