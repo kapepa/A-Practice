@@ -11,7 +11,6 @@ import { EditModule } from "../../shared/edit/edit.module";
 import { AccessEditGuard } from "../../guard/access-edit.guard";
 import { ErrorModule } from "../../popup/error/error.module";
 import { EditResolver } from "../../resolver/edit.resolver";
-import {UserResolver} from "../../resolver/user.resolver";
 
 const routes: Routes = [
   { path: 'recipe', component: HomeComponent, children:
