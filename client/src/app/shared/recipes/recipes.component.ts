@@ -21,7 +21,7 @@ export class RecipesComponent implements OnInit, OnDestroy {
     this.recipeService.recipe.subscribe((recipe: DtoRecipe) => {
       this.select = recipe;
     })
-  }
+  };
 
   ngOnDestroy() {
     if(!!this.ngRecipe) this.ngRecipe.unsubscribe();
