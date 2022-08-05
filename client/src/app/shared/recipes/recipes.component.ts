@@ -25,7 +25,7 @@ export class RecipesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if(!!this.ngRecipe) this.ngRecipe.unsubscribe();
-  }
+  };
 
   selectRecipe(recipe: DtoRecipe) {
     // this.select.emit(recipe)
