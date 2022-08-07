@@ -53,6 +53,6 @@ import { AuthModule } from "./popup/auth/auth.module";
     AuthInterceptorProviders,
     HttpClient,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { };
