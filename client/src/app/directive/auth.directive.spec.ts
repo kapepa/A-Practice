@@ -2,7 +2,7 @@ import { AuthDirective } from './auth.directive';
 
 describe('AuthDirective', () => {
   it('should create an instance', () => {
-    const directive = new AuthDirective();
+    const directive = AuthDirective;
     expect(directive).toBeTruthy();
   });
 });
