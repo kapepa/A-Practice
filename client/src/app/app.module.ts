@@ -16,7 +16,7 @@ import { ShoppingModule } from "./page/shopping/shopping.module";
 import { DirectiveModule } from "./directive/directive.module";
 import { EditModule } from "./shared/edit/edit.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { PipeModule } from "./pipe/pipe.module";
 import { AuthInterceptorProviders } from "./interceptor/auth.interceptor";
 import { CookieService } from 'ngx-cookie-service';
@@ -26,7 +26,6 @@ import { AuthModule } from "./popup/auth/auth.module";
 @NgModule({
   declarations: [
     AppComponent,
-    ErrorComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,6 +39,7 @@ import { AuthModule } from "./popup/auth/auth.module";
     HttpClientModule,
     PipeModule,
     AuthModule,
+    ErrorModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

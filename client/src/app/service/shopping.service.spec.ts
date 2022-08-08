@@ -1,16 +1,26 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 
 import { ShoppingService } from './shopping.service';
+import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { RouterTestingModule } from "@angular/router/testing";
 
 describe('ShoppingService', () => {
-  let service: ShoppingService;
-
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ShoppingService);
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule
+      ],
+      providers: [
+        ShoppingService,
+      ],
+    });
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  it('should get users', inject([HttpTestingController, ShoppingService],
+      (httpMock: HttpTestingController, shoppingService: ShoppingService) => {
+        expect(shoppingService).toBeTruthy();
+      }
+    )
+  );
 });
