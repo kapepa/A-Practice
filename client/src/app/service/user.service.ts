@@ -44,7 +44,7 @@ export class UserService {
     },(error: ErrorEvent) => {
       this.spinnerService.changeState();
     })
-  }
+  };
 
   getUser() {
     this.httpService.getOwnProfile().subscribe(( profile: DtoUser) => {
