@@ -8,7 +8,10 @@ import { SpinnerService } from "./spinner.service";
 import { CookieService } from "ngx-cookie-service";
 
 describe('UserService', () => {
-  let service: UserService;
+  let httpMock: HttpTestingController;
+  let httpService: HttpService;
+  let spinnerService: SpinnerService;
+  let cookieService: CookieService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,18 +21,13 @@ describe('UserService', () => {
         SpinnerService,
         CookieService
       ]
-    });
+    }).compileComponents();
+
+    httpService = TestBed.inject(HttpService);
+    spinnerService = TestBed.inject(SpinnerService);
+    cookieService = TestBed.inject(CookieService);
   });
 
-  it('should get users', inject([HttpClientTestingModule, HttpService, SpinnerService, CookieService],
-      (
-        httpMock: HttpTestingController,
-        httpService: HttpService,
-        spinnerService: SpinnerService,
-        cookieService: CookieService,
-      ) => {
-        expect([httpService, spinnerService, cookieService]).toBeTruthy();
-      }
-    )
-  );
+  it('include dependencies', () => {});
+
 });
