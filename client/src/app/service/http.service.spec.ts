@@ -8,8 +8,13 @@ import { Router } from "@angular/router";
 import {ErrorComponent} from "../page/error/error.component";
 import {RouterTestingModule} from "@angular/router/testing";
 
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {createSpyFromClass, Spy} from "jasmine-auto-spies";
+import {DtoErrorResponse} from "../dto/dto.common";
+
 describe('HttpService', () => {
   let serviceHttp: HttpService;
+  let httpSpy: Spy<HttpClient>;
 
   let mockCookieService = jasmine.createSpyObj('CookieService', ['get', 'set']);
   let mockErrorService = jasmine.createSpyObj('ErrorService', ['setError']);
@@ -22,10 +27,12 @@ describe('HttpService', () => {
         ErrorService,
         { provide: CookieService, useValue: mockCookieService },
         { provide: ErrorService, useValue:  mockErrorService},
+        { provide: HttpClient, useValue: createSpyFromClass(HttpClient) }
       ],
     }).compileComponents();
 
     serviceHttp = TestBed.inject(HttpService);
+    httpSpy = TestBed.inject<any>(HttpClient);
   });
 
   it('should be created HttpModule', () => {
@@ -48,8 +55,28 @@ describe('HttpService', () => {
     return expect(error).toBeUndefined();
   })
 
-  it('login user', async (done) => {
-    serviceHttp.loginUser({email: 'email@mail.test', password: 'password'}).subscribe()
+  it('login user', (done) => {
+    let user = {email: 'email@mail.test', password: 'password'}
+    httpSpy.post.and.nextWith(user);
+    serviceHttp.loginUser(user).subscribe(
+      (res) => {
+        // expect(res).to
+        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        console.log(res)
+        done()
+      }, done.fail,
+    )
+
+    // serviceHttp.loginUser({email: 'email@mail.test', password: 'password'}).subscribe(
+    //   () => { done() }, done.fail,
+    // )
   })
+
+  // it('login user error', (done) => {
+  //   serviceHttp.loginUser({email: 'email@mail.test', password: 'password'}).subscribe(
+  //     () => done.fail,
+  //     () =>  done(),
+  //   )
+  // })
 
 });
