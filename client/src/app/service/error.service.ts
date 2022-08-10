@@ -11,11 +11,11 @@ export class ErrorService {
 
   constructor() { }
 
-  setError(data: DtoErrorPopup) {
+  setError(data: DtoErrorPopup): void {
     this.isErrorSubject.next(data);
   }
 
-  restError() {
+  restError(): void {
     this.isErrorSubject.next({open: false, title: '', desc: ''});
   }
 }
