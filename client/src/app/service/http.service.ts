@@ -40,7 +40,7 @@ export class HttpService {
     this.cookieService.set('token', token);
   }
 
-  private createQuery(query: DtoQuery): string {
+  createQuery(query: DtoQuery): string {
     let queryStr = '';
     for(let key of Object.keys(query)) queryStr = `${queryStr}&${key}=${query[key as keyof DtoQuery]}`;
 

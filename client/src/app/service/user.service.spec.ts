@@ -28,6 +28,10 @@ describe('UserService', () => {
     cookieService = TestBed.inject(CookieService);
   });
 
-  it('include dependencies', () => {});
+  it('should create httpService', () => {
+    expect(httpService).toBeTruthy();
+  });
+
+
 
 });
