@@ -23,7 +23,7 @@ export class HttpService {
     private router: Router,
   ) { };
 
-  private handleError(error: HttpErrorResponse) {
+  handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
       console.error('An error occurred:', error.error);
     } else {
@@ -32,11 +32,11 @@ export class HttpService {
     return throwError(() => new Error('Something bad happened; please try again later.'));
   }
 
-  private clientError (error: { statusCode: number, message: string }) {
+  clientError(error: { statusCode: number, message: string }): void {
     this.errorService.setError({ open: true, title: 'Error', desc: error.message})
   }
 
-  private setToken(token: string) {
+  setToken(token: string) {
     this.cookieService.set('token', token);
   }
 
