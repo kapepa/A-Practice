@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { catchError, Observable, tap, throwError } from "rxjs";
+import { catchError, Observable, of, tap, throwError } from "rxjs";
 import { CookieService } from "ngx-cookie-service";
-import {DtoIngredient, DtoRecipe} from "../dto/dto.recipe";
+import { DtoIngredient, DtoRecipe } from "../dto/dto.recipe";
 import { DtoQuery } from "../dto/dto.query";
 import { ErrorService } from "./error.service";
 import { DtoErrorResponse } from "../dto/dto.common";
-import {Router} from "@angular/router";
-import {DtoUser} from "../dto/dto.user";
+import { Router } from "@angular/router";
+import { DtoUser } from "../dto/dto.user";
 
 @Injectable({
   providedIn: 'root'
