@@ -11,6 +11,7 @@ import {RouterTestingModule} from "@angular/router/testing";
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {createSpyFromClass, Spy} from "jasmine-auto-spies";
 import {DtoErrorResponse} from "../dto/dto.common";
+import {of, throwError} from "rxjs";
 
 describe('HttpService', () => {
   let serviceHttp: HttpService;
@@ -18,6 +19,17 @@ describe('HttpService', () => {
 
   let mockCookieService = jasmine.createSpyObj('CookieService', ['get', 'set']);
   let mockErrorService = jasmine.createSpyObj('ErrorService', ['setError']);
+  let mockHttpClient = jasmine.createSpyObj('HttpClient', ['post']);
+
+  let user = {email: 'email@mail.test', password: 'password'};
+  let response = {
+    access_token: 'SomeString',
+    status: 200,
+    response: {
+      statusCode: 200,
+      message: 'success',
+    }
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -27,12 +39,12 @@ describe('HttpService', () => {
         ErrorService,
         { provide: CookieService, useValue: mockCookieService },
         { provide: ErrorService, useValue:  mockErrorService},
-        { provide: HttpClient, useValue: createSpyFromClass(HttpClient) }
+        { provide: HttpClient, useValue: mockHttpClient }
       ],
     }).compileComponents();
 
     serviceHttp = TestBed.inject(HttpService);
-    httpSpy = TestBed.inject<any>(HttpClient);
+    httpSpy = TestBed.inject(HttpClient) as Spy<HttpClient>;
   });
 
   it('should be created HttpModule', () => {
@@ -55,28 +67,22 @@ describe('HttpService', () => {
     return expect(error).toBeUndefined();
   })
 
-  it('login user', (done) => {
-    let user = {email: 'email@mail.test', password: 'password'}
-    httpSpy.post.and.nextWith(user);
-    serviceHttp.loginUser(user).subscribe(
-      (res) => {
-        // expect(res).to
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        console.log(res)
-        done()
-      }, done.fail,
-    )
-
-    // serviceHttp.loginUser({email: 'email@mail.test', password: 'password'}).subscribe(
-    //   () => { done() }, done.fail,
-    // )
-  })
-
-  // it('login user error', (done) => {
-  //   serviceHttp.loginUser({email: 'email@mail.test', password: 'password'}).subscribe(
-  //     () => done.fail,
-  //     () =>  done(),
-  //   )
+  // it('create user', (done: DoneFn) => {
+  //
   // })
+
+  it('login user', (done: DoneFn) => {
+    httpSpy.post.and.returnValue(of(response));
+    serviceHttp.loginUser(user).subscribe({
+      next: (res) => {
+        expect(res).toEqual(response)
+        done()
+      },
+      error: (err) => {
+        expect(serviceHttp.handleError(err)).toThrowError();
+        done()
+      }
+    })
+  })
 
 });
