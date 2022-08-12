@@ -9,8 +9,10 @@ import {RouterTestingModule} from "@angular/router/testing";
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Spy } from "jasmine-auto-spies";
-import { of } from "rxjs";
 import {asyncData, asyncError} from "../../testing/async-observable-helpers";
+import {DtoUser} from "../dto/dto.user";
+import {DtoIngredient, DtoRecipe} from "../dto/dto.recipe";
+import {DtoErrorResponse} from "../dto/dto.common";
 
 describe('HttpService', () => {
   let serviceHttp: HttpService;
@@ -18,7 +20,15 @@ describe('HttpService', () => {
 
   let mockCookieService = jasmine.createSpyObj('CookieService', ['get', 'set']);
   let mockErrorService = jasmine.createSpyObj('ErrorService', ['setError']);
-  let mockHttpClient = jasmine.createSpyObj('HttpClient', ['post']);
+  let mockHttpClient = jasmine.createSpyObj('HttpClient', ['post','get', 'patch', 'delete']);
+
+  let user = {email: 'email@mail.test', password: 'password'};
+
+  const errorResponse = new HttpErrorResponse({
+    error: 'test 404 error',
+    status: 404,
+    statusText: 'Not Found'
+  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -66,7 +76,7 @@ describe('HttpService', () => {
         message: 'success',
       }
     };
-    httpSpy.post.and.returnValue(of(response));
+    httpSpy.post.and.returnValue(asyncData(response));
 
     serviceHttp.createUser(user).subscribe({
       next: (res) => {
@@ -78,11 +88,31 @@ describe('HttpService', () => {
         done();
       }
     })
+  })
 
+  it('create user error', (done: DoneFn) => {
+    let user = new FormData();
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404,
+      statusText: 'Not Found'
+    });
+
+    httpSpy.post.and.returnValue(asyncData(errorResponse));
+
+    serviceHttp.createUser(user).subscribe({
+      next: (res) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done();
+        },
+      error: (err) => {
+        expect(serviceHttp.handleError(err)).toThrowError();
+        done();
+      }
+    })
   })
 
   it('login user', (done: DoneFn) => {
-    let user = {email: 'email@mail.test', password: 'password'};
     let response = {
       access_token: 'SomeString',
       status: 200,
@@ -105,14 +135,6 @@ describe('HttpService', () => {
   })
 
   it('login user error', (done: DoneFn) => {
-    let user = {email: 'email@mail.test', password: 'password'};
-
-    const errorResponse = new HttpErrorResponse({
-      error: 'test 404 error',
-      status: 404,
-      statusText: 'Not Found'
-    });
-
     httpSpy.post.and.returnValue(asyncError(errorResponse));
 
     serviceHttp.loginUser(user).subscribe({
@@ -124,5 +146,265 @@ describe('HttpService', () => {
     })
   })
 
+  it('get own profile', (done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncData({} as DtoUser))
 
+    serviceHttp.getOwnProfile().subscribe({
+      next: (data: DtoUser) => {
+        expect(data).toEqual({} as DtoUser);
+        done();
+      },
+      error: () => done.fail,
+    })
+  })
+
+  it('get own profile error', (done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.getOwnProfile().subscribe({
+      next: () => done.fail('expected an error, not user'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done();
+      }
+    })
+  })
+
+  it('get one recipe', (done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncData({} as DtoRecipe));
+
+    serviceHttp.getOneRecipe('id').subscribe({
+      next: (recipe) => {
+        expect(recipe).toEqual({} as DtoRecipe & DtoErrorResponse)
+        done();
+      }
+    })
+  })
+
+  it('get one recipe error', (done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.getOneRecipe('id').subscribe({
+      next: () => done.fail('expected an error, not recipe'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse)
+        done();
+      }
+    })
+  })
+
+  it('should edit recipe',(done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncData({} as DtoRecipe));
+
+    serviceHttp.getEditRecipe('id').subscribe({
+      next: (recipe) => {
+        expect(recipe).toEqual({} as DtoRecipe & DtoErrorResponse);
+        done();
+      },
+      error: () => done.fail,
+    })
+  })
+
+  it('edit recipe error', (done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.getEditRecipe('id').subscribe({
+      next: () => done.fail('expected an error, edit recipe'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done();
+      }
+    })
+  })
+
+  it('get all recipe', (done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncData([] as DtoRecipe[]))
+
+    serviceHttp.getAllRecipe({ take: 5, skip: 5 }).subscribe({
+      next: (recipe: DtoRecipe[]) => {
+        expect(recipe).toEqual([] as DtoRecipe[]);
+        done();
+      },
+      error: () => done.fail
+    })
+  })
+
+  it('get all recipe error', (done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.getAllRecipe({ take: 5, skip: 5 }).subscribe({
+      next: () => done.fail('expected an error, all recipe'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done();
+      }
+    })
+  })
+
+  it('create recipe', (done) => {
+    httpSpy.post.and.returnValue(asyncData({} as DtoRecipe));
+
+    serviceHttp.createRecipe({} as FormData).subscribe({
+      next: (recipe: DtoRecipe & DtoErrorResponse) => {
+        expect(recipe).toEqual({} as DtoRecipe & DtoErrorResponse);
+        done()
+      },
+      error: () => done.fail
+    })
+  })
+
+  it('create recipe error', (done: DoneFn) => {
+    httpSpy.post.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.createRecipe({} as FormData).subscribe({
+      next: () => done.fail('expected an error, create recipe'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done()
+      }
+    })
+  })
+
+  it('update recipe', (done: DoneFn) => {
+    httpSpy.patch.and.returnValue(asyncData({} as DtoRecipe));
+
+    serviceHttp.updateRecipe({} as FormData).subscribe({
+      next: (recipe: DtoRecipe & DtoErrorResponse) => {
+        expect(recipe).toEqual({} as DtoRecipe & DtoErrorResponse);
+        done();
+      }
+    })
+  })
+
+  it('update recipe error', (done: DoneFn) => {
+    httpSpy.patch.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.updateRecipe({} as FormData).subscribe({
+      next: () => done.fail('expected an error, update recipe'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done();
+      }
+    })
+  })
+
+  it('delete recipe', (done: DoneFn) => {
+    httpSpy.delete.and.returnValue(asyncData({} as { delete: boolean } & DtoErrorResponse));
+
+    serviceHttp.deleteRecipe('id').subscribe({
+      next: (res: { delete: boolean } & DtoErrorResponse) => {
+        expect(res).toEqual({} as { delete: boolean } & DtoErrorResponse);
+        done();
+      },
+      error: () => done.fail,
+    })
+  })
+
+  it('delete recipe, error',(done: DoneFn) => {
+    httpSpy.delete.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.deleteRecipe('id').subscribe({
+      next: () => done.fail('expected an error, delete recipe'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done();
+      }
+    })
+  })
+
+  it('get allIngredient',(done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncData([] as DtoIngredient[] ));
+
+    serviceHttp.getAllIngredient({  take: 5, skip: 5 }).subscribe({
+      next: (res: DtoIngredient[] & DtoErrorResponse) => {
+        expect(res).toEqual([] as DtoIngredient[] )
+        done()
+      },
+      error: () => done.fail,
+    })
+  })
+
+  it('get allIngredient, error', (done: DoneFn) => {
+    httpSpy.get.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.getAllIngredient({  take: 5, skip: 5 }).subscribe({
+      next: () => done.fail('expected an error, get allIngredient'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done();
+      }
+    })
+  })
+
+  it('create ingredient', (done: DoneFn) => {
+    httpSpy.post.and.returnValue(asyncData({} as DtoIngredient));
+
+    serviceHttp.createIngredient({} as FormData).subscribe({
+      next: (res: DtoIngredient & DtoErrorResponse) => {
+        expect(res).toEqual({} as DtoIngredient & DtoErrorResponse);
+        done()
+      },
+      error: () => done.fail
+    })
+  })
+
+  it('create ingredient', (done: DoneFn) => {
+    httpSpy.post.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.createIngredient({} as FormData).subscribe({
+      next: () => done.fail('expected an error, create ingredient'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done();
+      }
+    })
+  })
+
+  it('update ingredient',(done: DoneFn) => {
+    httpSpy.patch.and.returnValue(asyncData({} as DtoIngredient));
+
+    serviceHttp.updateIngredient({} as FormData).subscribe({
+      next: (res: DtoIngredient & DtoErrorResponse) => {
+        expect(res).toEqual({} as DtoIngredient & DtoErrorResponse)
+        done()
+      },
+      error: () => done.fail,
+    })
+  })
+
+  it('update ingredient, error', (done: DoneFn) => {
+    httpSpy.patch.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.updateIngredient({} as FormData).subscribe({
+      next: () => done.fail('expected an error, update ingredient'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse);
+        done();
+      }
+    })
+  })
+
+  it('delete ingredient', (done: DoneFn) => {
+    httpSpy.delete.and.returnValue(asyncData( {} as { delete: boolean } & DtoErrorResponse));
+
+    serviceHttp.deleteIngredient('id').subscribe({
+      next: (res: { delete: boolean } & DtoErrorResponse) => {
+        expect(res).toEqual({} as { delete: boolean } & DtoErrorResponse);
+        done();
+      },
+      error: () => done.fail
+    })
+  })
+
+  it('delete ingredient, error', (done: DoneFn) => {
+    httpSpy.delete.and.returnValue(asyncError(errorResponse));
+
+    serviceHttp.deleteIngredient('id').subscribe({
+      next: () => done.fail('expected an error, delete ingredient'),
+      error: (err) => {
+        expect(errorResponse).toEqual(errorResponse)
+        done()
+      }
+    })
+  })
 });
