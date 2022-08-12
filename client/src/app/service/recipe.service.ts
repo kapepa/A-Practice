@@ -10,6 +10,8 @@ import { DtoQuery } from "../dto/dto.query";
 })
 export class RecipeService {
   selectIndex: number | null = null;
+
+  recipe$: DtoRecipe = {} as DtoRecipe;
   recipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
 
   editRecipe$: DtoRecipe = {} as DtoRecipe;
@@ -24,8 +26,9 @@ export class RecipeService {
   ) {}
 
   receiveRecipes(id: string){
-    this.httpService.getOneRecipe(id).subscribe((recipe: DtoRecipe) => {
-      this.recipe.next(recipe);
+    return this.httpService.getOneRecipe(id).subscribe((recipe: DtoRecipe) => {
+      this.recipe$ = recipe
+      this.recipe.next(this.recipe$);
     })
   }
 
