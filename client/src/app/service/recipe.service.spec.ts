@@ -3,8 +3,9 @@ import { RecipeService } from "./recipe.service";
 import { HttpService } from "./http.service";
 import { RouterTestingModule } from "@angular/router/testing";
 import { RecipeDetailComponent } from "../shared/recipe-detail/recipe-detail.component";
-import {asyncData} from "../../testing/async-observable-helpers";
-import {DtoRecipe} from "../dto/dto.recipe";
+import { DtoRecipe } from "../dto/dto.recipe";
+import { DtoErrorResponse } from "../dto/dto.common";
+import { of } from "rxjs";
 
 describe('RecipeService', () => {
   let serviceRecipe: RecipeService;
@@ -28,9 +29,10 @@ describe('RecipeService', () => {
     httpServiceSpy = TestBed.inject(HttpService) as jasmine.SpyObj<HttpService>;
   })
 
-  // it('receive recipes', (done: DoneFn) => {
-  //   mockHttpService.getOneRecipe.and.returnValue(asyncData({} as DtoRecipe));
-  //
-  //
-  // })
+  it('receive recipes', () => {
+    httpServiceSpy.getOneRecipe.and.returnValue(of({} as DtoRecipe & DtoErrorResponse))
+    serviceRecipe.receiveRecipes('id');
+
+    expect(serviceRecipe.recipe$).toEqual({} as DtoRecipe & DtoErrorResponse)
+  })
 })
