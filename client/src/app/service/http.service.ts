@@ -72,7 +72,9 @@ export class HttpService {
 
   getOwnProfile(): Observable<DtoUser> {
     return this.http.get<DtoUser>(`${this.url}/api/user`).pipe(
-      tap({ error: (error) => this.clientError(error) }),
+      tap({
+        error: (error) => this.clientError(error)
+      }),
       catchError(this.handleError)
     )
   }
