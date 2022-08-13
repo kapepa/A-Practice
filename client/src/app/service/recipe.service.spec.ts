@@ -14,7 +14,7 @@ describe('RecipeService', () => {
   let router: Router;
 
   let mockHttpService = jasmine.createSpyObj('HttpService', [
-    'getOneRecipe', 'updateRecipe', 'getEditRecipe', 'createRecipe',
+    'getOneRecipe', 'updateRecipe', 'getEditRecipe', 'createRecipe', 'deleteRecipe',
   ]);
 
 
@@ -62,30 +62,32 @@ describe('RecipeService', () => {
     httpServiceSpy.getEditRecipe.and.returnValue(of({} as DtoRecipe & DtoErrorResponse));
     serviceRecipe.getRecipeEdit('id');
 
-    serviceRecipe.editRecipe.subscribe((res) => {
-      expect(res).toEqual({} as DtoRecipe);
-    })
+    expect(serviceRecipe.editRecipe$).toEqual({} as DtoRecipe)
   })
 
   it('set edit', () => {
     serviceRecipe.setEdit({} as DtoRecipe)
 
-    serviceRecipe.editRecipe.subscribe((recipe: DtoRecipe) => {
-      expect(recipe).toEqual({} as DtoRecipe);
-    })
+    expect(serviceRecipe.editRecipe$).toEqual({} as DtoRecipe)
   });
 
   it('set index', () => {
     serviceRecipe.setIndex(0);
 
-    serviceRecipe.selectIndex.subscribe((index: number | null) => {
-      expect(index).toEqual(0);
-    });
+    expect(serviceRecipe.selectIndex$).toEqual(0);
   })
 
   it('new recipes', () => {
     httpServiceSpy.createRecipe.and.returnValue(of({} as DtoRecipe & DtoErrorResponse));
+    serviceRecipe.newRecipes({} as FormData);
 
+    expect(serviceRecipe.recipes).toEqual([] as DtoRecipe[]);
+  })
 
+  it('delete recipes', () => {
+    httpServiceSpy.deleteRecipe.and.returnValue(of({} as { delete: boolean } & DtoErrorResponse));
+    serviceRecipe.deleteRecipes();
+
+    expect(serviceRecipe.recipes).toEqual([] as DtoRecipe[]);
   })
 })
