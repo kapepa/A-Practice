@@ -4,15 +4,14 @@ import { HttpService } from './http.service';
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { CookieService } from "ngx-cookie-service";
 import { ErrorService } from "./error.service";
-import { Router } from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Spy } from "jasmine-auto-spies";
-import {asyncData, asyncError} from "../../testing/async-observable-helpers";
-import {DtoUser} from "../dto/dto.user";
-import {DtoIngredient, DtoRecipe} from "../dto/dto.recipe";
-import {DtoErrorResponse} from "../dto/dto.common";
+import { asyncData, asyncError } from "../../testing/async-observable-helpers";
+import { DtoUser } from "../dto/dto.user";
+import { DtoIngredient, DtoRecipe } from "../dto/dto.recipe";
+import { DtoErrorResponse } from "../dto/dto.common";
 
 describe('HttpService', () => {
   let serviceHttp: HttpService;

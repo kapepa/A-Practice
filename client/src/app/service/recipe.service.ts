@@ -9,7 +9,8 @@ import { DtoQuery } from "../dto/dto.query";
   providedIn: 'root'
 })
 export class RecipeService {
-  selectIndex: number | null = null;
+  selectIndex$: number | null = null;
+  selectIndex: Subject<number | null> = new Subject<number | null>();
 
   recipe$: DtoRecipe = {} as DtoRecipe;
   recipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
@@ -17,7 +18,7 @@ export class RecipeService {
   editRecipe$: DtoRecipe = {} as DtoRecipe;
   editRecipe: Subject<DtoRecipe> = new Subject<DtoRecipe>();
 
-  private recipes: DtoRecipe[] = [];
+  recipes: DtoRecipe[] = [];
   recipesList = new Subject<DtoRecipe[]>();
 
   constructor(
@@ -27,16 +28,17 @@ export class RecipeService {
 
   receiveRecipes(id: string){
     return this.httpService.getOneRecipe(id).subscribe((recipe: DtoRecipe) => {
-      this.recipe$ = recipe
+      this.recipe$ = recipe;
       this.recipe.next(this.recipe$);
     })
   }
 
   updateRecipes(recipes: FormData) {
     this.httpService.updateRecipe(recipes).subscribe((recipes: DtoRecipe) => {
-      this.recipes.splice( Number(this.editRecipe$),1, recipes);
+      this.recipes.splice( Number(this.editRecipe$),1, recipes );
       this.recipesList.next(this.recipes);
-      this.router.navigate([ '/recipe', recipes.id ])
+
+      this.router.navigate([ '/recipe', recipes.id ]);
     })
   }
 
@@ -46,11 +48,12 @@ export class RecipeService {
 
   setEdit(recipe: DtoRecipe) {
     this.editRecipe$ = recipe;
-    this.editRecipe.next(recipe);
+    this.editRecipe.next(this.editRecipe$);
   }
 
   setIndex(index: number | null) {
-    this.selectIndex = index;
+    this.selectIndex$ = index;
+    this.selectIndex.next(this.selectIndex$)
   }
 
   newRecipes(data: FormData) {
@@ -61,12 +64,12 @@ export class RecipeService {
   }
 
   deleteRecipes() {
-    if(this.selectIndex !== null) {
-      const id = this.recipes[this.selectIndex].id;
+    if(this.selectIndex$ !== null) {
+      const id = this.recipes[this.selectIndex$].id;
       this.httpService.deleteRecipe(id).subscribe(() => {
         if(this.selectIndex !== null){
-          this.recipes.splice(this.selectIndex,1);
-          this.selectIndex = null;
+          this.recipes.splice(Number(this.selectIndex$),1);
+          this.selectIndex$ = null;
           this.recipesList.next(this.recipes);
           this.editRecipe$ = {} as DtoRecipe;
         }
