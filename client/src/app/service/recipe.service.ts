@@ -58,8 +58,10 @@ export class RecipeService {
 
   newRecipes(data: FormData) {
     this.httpService.createRecipe(data).subscribe((recipe: DtoRecipe) => {
-      this.recipes.unshift(recipe);
-      this.recipesList.next(this.recipes);
+      if(recipe.id) {
+        this.recipes.unshift(recipe);
+        this.recipesList.next(this.recipes);
+      }
     })
   }
 
