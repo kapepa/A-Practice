@@ -7,7 +7,7 @@ import { HttpService } from "./http.service";
 import { SpinnerService } from "./spinner.service";
 import { CookieService } from "ngx-cookie-service";
 
-describe('UserService', () => {
+describe('SpinnerService', () => {
   let spinnerService: SpinnerService;
 
   beforeEach(() => {
