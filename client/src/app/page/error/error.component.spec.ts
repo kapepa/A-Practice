@@ -15,6 +15,6 @@ describe('ErrorComponent', () => {
   });
 
   it('should create', () => {
-
+    expect(true).toEqual(true)
   });
 });
