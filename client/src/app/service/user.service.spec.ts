@@ -8,30 +8,27 @@ import { SpinnerService } from "./spinner.service";
 import { CookieService } from "ngx-cookie-service";
 
 describe('UserService', () => {
-  let httpMock: HttpTestingController;
-  let httpService: HttpService;
   let spinnerService: SpinnerService;
-  let cookieService: CookieService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule,RouterTestingModule],
+      imports: [RouterTestingModule],
       providers: [
-        HttpService,
         SpinnerService,
-        CookieService
       ]
     }).compileComponents();
 
-    httpService = TestBed.inject(HttpService);
     spinnerService = TestBed.inject(SpinnerService);
-    cookieService = TestBed.inject(CookieService);
   });
 
   it('should create httpService', () => {
-    expect(httpService).toBeTruthy();
+    expect(spinnerService).toBeTruthy();
   });
 
+  it('change state', () => {
+    spinnerService.changeState();
 
+    expect(spinnerService.spinner$).toEqual(true)
+  })
 
 });
