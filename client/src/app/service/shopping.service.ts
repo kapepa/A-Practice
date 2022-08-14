@@ -28,24 +28,28 @@ export class ShoppingService {
 
   getAllIngredient(take = 5, skip = 0) {
     this.httpService.getAllIngredient({ take, skip }).subscribe((ingredients: DtoIngredient[]) => {
-      this.ingredientList.push(...ingredients);
+      this.ingredientList = this.ingredientList.concat(ingredients);
       this.ingredient.next(this.ingredientList);
     })
   }
 
   createIngredient(data: FormData, cd: () => void) {
     this.httpService.createIngredient(data).subscribe((ingredient: DtoIngredient) => {
-      this.ingredientList.push(ingredient);
-      this.ingredient.next(this.ingredientList);
-      cd();
+      if(ingredient.id){
+        this.ingredientList.push(ingredient);
+        this.ingredient.next(this.ingredientList);
+        cd();
+      }
     })
   }
 
   updateIngredient(data: FormData, cd: () => void) {
     this.httpService.updateIngredient(data).subscribe((ingredient: DtoIngredient) => {
-      if( this.editIndex$ ) this.ingredientList.splice( this.editIndex$, 1, ingredient );
-      this.ingredient.next(this.ingredientList);
-      cd();
+      if( this.editIndex$ ){
+        this.ingredientList.splice( this.editIndex$, 1, ingredient );
+        this.ingredient.next(this.ingredientList);
+        cd();
+      }
     })
   }
 
