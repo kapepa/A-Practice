@@ -3,14 +3,25 @@ import { TestBed } from '@angular/core/testing';
 import { SpinnerService } from './spinner.service';
 
 describe('SpinnerService', () => {
-  let service: SpinnerService;
+  let spinnerService: SpinnerService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(SpinnerService);
+    TestBed.configureTestingModule({
+      providers: [
+        SpinnerService,
+      ]
+    }).compileComponents();
+
+    spinnerService = TestBed.inject(SpinnerService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should create httpService', () => {
+    expect(spinnerService).toBeTruthy();
   });
+
+  it('change state', () => {
+    spinnerService.changeState();
+
+    expect(spinnerService.spinner$).toEqual(true)
+  })
 });
