@@ -50,7 +50,10 @@ export class HttpService {
   createUser(data: FormData): Observable<{create: boolean} & DtoErrorResponse> {
     return this.http.post<{create: boolean} & DtoErrorResponse>(`${this.url}/api/user/create`, data).pipe(
       tap({
-        next: (data) => { if(data.response) this.clientError(data.response) },
+        next: (data) => {
+          if( data.response ) this.clientError(data.response);
+          return data
+        },
         error: (error) => this.clientError(error)
       }),
       catchError(this.handleError),
@@ -63,6 +66,7 @@ export class HttpService {
         next: (data) => {
           if(data.access_token) this.setToken(data.access_token);
           if(data.response) this.clientError(data.response)
+          return data
         },
         error: (error) => this.clientError(error),
       }),

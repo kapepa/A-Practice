@@ -5,6 +5,7 @@ import { SpinnerService } from "./spinner.service";
 import { Subject } from "rxjs";
 import { DtoUser } from "../dto/dto.user";
 import {CookieService} from "ngx-cookie-service";
+import {DtoErrorResponse} from "../dto/dto.common";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class UserService {
     this.spinnerService.changeState();
     this.httpService.createUser(form).subscribe((data) => {
       if( data.create ) {
-        this.router.navigate([], { queryParams: { login: 'login' } })
+        this.router.navigate([], { queryParams: { login: 'login' } });
         this.spinnerService.changeState();
         cb();
       }
@@ -34,7 +35,6 @@ export class UserService {
   }
 
   loginUser(login: { email: string, password: string }, cb: () => void){
-
     this.spinnerService.changeState();
     this.httpService.loginUser({ email: login.email, password: login.password }).subscribe((token) => {
       this.router.navigate(['/recipe'],{queryParams: {}});
