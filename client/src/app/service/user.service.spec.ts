@@ -77,17 +77,16 @@ describe('UserService', () => {
   })
 
   it('should login user', () => {
-    expect(spinnerService.changeState).toHaveBeenCalled();
     httpService.loginUser.and.returnValue( of({access_token: 'token'} as {access_token: string} & DtoErrorResponse));
 
     router.navigate(['recipe']).then(() => {
       expect(location.path()).toEqual('/recipe');
-      expect(spinnerService.changeState).toHaveBeenCalled();
     });
 
     httpService.getOwnProfile.and.returnValue(of( {} as  DtoUser));
     userService.getUser();
     expect(userService.user).toEqual({} as DtoUser);
+    expect(spinnerService.changeState).toHaveBeenCalledTimes(2);
   });
 
   it('should get user', () => {
