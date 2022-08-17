@@ -13,13 +13,15 @@ import { CookieService } from "ngx-cookie-service";
   providedIn: 'root'
 })
 export class UserResolver implements Resolve<DtoUser> {
+  token: string | undefined;
+
   constructor(
     private httpService: HttpService,
     private cookieService: CookieService,
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DtoUser> {
-    const token = this.cookieService.get('token');
-    return token ? this.httpService.getOwnProfile() : of({} as DtoUser);
+  resolve(route: ActivatedRouteSnapshot): Observable<DtoUser> {
+    this.token = this.cookieService.get('token');
+    return this.token ? this.httpService.getOwnProfile() : of({} as DtoUser);
   }
 }
