@@ -16,7 +16,7 @@ export class EditResolver implements Resolve<DtoRecipe> {
     private httpService: HttpService,
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DtoRecipe> {
+  resolve(route: ActivatedRouteSnapshot): Observable<DtoRecipe> {
     return this.httpService.getEditRecipe(route.params['id'])
   }
 }

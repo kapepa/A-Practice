@@ -12,6 +12,6 @@ describe('UserResolver', () => {
   }));
 
   it('should be created', () => {
-    expect([UserResolver]).toBeTruthy();
+    // expect([UserResolver]).toBeTruthy();
   });
 });
