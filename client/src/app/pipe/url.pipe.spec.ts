@@ -11,7 +11,7 @@ describe('UrlPipe', () => {
     expect(pipe.transform(undefined)).toBe('');
   });
 
-  // it('should return ArrayBuffer', () => {
-  //   expect(pipe.transform("data:image:picture")).toBe('data:image:picture');
-  // });
+  it('should return ArrayBuffer', () => {
+    expect(pipe.transform("data:image:picture")).toBe('data:image:picture');
+  });
 });
