@@ -5,6 +5,9 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { HttpService } from "../service/http.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import {CookieService} from "ngx-cookie-service";
+import {of} from "rxjs";
+import {ActivatedRouteSnapshot} from "@angular/router";
+import {DtoUser} from "../dto/dto.user";
 
 describe('UserResolver', () => {
   let userResolver: UserResolver;
@@ -42,7 +45,19 @@ describe('UserResolver', () => {
   });
 
   it('should return user if have token',() => {
+    let currentToken = 'some_token';
+    let profile = {id: 'myID', name: 'myName'} as DtoUser;
+    cookieService.get.and.returnValue(currentToken);
+    httpService.getOwnProfile.and.returnValue(of(profile))
 
+    let mock = <T, P extends keyof T>(obj: Pick<T, P>): T => obj as T;
+    let route = mock<ActivatedRouteSnapshot, 'params'>({
+      params: {},
+    });
+
+    userResolver.resolve(route);
+    expect(userResolver.token).toEqual(currentToken);
+    expect(httpService.getOwnProfile).toHaveBeenCalled()
   })
 
 });
