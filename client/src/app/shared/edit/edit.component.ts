@@ -25,13 +25,12 @@ export class EditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     const recipe = this.route.snapshot.data['recipe'];
-    if( recipe ) {
+
+    if( !!recipe ) {
       this.recipeForm = this.createForm(recipe);
       this.recipeService.setEdit(recipe);
     } else {
@@ -43,7 +42,7 @@ export class EditComponent implements OnInit, OnDestroy {
     })
   }
 
-  createForm(recipe: DtoRecipe) {
+  createForm(recipe: DtoRecipe): FormGroup {
     const { id, name, description, ingredients } = recipe;
 
     if( recipe?.image ) this.imageRecipe = recipe?.image;

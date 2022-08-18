@@ -46,7 +46,7 @@ export class RecipeService {
     this.httpService.getEditRecipe(id).subscribe((recipe: DtoRecipe) => this.setEdit(recipe))
   }
 
-  setEdit(recipe: DtoRecipe) {
+  setEdit(recipe: DtoRecipe): void {
     this.editRecipe$ = recipe;
     this.editRecipe.next(this.editRecipe$);
   }

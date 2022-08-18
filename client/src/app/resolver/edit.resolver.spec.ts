@@ -35,13 +35,15 @@ describe('EditResolver', () => {
   })
 
   it('should send id recipe', () => {
+    let id = '1234'
     let mock = <T, P extends keyof T>(obj: Pick<T, P>): T => obj as T;
     let route = mock<ActivatedRouteSnapshot, 'params'>({
-      params: {id: '1234'},
+      params: {id},
     });
     httpService.getEditRecipe.and.callThrough();
 
     editResolver.resolve(route)
+    expect(editResolver.routerID).toEqual(id)
   })
 
 });

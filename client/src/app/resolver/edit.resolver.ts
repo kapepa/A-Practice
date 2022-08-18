@@ -12,11 +12,13 @@ import { DtoRecipe } from "../dto/dto.recipe";
   providedIn: 'root'
 })
 export class EditResolver implements Resolve<DtoRecipe> {
+  routerID!: string;
   constructor(
     private httpService: HttpService,
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<DtoRecipe> {
-    return this.httpService.getEditRecipe(route.params['id'])
+    this.routerID = route.params['id']
+    return this.httpService.getEditRecipe(this.routerID)
   }
 }
