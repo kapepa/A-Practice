@@ -19,8 +19,10 @@ describe('UserResolver', () => {
   ])
 
   let spyCookieService = jasmine.createSpyObj('CookieService', [
-    'get', 'set',
+    'get', null, undefined
   ])
+
+  let mock = <T, P extends keyof T>(obj: Pick<T, P>): T => obj as T;
 
   beforeEach((() => {
     TestBed.configureTestingModule({
@@ -50,7 +52,6 @@ describe('UserResolver', () => {
     cookieService.get.and.returnValue(currentToken);
     httpService.getOwnProfile.and.returnValue(of(profile))
 
-    let mock = <T, P extends keyof T>(obj: Pick<T, P>): T => obj as T;
     let route = mock<ActivatedRouteSnapshot, 'params'>({
       params: {},
     });
@@ -58,6 +59,17 @@ describe('UserResolver', () => {
     userResolver.resolve(route);
     expect(userResolver.token).toEqual(currentToken);
     expect(httpService.getOwnProfile).toHaveBeenCalled()
+  })
+
+  it('should return empty object DtoUser', () => {
+    cookieService.get.and.returnValue('')
+
+    let route = mock<ActivatedRouteSnapshot, 'params'>({
+      params: {},
+    });
+
+    userResolver.resolve(route)
+    expect(userResolver.token).toEqual('');
   })
 
 });

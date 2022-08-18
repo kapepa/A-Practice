@@ -22,6 +22,6 @@ export class UserResolver implements Resolve<DtoUser> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<DtoUser> {
     this.token = this.cookieService.get('token');
-    return this.token ? this.httpService.getOwnProfile() : of({} as DtoUser);
+    return !!this.token ? this.httpService.getOwnProfile() : of({} as DtoUser);
   }
 }
