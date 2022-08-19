@@ -6,15 +6,9 @@ import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RecipeService } from "../../service/recipe.service";
 import { DtoIngredient, DtoRecipe } from "../../dto/dto.recipe";
-import { of, Subject } from "rxjs";
+import { of } from "rxjs";
 import { DtoUser } from "../../dto/dto.user";
-import {ActivatedRoute} from "@angular/router";
-
-class MockRecipeService {
-  selectIndex$: number | null = null;
-  editRecipe = of({} as DtoRecipe);
-  setEdit(recipe: DtoRecipe): void {}
-}
+import { ActivatedRoute } from "@angular/router";
 
 describe('EditComponent', () => {
   let editComponent: EditComponent;
@@ -32,7 +26,12 @@ describe('EditComponent', () => {
   }
 
   beforeEach((() => {
-
+    class MockRecipeService {
+      editRecipe = of(recipe as DtoRecipe);
+      setEdit(recipe: DtoRecipe): void {};
+      updateRecipes({}: FormData): void {};
+      newRecipes({}: FormData):void  {};
+    }
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -56,14 +55,61 @@ describe('EditComponent', () => {
     expect(editComponent).toBeTruthy();
   });
 
-  it('', () => {
+  it('should initialize edit old FormGroup, ngOnInit', () => {
     editComponent.ngOnInit();
     let recipe = activatedRoute.snapshot.data['recipe'];
+    let res = editComponent.createForm(recipe)
+    recipeService.setEdit(recipe);
 
-    recipeService.setEdit(recipe)
-
-    recipeService.editRecipe.subscribe((recipe) => {
-      console.log(recipe)
+    expect(res.get('id')?.value).toEqual(recipe.id)
+    recipeService.editRecipe.subscribe((res) => {
+      expect(res).toEqual(recipe)
     })
   })
+
+  it('should initialize new FormGroup, ngOnInit',() => {
+    editComponent.ngOnInit();
+    let recipe = {} as DtoRecipe;
+    let res = editComponent.createForm(recipe)
+
+    expect(res.get('id')?.value).toEqual('');
+  })
+
+  it('should create FormGroup and return ', () => {
+    let form = editComponent.createForm(recipe);
+
+    expect(form.get('name')?.value).toEqual(recipe.name);
+  })
+
+  it('should submit FormData to server old FormGroup, onSubmit', () => {
+    editComponent.recipeForm = editComponent.createForm(recipe);
+    editComponent.onSubmit();
+
+    expect(editComponent.recipeForm.get('name')?.value).toBeNull();
+  })
+
+  it('should submit FormData to server New FormGroup, onSubmit', () => {
+    const { id, ...other } = recipe;
+    editComponent.recipeForm = editComponent.createForm({...other, id: ''});
+    editComponent.onSubmit();
+
+    expect(editComponent.recipeForm.get('name')?.value).toBeNull();
+  })
+
+  it('should reset FormGroup, resetForm', () => {
+    editComponent.recipeForm = editComponent.createForm(recipe);
+    editComponent.imageFile = 'image';
+    editComponent.imageRecipe = 'image';
+
+    editComponent.resetForm();
+
+    expect(editComponent.imageFile).toBeUndefined()
+    expect(editComponent.imageRecipe).toBeUndefined()
+  })
+
+  it('should cancel recipes and routing to /recipe, cancelRecipes', () => {
+
+  })
+
+
 });
