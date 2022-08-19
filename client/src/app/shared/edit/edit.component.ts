@@ -54,9 +54,9 @@ export class EditComponent implements OnInit, OnDestroy {
       id: [id ? id : ''],
       name: [ name ? recipe?.name : '', [Validators.required, Validators.minLength(3)]],
       description: [ description ? recipe?.description : '', [ Validators.required, Validators.minLength(3)]],
-      ingredients: this.fb.array(ingredients ? ingredients.map((ingredient: DtoIngredient) => {
+      ingredients: this.fb.array(!!ingredients?.length ? ingredients.map((ingredient: DtoIngredient) => {
         return this.fb.group(ingredient);
-      }) : [])
+      }) : [] as any)
     });
   }
 
@@ -86,10 +86,12 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   resetForm() {
-    this.imageFile = undefined;
-    this.imageRecipe = undefined;
-    this.deleteRecipeAll();
-    this.recipeForm.reset();
+    if(!!this.recipeForm?.value){
+      this.imageFile = undefined;
+      this.imageRecipe = undefined;
+      this.deleteRecipeAll();
+      this.recipeForm.reset();
+    }
   }
 
   cancelRecipes(e: Event) {
@@ -106,15 +108,16 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   deleteRecipeAll() {
-    this.ingredientsArr.clear()
+    let arr = this.ingredientsArr;
+    if(!!arr?.length) arr.clear();
   }
 
-  receiveIngredient(i: number, key: string) {
+  receiveIngredient() {
     return this.recipeForm.get('ingredients');
   }
 
   get ingredientsArr() {
-    return this.recipeForm.get('ingredients') as FormArray;
+    return this.recipeForm?.get('ingredients') as FormArray;
   }
 
   selectImage(elem: HTMLInputElement) { elem.click(); }
