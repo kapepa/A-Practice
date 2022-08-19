@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditComponent } from './edit.component';
 import { RouterTestingModule } from "@angular/router/testing";
@@ -8,12 +8,17 @@ import { RecipeService } from "../../service/recipe.service";
 import { DtoIngredient, DtoRecipe } from "../../dto/dto.recipe";
 import { of } from "rxjs";
 import { DtoUser } from "../../dto/dto.user";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router, Routes } from "@angular/router";
+import { Location } from '@angular/common';
+import { RecipeDetailComponent } from "../recipe-detail/recipe-detail.component";
 
 describe('EditComponent', () => {
+  let fixture: ComponentFixture<EditComponent>
   let editComponent: EditComponent;
   let recipeService: RecipeService;
   let activatedRoute: ActivatedRoute;
+  let router: Router;
+  let location: Location
 
   let recipe = {
     created_at: "2022-07-21T21:27:48.350Z",
@@ -25,6 +30,10 @@ describe('EditComponent', () => {
     user: {} as DtoUser,
   }
 
+  const routes: Routes = [
+    {path: 'recipe/:id', component: RecipeDetailComponent},
+  ];
+
   beforeEach((() => {
     class MockRecipeService {
       editRecipe = of(recipe as DtoRecipe);
@@ -34,7 +43,7 @@ describe('EditComponent', () => {
     }
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
+        RouterTestingModule.withRoutes(routes),
         HttpClientTestingModule,
         ReactiveFormsModule,
       ],
@@ -44,11 +53,16 @@ describe('EditComponent', () => {
         { provide: RecipeService, useClass: MockRecipeService },
         { provide: ActivatedRoute, useValue: { snapshot: { data: { title: recipe.name, recipe } } }, }
       ]
-    }).compileComponents();
+    });
 
+    fixture = TestBed.createComponent(EditComponent);
     editComponent = TestBed.inject(EditComponent);
     recipeService = TestBed.inject(RecipeService);
     activatedRoute = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
+    location = TestBed.inject(Location);
+
+    router.initialNavigation()
   }));
 
   it('should create editComponent', () => {
@@ -107,8 +121,28 @@ describe('EditComponent', () => {
     expect(editComponent.imageRecipe).toBeUndefined()
   })
 
-  it('should cancel recipes and routing to /recipe, cancelRecipes', () => {
+  it('should cancel recipes and routing to /recipe, cancelRecipes',() => {
+    editComponent.currentID = "someID"
+    fixture.nativeElement.querySelector('.btn-danger').click();
 
+    router.navigate(['/recipe',editComponent.currentID]).then((param) => {
+      expect(location.path()).toEqual('/recipe/' + editComponent.currentID);
+    })
+    expect(true).toBeTruthy()
+  })
+
+  it('should create FormArray on field ingredients, appendRecipe', () => {
+    editComponent.recipeForm = editComponent.createForm(recipe);
+    editComponent.appendRecipe();
+
+    expect([...editComponent.recipeForm.get('ingredients')?.value].length).toEqual(1)
+  })
+
+  it('should delete ingredient on index , deleteRecipe', () => {
+    editComponent.recipeForm = editComponent.createForm(recipe);
+    editComponent.deleteRecipe(0);
+
+    expect([...editComponent.recipeForm.get('ingredients')?.value].length).toEqual(0)
   })
 
 
