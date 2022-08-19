@@ -112,9 +112,9 @@ export class EditComponent implements OnInit, OnDestroy {
     if(!!arr?.length) arr.clear();
   }
 
-  receiveIngredient() {
-    return this.recipeForm.get('ingredients');
-  }
+  // receiveIngredient() {
+  //   return this.recipeForm.get('ingredients');
+  // }
 
   get ingredientsArr() {
     return this.recipeForm?.get('ingredients') as FormArray;

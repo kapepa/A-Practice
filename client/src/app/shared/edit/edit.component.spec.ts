@@ -63,6 +63,7 @@ describe('EditComponent', () => {
     location = TestBed.inject(Location);
 
     router.initialNavigation()
+    fixture.detectChanges();
   }));
 
   it('should create editComponent', () => {
@@ -145,5 +146,17 @@ describe('EditComponent', () => {
     expect([...editComponent.recipeForm.get('ingredients')?.value].length).toEqual(0)
   })
 
+  it('click on button for load images, selectImage', () => {
+    spyOn(editComponent, 'selectImage');
+    let imageUrl = fixture.nativeElement.querySelector('#imageUrl')
+    fixture.nativeElement.querySelector('#imageBtn').click(imageUrl);
+    editComponent.selectImage(imageUrl)
+
+    expect(editComponent.selectImage).toHaveBeenCalled();
+  })
+
+  it('change image on load, changeInputImage', () => {
+
+  })
 
 });
