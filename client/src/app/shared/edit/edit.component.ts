@@ -42,6 +42,10 @@ export class EditComponent implements OnInit, OnDestroy {
     })
   }
 
+  ngOnDestroy() {
+    // this.editSubject.unsubscribe()
+  }
+
   createForm(recipe: DtoRecipe): FormGroup {
     const { id, name, description, ingredients } = recipe;
 
@@ -54,10 +58,6 @@ export class EditComponent implements OnInit, OnDestroy {
         return this.fb.group(ingredient);
       }) : [])
     });
-  }
-
-  ngOnDestroy() {
-    // this.editSubject.unsubscribe()
   }
 
   onSubmit() {
