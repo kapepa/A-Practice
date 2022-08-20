@@ -52,7 +52,7 @@ describe('EditComponent', () => {
         EditComponent,
         { provide: RecipeService, useClass: MockRecipeService },
         { provide: ActivatedRoute, useValue: { snapshot: { data: { title: recipe.name, recipe } } }, }
-      ]
+      ],
     });
 
     fixture = TestBed.createComponent(EditComponent);
@@ -155,8 +155,8 @@ describe('EditComponent', () => {
     expect(editComponent.selectImage).toHaveBeenCalled();
   })
 
-  it('change image on load, changeInputImage', () => {
-
-  })
+  // it('change image on load, changeInputImage', () => {
+  //   // fixture.nativeElement.querySelector('#imageInput');
+  // })
 
 });
