@@ -3,7 +3,7 @@ import { RecipeService } from "../../service/recipe.service";
 import {Subject, Subscription} from "rxjs";
 import { DtoIngredient, DtoRecipe } from "../../dto/dto.recipe";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-edit',
@@ -124,7 +124,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   changeInputImage(e: Event) {
     const elem = (e.target as HTMLInputElement);
-    if(elem.files && elem.files[0]){
+    if(elem?.files && elem.files[0]){
       this.imageFile = elem.files[0];
       const reader = new FileReader();
       reader.readAsDataURL(elem.files[0]);
@@ -134,11 +134,11 @@ export class EditComponent implements OnInit, OnDestroy {
     }
   }
 
-  get name () {
+  get name (): AbstractControl<string> | null {
     return this.recipeForm.get('name')
   }
 
-  get description() {
+  get description(): AbstractControl<string> | null {
     return this.recipeForm.get('description');
   }
 }

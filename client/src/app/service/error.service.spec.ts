@@ -2,12 +2,14 @@ import { TestBed } from '@angular/core/testing';
 
 import { ErrorService } from './error.service';
 import { DtoErrorPopup } from "../dto/dto.common";
+import {BrowserModule} from "@angular/platform-browser";
 
 describe('ErrorService', () => {
   let serviceError: ErrorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [ BrowserModule ],
       providers: [
         ErrorService
       ]
