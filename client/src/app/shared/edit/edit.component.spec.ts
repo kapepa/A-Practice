@@ -11,6 +11,8 @@ import { DtoUser } from "../../dto/dto.user";
 import { ActivatedRoute, Router, Routes } from "@angular/router";
 import { Location } from '@angular/common';
 import { RecipeDetailComponent } from "../recipe-detail/recipe-detail.component";
+import {BrowserModule} from "@angular/platform-browser";
+import {EditModule} from "./edit.module";
 
 describe('EditComponent', () => {
   let fixture: ComponentFixture<EditComponent>
@@ -43,9 +45,11 @@ describe('EditComponent', () => {
     }
     TestBed.configureTestingModule({
       imports: [
+        BrowserModule,
         RouterTestingModule.withRoutes(routes),
         HttpClientTestingModule,
         ReactiveFormsModule,
+        EditModule,
       ],
       declarations: [ ],
       providers: [
@@ -53,7 +57,7 @@ describe('EditComponent', () => {
         { provide: RecipeService, useClass: MockRecipeService },
         { provide: ActivatedRoute, useValue: { snapshot: { data: { title: recipe.name, recipe } } }, }
       ],
-    });
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EditComponent);
     editComponent = TestBed.inject(EditComponent);
@@ -155,8 +159,33 @@ describe('EditComponent', () => {
     expect(editComponent.selectImage).toHaveBeenCalled();
   })
 
-  // it('change image on load, changeInputImage', () => {
-  //   // fixture.nativeElement.querySelector('#imageInput');
-  // })
+  it('should upload the file - changeInputImage = true', () => {
+
+    let dataTransfer = new DataTransfer()
+    dataTransfer.items.add(new File([''], 'test-file.pdf'))
+
+    let inputDebugEl = fixture.nativeElement.querySelector('#imageUrl');
+    inputDebugEl.files = dataTransfer.files;
+    fixture.detectChanges();
+
+    spyOn(editComponent, 'changeInputImage');
+
+    editComponent.changeInputImage(inputDebugEl);
+    expect(editComponent.changeInputImage).toHaveBeenCalled()
+  });
+
+  it('should return name of FormGroup, name', () => {
+    editComponent.recipeForm = editComponent.createForm(recipe);
+    let name = editComponent.name;
+
+    expect(name?.value).toEqual(recipe.name)
+  })
+
+  it('should return description of FormGroup, description', () => {
+    editComponent.recipeForm = editComponent.createForm(recipe);
+    let description = editComponent.description;
+
+    expect(description?.value).toEqual(recipe.description)
+  })
 
 });
