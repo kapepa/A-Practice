@@ -12,10 +12,8 @@ import { asyncData, asyncError } from "../../testing/async-observable-helpers";
 import { DtoUser } from "../dto/dto.user";
 import { DtoIngredient, DtoRecipe } from "../dto/dto.recipe";
 import { DtoErrorResponse } from "../dto/dto.common";
-import {environment} from "../../environments/environment";
 
 describe('HttpService', () => {
-  let url = environment.configUrl;
   let serviceHttp: HttpService;
   let httpSpy: Spy<HttpClient>;
 
