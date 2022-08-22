@@ -10,9 +10,16 @@ import { DtoErrorResponse } from "../dto/dto.common";
 import { Router } from "@angular/router";
 import { DtoUser } from "../dto/dto.user";
 
+export interface Post {
+  id: number;
+  title: string;
+  body: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class HttpService {
   private url = environment.configUrl;
 
@@ -111,6 +118,7 @@ export class HttpService {
 
   getAllRecipe(query?: DtoQuery): Observable<DtoRecipe[]> {
     const compileQuery = query && !!Object.keys(query).length ? this.createQuery(query) : '';
+
     return this.http.get<DtoRecipe[] & DtoErrorResponse>(`${this.url}/api/recipe${compileQuery}`).pipe(
       tap({
         error: (error) => this.clientError(error)
@@ -184,5 +192,9 @@ export class HttpService {
       }),
       catchError(this.handleError)
     )
+  }
+
+  getPosts(): Observable<any> {
+    return this.http.get<Post[]>(`https://jsonplaceholder.typicode.com/posts`);
   }
 }
