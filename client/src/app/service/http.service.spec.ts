@@ -1,10 +1,10 @@
-import { TestBed } from '@angular/core/testing';
+import {fakeAsync, TestBed} from '@angular/core/testing';
 
 import { HttpService } from './http.service';
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { CookieService } from "ngx-cookie-service";
 import { ErrorService } from "./error.service";
-import {RouterTestingModule} from "@angular/router/testing";
+import { RouterTestingModule } from "@angular/router/testing";
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Spy } from "jasmine-auto-spies";
@@ -12,8 +12,10 @@ import { asyncData, asyncError } from "../../testing/async-observable-helpers";
 import { DtoUser } from "../dto/dto.user";
 import { DtoIngredient, DtoRecipe } from "../dto/dto.recipe";
 import { DtoErrorResponse } from "../dto/dto.common";
+import {environment} from "../../environments/environment";
 
 describe('HttpService', () => {
+  let url = environment.configUrl;
   let serviceHttp: HttpService;
   let httpSpy: Spy<HttpClient>;
 
@@ -31,7 +33,10 @@ describe('HttpService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, RouterTestingModule ],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+      ],
       providers: [
         HttpService,
         ErrorService,
@@ -45,13 +50,15 @@ describe('HttpService', () => {
     httpSpy = TestBed.inject(HttpClient) as Spy<HttpClient>;
   });
 
+
   it('should be created HttpModule', () => {
     expect(serviceHttp).toBeTruthy();
   });
 
   it('create query string', () => {
-    const query = serviceHttp.createQuery({take: 5});
-    return expect(query).toBe('?take=5')
+    let query = serviceHttp.createQuery({take: 5});
+
+    expect(query).toBe('?take=5')
   });
 
   it('set token in cookie', () => {
@@ -406,4 +413,5 @@ describe('HttpService', () => {
       }
     })
   })
+
 });
