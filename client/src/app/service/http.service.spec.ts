@@ -222,7 +222,7 @@ describe('HttpService', () => {
   })
 
   it('get all recipe', (done: DoneFn) => {
-    httpSpy.get.and.returnValue(asyncData([] as DtoRecipe[]))
+    httpSpy.get.and.returnValue(asyncData([] as DtoRecipe[]));
 
     serviceHttp.getAllRecipe({ take: 5, skip: 5 }).subscribe({
       next: (recipe: DtoRecipe[]) => {
