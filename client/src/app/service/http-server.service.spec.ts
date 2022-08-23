@@ -214,6 +214,88 @@ describe('Http Server', () => {
     })
   })
 
+  describe('get all recipe, getAllRecipe()',() => {
+    let http = `${url}/api/recipe?take=5&skip=0`;
 
+    it('', () => {
+      httpService.getAllRecipe({ take: 5, skip: 0 }).subscribe((res) => {
+        expect([recipe]).toEqual(res);
+      });
+      httpMock.expectOne({ url: http, method: 'GET' }).flush([recipe]);
+    })
+  })
+
+  describe('create new recipe, createRecipe()', () => {
+    let http = `${url}/api/recipe/create`;
+
+    it('should success create recipe', () => {
+      httpService.createRecipe({} as FormData).subscribe((res) => {
+        expect(recipe).toEqual(res);
+      })
+
+      httpMock.expectOne({url: http, method: "POST"}).flush(recipe);
+    })
+
+    it('should be error when create recipe', () => {
+      httpService.createRecipe({} as FormData).subscribe((res) => {
+        spyOn(httpService, 'clientError');
+        httpService.clientError(res.response);
+
+        expect(httpService.clientError).toHaveBeenCalled();
+        expect(responseError).toEqual(res);
+      })
+
+      httpMock.expectOne({url: http, method: "POST"}).flush(responseError);
+    })
+  })
+
+  describe('update recipe, updateRecipe()', () => {
+    let http = `${url}/api/recipe/update`;
+
+    it('should success update recipe', () => {
+      httpService.updateRecipe({} as FormData).subscribe((res) => {
+        expect(recipe).toEqual(res);
+      })
+
+      httpMock.expectOne({url: http, method: 'PATCH'}).flush(recipe);
+    })
+
+    it('should be error when update', () => {
+      httpService.updateRecipe({} as FormData).subscribe((res) => {
+        spyOn(httpService, 'clientError');
+        httpService.clientError(res.response);
+
+        expect(httpService.clientError).toHaveBeenCalled();
+        expect(responseError).toEqual(res);
+      })
+
+      httpMock.expectOne({url: http, method: 'PATCH'}).flush(responseError);
+    });
+  })
+
+  describe('delete recipe, deleteRecipe()', () => {
+    let id = 'recipeID';
+    let http = `${url}/api/recipe/${id}`;
+
+    it('should success delete recipe', () => {
+      httpService.deleteRecipe(id).subscribe((res) => {
+        expect({ delete: true }).toEqual(res);
+      });
+
+      httpMock.expectOne({ url: http, method: 'DELETE' }).flush({ delete: true });
+    })
+
+    it('should success delete recipe', () => {
+      httpService.deleteRecipe(id).subscribe((res) => {
+        spyOn(httpService, 'clientError');
+        httpService.clientError(res.response);
+
+        expect(httpService.clientError).toHaveBeenCalled();
+        expect(responseError).toEqual(res);
+      });
+
+      httpMock.expectOne({ url: http, method: 'DELETE' }).flush(responseError);
+    })
+  })
 
 });
