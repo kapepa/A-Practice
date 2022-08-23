@@ -49,6 +49,15 @@ describe('Http Server', () => {
     ingredients: [] as DtoIngredient[],
   }
 
+  let ingredient: DtoIngredient = {
+    id: 'ingredientID',
+    name: 'ingredientName',
+    amount: 2,
+    public: true,
+    recipe: {} as  DtoRecipe,
+    created_at: new Date(),
+  }
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -296,6 +305,33 @@ describe('Http Server', () => {
 
       httpMock.expectOne({ url: http, method: 'DELETE' }).flush(responseError);
     })
+  })
+
+  describe('get all ingredient, getAllIngredient()', () => {
+    let http = `${url}/api/recipe/ingredients?take=5&skip=0`;
+
+    it('should success all ingredient', (done: DoneFn) => {
+      httpService.getAllIngredient({take: 5, skip: 0}).subscribe({
+        next: (res) => {
+          expect([ingredient]).toEqual(res);
+          done()
+        },
+        error: () => done.fail
+      })
+
+      httpMock.expectOne({url: http, method: 'GET' }).flush([ingredient])
+    })
+
+    // it('should error when get ingredient', (done: DoneFn) => {
+    //   httpService.getAllIngredient({take: 5, skip: 0}).subscribe({
+    //     next: (res) => {
+    //       done.fail('such ingredients is not find')
+    //     },
+    //     error: (err) => done()
+    //   })
+    //
+    //   httpMock.expectOne({url: http, method: 'GET' }).flush([ingredient])
+    // })
   })
 
 });
