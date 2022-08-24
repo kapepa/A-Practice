@@ -9,6 +9,7 @@ import { DtoIngredient, DtoRecipe } from "../dto/dto.recipe";
 import { DtoUser } from "../dto/dto.user";
 import { Router } from "@angular/router";
 import { HomeComponent } from "../page/home/home.component";
+import {HttpErrorResponse} from "@angular/common/http";
 
 describe('Http Server', () => {
   let url = environment.configUrl
@@ -18,17 +19,10 @@ describe('Http Server', () => {
   let errorService: jasmine.SpyObj<ErrorService>;
   let cookieService: jasmine.SpyObj<CookieService>;
 
+  let spyHttpClient = jasmine.createSpyObj('HttpClient', ['get']);
   let spyErrorService = jasmine.createSpyObj('ErrorService', ['setError']);
   let spyCookieService = jasmine.createSpyObj('ErrorService', ['get','set']);
   let spyMockRouter = { navigate: jasmine.createSpy('navigate') };
-
-  let responseError = {
-    status: 404,
-    response: {
-      statusCode: 404,
-      message: 'message error',
-    }
-  };
 
   let user: DtoUser = {
     id: 'someID',
@@ -58,6 +52,19 @@ describe('Http Server', () => {
     created_at: new Date(),
   }
 
+  let responseError = {
+    status: 404,
+    response: {
+      statusCode: 404,
+      message: 'message error',
+    }
+  };
+
+  let errorResponse = new HttpErrorResponse({
+    error: 'test 404 error',
+    status: 404, statusText: 'Not Found'
+  });
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -73,7 +80,6 @@ describe('Http Server', () => {
         { provide: Router, useValue: spyMockRouter },
       ],
     });
-
 
     router = TestBed.inject(Router);
     httpService = TestBed.inject(HttpService);
@@ -103,37 +109,61 @@ describe('Http Server', () => {
   describe('create user, createUser()', () => {
     let http = `${url}/api/user/create`;
 
-    it('success user did created', () => {
+    it('success user did created', (done: DoneFn) => {
       let body = {create: true};
-      httpService.createUser({} as FormData).subscribe((data) => {
-
-        expect(body).toEqual(data);
+      httpService.createUser({} as FormData).subscribe({
+        next: (data) => {
+          expect(body).toEqual(data);
+          done();
+        },
+        error: err => done.fail
       })
 
       httpMock.expectOne({url: http, method: 'POST'}).flush(body)
     })
 
-    it('such email is already exist in db', () => {
+    it('such email is already exist in db', (done: DoneFn) => {
 
-      httpService.createUser({} as FormData).subscribe((data) => {
-        spyOn(httpService, 'clientError').and.callThrough();
-        httpService.clientError(data.response);
+      httpService.createUser({} as FormData).subscribe({
+        next: (data) => {
+          spyOn(httpService, 'clientError').and.callThrough();
+          httpService.clientError(data.response);
 
-        expect(responseError).toEqual(data);
-        expect(httpService.clientError).toHaveBeenCalledTimes(1);
+          expect(responseError).toEqual(data);
+          expect(httpService.clientError).toHaveBeenCalledTimes(1);
+          done();
+        },
+        error: err => done.fail,
       })
 
       httpMock.expectOne({url: http, method: 'POST'}).flush(responseError)
     })
 
 
-    it('error when create user', function () {
+    it('error when create user', (done: DoneFn) => {
       let body = {create: false};
-      httpService.createUser({} as FormData).subscribe((data) => {
-        expect(body).toEqual(data);
+      httpService.createUser({} as FormData).subscribe({
+        next: (data) => {
+          expect(body).toEqual(data);
+          done();
+        },
+        error: err => done.fail,
       })
 
       httpMock.expectOne({url: http, method: 'POST'}).flush(body);
+    });
+
+    it('error when create user, on server', (done: DoneFn) => {
+      let body = {create: false};
+      httpService.createUser({} as FormData).subscribe({
+        next: () => done.fail,
+        error: err => {
+          expect(err).toBeTruthy();
+          done();
+        },
+      })
+
+      httpMock.expectOne({url: http, method: 'POST'}).flush({}, errorResponse);
     });
   })
 
@@ -141,37 +171,71 @@ describe('Http Server', () => {
     let http = `${url}/api/auth/login`;
     let login = {email: 'test@mail.com', password: 'something_password'}
 
-    it('should success login, return token', () => {
-      httpService.loginUser(login).subscribe((data) => {
-        spyOn(httpService, 'setToken').and.callThrough();
-        httpService.setToken(data.access_token);
+    it('should success login, return token', (done: DoneFn) => {
+      httpService.loginUser(login).subscribe({
+        next: (data) => {
+          spyOn(httpService, 'setToken').and.callThrough();
+          httpService.setToken(data.access_token);
 
-        expect(httpService.setToken).toHaveBeenCalled();
-        expect(cookieService.set).toHaveBeenCalled();
-        expect({access_token: 'some_token'}).toEqual(data)
+          expect(httpService.setToken).toHaveBeenCalled();
+          expect(cookieService.set).toHaveBeenCalled();
+          expect({access_token: 'some_token'}).toEqual(data);
+          done()
+        },
+        error: err => done.fail,
       })
       httpMock.expectOne({url: http, method: 'POST'}).flush({access_token: 'some_token'});
     })
 
-    it('should error login',() => {
-      httpService.loginUser(login).subscribe((res) => {
-        spyOn(httpService,'clientError').and.callThrough();
-        httpService.clientError(res.response);
+    it('should error login',(done: DoneFn) => {
+      httpService.loginUser(login).subscribe({
+        next: (res) => {
+          spyOn(httpService,'clientError').and.callThrough();
+          httpService.clientError(res.response);
 
-        expect(httpService.clientError).toHaveBeenCalledTimes(1)
-        expect(responseError).toEqual(res);
+          expect(httpService.clientError).toHaveBeenCalledTimes(1)
+          expect(responseError).toEqual(res);
+          done();
+        },
+        error: err => done.fail,
       })
       httpMock.expectOne({ url: http, method: 'POST' }).flush(responseError)
+    })
+
+    it('should error login, on server',(done: DoneFn) => {
+      httpService.loginUser(login).subscribe({
+        next: () => done.fail,
+        error: err => {
+          expect(err).toBeTruthy();
+          done()
+        },
+      })
+      httpMock.expectOne({ url: http, method: 'POST' }).flush({}, errorResponse)
     })
   })
 
   describe('get own profile, getOwnProfile()', () => {
     let http = `${url}/api/user`;
-    it('should return data profile', () => {
-      httpService.getOwnProfile().subscribe((res: DtoUser) => {
-        expect(res).toEqual(user);
+    it('should return data profile', (done: DoneFn) => {
+      httpService.getOwnProfile().subscribe({
+        next: (res: DtoUser) => {
+          expect(res).toEqual(user);
+          done();
+        },
+        error: () => done.fail,
       })
       httpMock.expectOne({url: http, method: "GET"}).flush(user)
+    })
+
+    it('should return error data profile, on server', (done: DoneFn) => {
+      httpService.getOwnProfile().subscribe({
+        next: () => done.fail,
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done();
+        },
+      })
+      httpMock.expectOne({url: http, method: "GET"}).flush({}, errorResponse)
     })
   })
 
@@ -179,25 +243,45 @@ describe('Http Server', () => {
     let id = 'recipeID';
     let http = `${url}/api/recipe/one/${id}`;
 
-    it('should get one recipe on id', () => {
+    it('should get one recipe on id', (done: DoneFn) => {
 
-      httpService.getOneRecipe(id).subscribe((res) => {
-        expect(recipe).toEqual(res)
+      httpService.getOneRecipe(id).subscribe({
+        next: (res) => {
+          expect(recipe).toEqual(res)
+          done()
+        },
+        error: () => done.fail,
       });
 
       httpMock.expectOne({url: http, method: 'GET'}).flush(recipe);
     });
 
-    it('should return error', () => {
+    it('should return error', (done: DoneFn) => {
       spyOn(httpService, 'clientError').and.callThrough();
-      httpService.getOneRecipe(id).subscribe((res) => {
-        httpService.clientError(res.response)
+      httpService.getOneRecipe(id).subscribe({
+        next: (res) => {
+          httpService.clientError(res.response)
 
-        expect(httpService.clientError).toHaveBeenCalled();
-        expect(responseError).toEqual(res);
+          expect(httpService.clientError).toHaveBeenCalled();
+          expect(responseError).toEqual(res);
+          done();
+        },
+        error: () => done.fail,
       });
 
       httpMock.expectOne({url: http, method: 'GET'}).flush(responseError);
+    });
+
+    it('should return error, one server', (done: DoneFn) => {
+      httpService.getOneRecipe(id).subscribe({
+        next: () => done.fail,
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done();
+        },
+      });
+
+      httpMock.expectOne({url: http, method: 'GET'}).flush({}, errorResponse);
     });
   })
 
@@ -205,22 +289,43 @@ describe('Http Server', () => {
     let id = 'recipeID';
     let http = `${url}/api/recipe/edit/${id}`;
 
-    it('should success get recipe', () => {
-      httpService.getEditRecipe(id).subscribe((res) => {
-        expect(recipe).toEqual(res);
+    it('should success get recipe', (done: DoneFn) => {
+      httpService.getEditRecipe(id).subscribe({
+        next: (res) => {
+          expect(recipe).toEqual(res);
+          done()
+        },
+        error: () => done.fail,
       })
 
       httpMock.expectOne({url: http, method: 'GET'}).flush(recipe);
     })
 
-    it('should success get recipe',() => {
-      httpService.getEditRecipe(id).subscribe((res) => {
-        expect(router.navigate).toHaveBeenCalledWith(['/recipe']);
-        expect(responseError).toEqual(res);
+    it('should success get recipe',(done: DoneFn) => {
+      httpService.getEditRecipe(id).subscribe({
+        next: (res) => {
+          expect(router.navigate).toHaveBeenCalledWith(['/recipe']);
+          expect(responseError).toEqual(res);
+          done()
+        },
+        error: () => done.fail,
       })
 
       httpMock.expectOne({url: http, method: 'GET'}).flush(responseError);
     })
+
+    it('should success get recipe, on server',(done: DoneFn) => {
+      httpService.getEditRecipe(id).subscribe({
+        next: () => done.fail,
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done();
+        }
+      })
+
+      httpMock.expectOne({url: http, method: 'GET'}).flush({}, errorResponse);
+    })
+
   })
 
   describe('get all recipe, getAllRecipe()',() => {
@@ -237,48 +342,89 @@ describe('Http Server', () => {
   describe('create new recipe, createRecipe()', () => {
     let http = `${url}/api/recipe/create`;
 
-    it('should success create recipe', () => {
-      httpService.createRecipe({} as FormData).subscribe((res) => {
-        expect(recipe).toEqual(res);
+    it('should success create recipe', (done: DoneFn) => {
+      httpService.createRecipe({} as FormData).subscribe({
+        next: (res) => {
+          expect(recipe).toEqual(res);
+          done();
+        },
+        error: () => done.fail,
       })
 
       httpMock.expectOne({url: http, method: "POST"}).flush(recipe);
     })
 
-    it('should be error when create recipe', () => {
-      httpService.createRecipe({} as FormData).subscribe((res) => {
-        spyOn(httpService, 'clientError');
-        httpService.clientError(res.response);
+    it('should be error when create recipe', (done: DoneFn) => {
+      httpService.createRecipe({} as FormData).subscribe({
+        next: (res) => {
+          spyOn(httpService, 'clientError');
+          httpService.clientError(res.response);
 
-        expect(httpService.clientError).toHaveBeenCalled();
-        expect(responseError).toEqual(res);
+          expect(httpService.clientError).toHaveBeenCalled();
+          expect(responseError).toEqual(res);
+          done();
+        },
+        error: () => done.fail,
       })
 
       httpMock.expectOne({url: http, method: "POST"}).flush(responseError);
     })
+
+    it('should be error when create recipe, on server', (done: DoneFn) => {
+      httpService.createRecipe({} as FormData).subscribe({
+        next: () => done.fail,
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done()
+        },
+      })
+
+      httpMock.expectOne({url: http, method: "POST"}).flush({},errorResponse);
+    })
+
   })
 
   describe('update recipe, updateRecipe()', () => {
     let http = `${url}/api/recipe/update`;
 
-    it('should success update recipe', () => {
-      httpService.updateRecipe({} as FormData).subscribe((res) => {
-        expect(recipe).toEqual(res);
+    it('should success update recipe', (done: DoneFn) => {
+      httpService.updateRecipe({} as FormData).subscribe({
+        next: (res) => {
+          expect(recipe).toEqual(res);
+          done();
+        },
+        error: () => done.fail,
       })
 
       httpMock.expectOne({url: http, method: 'PATCH'}).flush(recipe);
     })
 
-    it('should be error when update', () => {
-      httpService.updateRecipe({} as FormData).subscribe((res) => {
-        spyOn(httpService, 'clientError');
-        httpService.clientError(res.response);
+    it('should be error when update', (done: DoneFn) => {
+      httpService.updateRecipe({} as FormData).subscribe({
+        next: (res) => {
+          spyOn(httpService, 'clientError');
+          httpService.clientError(res.response);
 
-        expect(httpService.clientError).toHaveBeenCalled();
-        expect(responseError).toEqual(res);
+          expect(httpService.clientError).toHaveBeenCalled();
+          expect(responseError).toEqual(res);
+          done();
+        },
+        error: () => done.fail,
       })
 
       httpMock.expectOne({url: http, method: 'PATCH'}).flush(responseError);
+    });
+
+    it('should be error when update, on server', (done: DoneFn) => {
+      httpService.updateRecipe({} as FormData).subscribe({
+        next: () => done.fail,
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done();
+        }
+      })
+
+      httpMock.expectOne({url: http, method: 'PATCH'}).flush({}, errorResponse);
     });
   })
 
@@ -286,24 +432,44 @@ describe('Http Server', () => {
     let id = 'recipeID';
     let http = `${url}/api/recipe/${id}`;
 
-    it('should success delete recipe', () => {
-      httpService.deleteRecipe(id).subscribe((res) => {
-        expect({ delete: true }).toEqual(res);
+    it('should success delete recipe', (done: DoneFn) => {
+      httpService.deleteRecipe(id).subscribe({
+        next: (res) => {
+          expect({ delete: true }).toEqual(res);
+          done();
+        },
+        error: (err) => done.fail,
       });
 
       httpMock.expectOne({ url: http, method: 'DELETE' }).flush({ delete: true });
     })
 
-    it('should success delete recipe', () => {
-      httpService.deleteRecipe(id).subscribe((res) => {
-        spyOn(httpService, 'clientError');
-        httpService.clientError(res.response);
+    it('should error delete recipe', (done: DoneFn) => {
+      httpService.deleteRecipe(id).subscribe({
+        next: (res) => {
+          spyOn(httpService, 'clientError');
+          httpService.clientError(res.response);
 
-        expect(httpService.clientError).toHaveBeenCalled();
-        expect(responseError).toEqual(res);
+          expect(httpService.clientError).toHaveBeenCalled();
+          expect(responseError).toEqual(res);
+          done();
+        },
+        error: () => done.fail,
       });
 
       httpMock.expectOne({ url: http, method: 'DELETE' }).flush(responseError);
+    })
+
+    it('should error delete recipe, on server', (done: DoneFn) => {
+      httpService.deleteRecipe(id).subscribe({
+        next: (res) => done.fail,
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done();
+        }
+      });
+
+      httpMock.expectOne({ url: http, method: 'DELETE' }).flush({},errorResponse);
     })
   })
 
@@ -322,16 +488,105 @@ describe('Http Server', () => {
       httpMock.expectOne({url: http, method: 'GET' }).flush([ingredient])
     })
 
-    // it('should error when get ingredient', (done: DoneFn) => {
-    //   httpService.getAllIngredient({take: 5, skip: 0}).subscribe({
-    //     next: (res) => {
-    //       done.fail('such ingredients is not find')
-    //     },
-    //     error: (err) => done()
-    //   })
-    //
-    //   httpMock.expectOne({url: http, method: 'GET' }).flush([ingredient])
-    // })
+    it('should error when get ingredient', (done: DoneFn) => {
+      httpService.getAllIngredient({take: 5, skip: 0}).subscribe({
+        next: (res) => {
+          done.fail('such ingredients is not find')
+        },
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done()
+        },
+      })
+
+      httpMock.expectOne({url: http, method: 'GET' }).flush({},errorResponse);
+    })
+
+  })
+
+  describe('create ingredient, createIngredient()', () => {
+    let http = `${url}/api/recipe/ingredient/create`;
+
+    it('should return new ingredient', (done) => {
+      httpService.createIngredient({} as FormData).subscribe({
+        next: (res) => {
+          expect(ingredient).toEqual(res);
+          done();
+        },
+        error: err => done.fail,
+      })
+
+      httpMock.expectOne(http).flush(ingredient);
+    })
+
+    it('should error, on server', (done: DoneFn) => {
+      httpService.createIngredient({} as FormData).subscribe({
+        next: () => done.fail,
+        error: (err) => {
+          expect(err).toBeTruthy();
+          done();
+        }
+      })
+
+      httpMock.expectOne(http).flush({}, errorResponse);
+    })
+  })
+
+  describe('update ingredient updateIngredient()', () => {
+    let http = `${url}/api/recipe/ingredient/update`;
+
+    it('should success update ingredient', (done: DoneFn) => {
+      httpService.updateIngredient({} as FormData).subscribe({
+        next: (res) => {
+          expect(ingredient).toEqual(res);
+          done();
+        },
+        error: err => done.fail,
+      })
+
+      httpMock.expectOne({url: http, method: 'PATCH'}).flush(ingredient);
+    });
+
+    it('should error when ingredient', (done: DoneFn) => {
+      httpService.updateIngredient({} as FormData).subscribe({
+        next: () => done.fail,
+        error: err => {
+          expect(err).toBeTruthy();
+          done();
+        },
+      })
+
+      httpMock.expectOne({url: http, method: 'PATCH'}).flush({},errorResponse);
+    });
+  })
+
+  describe('delete ingredient on id, deleteIngredient()', () => {
+    let id = 'ingredientID';
+    let http = `${url}/api/recipe/ingredient/${id}`;
+
+    it('should success delete ingredient', (done: DoneFn) => {
+      httpService.deleteIngredient(id).subscribe({
+        next: (res) => {
+          expect({ delete: true }).toEqual(res);
+          done();
+        },
+        error: err => done.fail,
+      })
+
+      httpMock.expectOne({url: http, method: 'DELETE'}).flush({ delete: true });
+    })
+
+    it('should success delete ingredient', (done: DoneFn) => {
+      httpService.deleteIngredient(id).subscribe({
+        next: () => done.fail,
+        error: err => {
+          expect(err).toBeTruthy();
+          done();
+        }
+      })
+
+      httpMock.expectOne({url: http, method: 'DELETE'}).flush({}, errorResponse);
+    })
   })
 
 });
