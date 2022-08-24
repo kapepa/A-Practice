@@ -55,7 +55,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       const errorRef = this.appError.viewContainerRef;
       const errorComponent = errorRef.createComponent(ErrorComponent);
 
-
       errorComponent.instance.isError = error;
       this.error = errorComponent.instance.close.subscribe(() => {
         this.error.unsubscribe();
