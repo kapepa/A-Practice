@@ -43,7 +43,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if(params['login'] && (!this.login || this.login?.closed)) this.invokeAuth();
     });
     this.spinnerService.spinner.subscribe(( bool: boolean ) => {
-      if(this.spinnerRef) this.spinnerRef.clear();
+      if(!!this.spinnerRef) this.spinnerRef.clear();
 
       if(bool){
         this.spinnerRef = this.appSpinner.viewContainerRef;

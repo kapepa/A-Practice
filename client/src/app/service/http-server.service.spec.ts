@@ -447,7 +447,7 @@ describe('Http Server', () => {
     it('should error delete recipe', (done: DoneFn) => {
       httpService.deleteRecipe(id).subscribe({
         next: (res) => {
-          spyOn(httpService, 'clientError');
+          spyOn(httpService, 'clientError').and.callThrough();
           httpService.clientError(res.response);
 
           expect(httpService.clientError).toHaveBeenCalled();
