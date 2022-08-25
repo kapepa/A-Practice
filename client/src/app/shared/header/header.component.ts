@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild, ComponentFactoryResolver, ViewContainerRef} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ComponentFactoryResolver, ViewContainerRef, Type} from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserService } from "../../service/user.service";
 import { AlertDirective } from "../../directive/alert.directive";
@@ -6,13 +6,13 @@ import { AlertComponent } from "../../popup/alert/alert.component";
 import { Subscription } from "rxjs";
 import { AuthDirective } from "../../directive/auth.directive";
 import { AuthComponent } from "../../popup/auth/auth.component";
-import {DtoErrorPopup} from "../../dto/dto.common";
-import {ErrorService} from "../../service/error.service";
-import {ErrorDirective} from "../../directive/error.directive";
-import {ErrorComponent} from "../../popup/error/error.component";
-import {SpinnerService} from "../../service/spinner.service";
-import {SpinnerDirective} from "../../directive/spinner.directive";
-import {SpinnerComponent} from "../spinner/spinner.component";
+import { DtoErrorPopup } from "../../dto/dto.common";
+import { ErrorService } from "../../service/error.service";
+import { ErrorDirective } from "../../directive/error.directive";
+import { ErrorComponent } from "../../popup/error/error.component";
+import { SpinnerService } from "../../service/spinner.service";
+import { SpinnerDirective } from "../../directive/spinner.directive";
+import { SpinnerComponent } from "../spinner/spinner.component";
 
 @Component({
   selector: 'app-header',
@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   login!: Subscription;
   error!: Subscription;
   spinner!: Subscription;
+
   @ViewChild(AuthDirective, {static: true}) appAuth!: AuthDirective;
   @ViewChild(AlertDirective, {static: true}) appAlert!: AlertDirective;
   @ViewChild(ErrorDirective, {static: true}) appError!: ErrorDirective;
@@ -49,24 +50,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.spinnerService.spinner.subscribe(( bool: boolean ) => {
       if(!!this.spinnerRef) this.spinnerRef.clear();
 
-      if(bool && this.appSpinner){
-        this.spinnerRef = this.appSpinner.viewContainerRef;
-        const spinnerComponent = this.spinnerRef.createComponent(SpinnerComponent);
-        spinnerComponent.instance.spinner = true;
+      if(bool){
+        this.spinnerRef = this.appSpinner?.viewContainerRef;
+        const spinnerComponent = this.spinnerRef?.createComponent(SpinnerComponent);
+        if(!!spinnerComponent) spinnerComponent.instance.spinner = true;
       }
     })
 
     this.errorService.isErrorSubject.subscribe(( error: DtoErrorPopup ) => {
-      if(!this.appError) return;
-      const errorRef = this.appError.viewContainerRef;
-      const errorComponent = errorRef.createComponent(ErrorComponent);
+      const errorRef = this.appError?.viewContainerRef;
+      const errorComponent = errorRef?.createComponent(ErrorComponent);
 
-      errorComponent.instance.isError = error;
-      this.error = errorComponent.instance.close.subscribe(() => {
-        this.error.unsubscribe();
-        this.errorService.restError();
-        errorRef.clear();
-      })
+      if(!!errorComponent) {
+        errorComponent.instance.isError = error;
+        this.error = errorComponent.instance.close.subscribe(() => {
+          this.error.unsubscribe();
+          this.errorService.restError();
+          errorRef.clear();
+        })
+      }
     })
 
   }
@@ -86,16 +88,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   invokeAuth() {
-    console.log(this.appAuth)
-    if(!this.appAuth) return;
-    const loginRef = this.appAuth.viewContainerRef;
-    const authComponent = loginRef.createComponent(AuthComponent);
+    const loginRef = this.appAuth?.viewContainerRef;
+    const authComponent = loginRef?.createComponent(AuthComponent);
 
-    this.login = authComponent.instance.close.subscribe(() => {
-      this.login.unsubscribe();
-      loginRef.clear();
-      this.router.navigate([], { queryParams: { }});
-    })
+    if(!!authComponent) {
+      this.login = authComponent.instance.close.subscribe(() => {
+        this.login.unsubscribe();
+        loginRef.clear();
+        this.router.navigate([], { queryParams: { }});
+      })
+    }
   }
 
   clickDynamic() {
@@ -107,4 +109,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       alertRef.clear();
     })
   }
+
+
 }

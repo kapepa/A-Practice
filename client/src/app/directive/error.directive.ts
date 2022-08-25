@@ -1,7 +1,8 @@
 import {Directive, ViewContainerRef} from '@angular/core';
 
 @Directive({
-  selector: '[appError]'
+  selector: '[appError]',
+  exportAs: 'appError',
 })
 export class ErrorDirective {
 
