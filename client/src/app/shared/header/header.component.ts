@@ -30,6 +30,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild(SpinnerDirective, {static: true}) appSpinner!: SpinnerDirective;
   spinnerRef!: ViewContainerRef;
 
+  test:boolean = false
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -39,19 +41,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+
     this.route.queryParams.subscribe(params => {
       if(params['login'] && (!this.login || this.login?.closed)) this.invokeAuth();
     });
+
     this.spinnerService.spinner.subscribe(( bool: boolean ) => {
       if(!!this.spinnerRef) this.spinnerRef.clear();
 
-      if(bool){
+      if(bool && this.appSpinner){
         this.spinnerRef = this.appSpinner.viewContainerRef;
         const spinnerComponent = this.spinnerRef.createComponent(SpinnerComponent);
         spinnerComponent.instance.spinner = true;
       }
     })
+
     this.errorService.isErrorSubject.subscribe(( error: DtoErrorPopup ) => {
+      if(!this.appError) return;
       const errorRef = this.appError.viewContainerRef;
       const errorComponent = errorRef.createComponent(ErrorComponent);
 
@@ -62,6 +68,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         errorRef.clear();
       })
     })
+
   }
 
   ngOnDestroy() {
@@ -79,6 +86,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   invokeAuth() {
+    console.log(this.appAuth)
+    if(!this.appAuth) return;
     const loginRef = this.appAuth.viewContainerRef;
     const authComponent = loginRef.createComponent(AuthComponent);
 
