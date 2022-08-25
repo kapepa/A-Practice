@@ -14,6 +14,9 @@ import {AlertDirective} from "../../directive/alert.directive";
 import {BrowserModule} from "@angular/platform-browser";
 import {HeaderModule} from "./header.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {DtoUser} from "../../dto/dto.user";
+import {AuthComponent} from "../../popup/auth/auth.component";
+import {CommonModule} from "@angular/common";
 
 class MockSpinnerService {
   spinner = of(true);
@@ -28,12 +31,11 @@ class MockErrorService {
 }
 
 class MockUserService {
-
+  user: DtoUser = {} as DtoUser;
 }
 
 describe('HeaderComponent', () => {
   let fixture:ComponentFixture<HeaderComponent>;
-  let component: HeaderComponent
 
   let headerComponent: HeaderComponent;
   let activatedRoute: ActivatedRoute;
@@ -41,16 +43,16 @@ describe('HeaderComponent', () => {
   let errorService: jasmine.SpyObj<ErrorService>;
   let spinnerService: jasmine.SpyObj<SpinnerService>;
 
-  let userServiceSpy = jasmine.createSpyObj('UserService', ['createUser']);
-
   beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
         BrowserModule,
         RouterTestingModule,
+        CommonModule,
       ],
       providers: [
+        HeaderComponent,
         { provide: UserService, useClass: MockUserService },
         { provide: ErrorService, useClass: MockErrorService },
         { provide: SpinnerService, useClass: MockSpinnerService },
@@ -62,13 +64,11 @@ describe('HeaderComponent', () => {
         ErrorDirective,
         SpinnerDirective,
         AlertDirective,
-      ]
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
-    component = fixture.componentInstance;
-
-    // headerComponent = TestBed.inject(HeaderComponent);
+    headerComponent = TestBed.inject(HeaderComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
     userService = TestBed.inject(UserService) as jasmine.SpyObj<UserService>;
     errorService = TestBed.inject(ErrorService) as jasmine.SpyObj<ErrorService>;
@@ -78,39 +78,40 @@ describe('HeaderComponent', () => {
   }))
 
   it('should be create HeaderComponent', () => {
-    expect(component).toBeTruthy();
+    expect(headerComponent).toBeTruthy();
   })
 
-  // describe('HeaderComponent, ngOnInit()',() => {
-  //
-  //   beforeEach(() => {
-  //
-  //     // fixture.detectChanges();
-  //     // headerComponent.ngOnInit();
-  //   })
-  //
-  //   it('should have login query', () => {
-  //     // activatedRoute.queryParams.subscribe((value) => {
-  //     //   let invokeAuth = spyOn(headerComponent, 'invokeAuth').and.callThrough();
-  //     //   headerComponent.appAuth = fixture.componentInstance.appAuth
-  //     //   console.log(fixture.componentInstance.appAuth)
-  //     //   headerComponent.invokeAuth();
-  //     //   expect(invokeAuth).toHaveBeenCalled();
-  //     // })
-  //   });
-  //
-  //   it('should call spinner', () => {
-  //     // spinnerService.spinner.subscribe((bool: boolean) => {
-  //     //
-  //     // })
-  //   })
-  //
-  //   it('should call error', () => {
-  //     // errorService.isErrorSubject.subscribe((err: DtoErrorPopup) => {
-  //     //
-  //     // })
-  //   })
-  // })
+  describe('HeaderComponent, ngOnInit()',() => {
+
+    beforeEach(() => {
+      headerComponent.ngOnInit();
+    })
+
+    it('should have login query', () => {
+
+      activatedRoute.queryParams.subscribe((value) => {
+        // let invokeAuth = spyOn(headerComponent, 'invokeAuth').and.callThrough();
+        // headerComponent.appAuth = fixture.componentInstance.appAuth
+        // console.log(fixture.componentInstance.appAuth)
+        // headerComponent.invokeAuth();
+        // expect(invokeAuth).toHaveBeenCalled();
+      })
+
+      // headerComponent.invokeAuth();
+    });
+
+    it('should call spinner', () => {
+      // spinnerService.spinner.subscribe((bool: boolean) => {
+      //
+      // })
+    })
+
+    it('should call error', () => {
+      // errorService.isErrorSubject.subscribe((err: DtoErrorPopup) => {
+      //
+      // })
+    })
+  })
 
 
 })
