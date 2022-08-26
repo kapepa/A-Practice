@@ -11,12 +11,16 @@ import {AuthDirective} from "../../directive/auth.directive";
 import {ErrorDirective} from "../../directive/error.directive";
 import {SpinnerDirective} from "../../directive/spinner.directive";
 import {AlertDirective} from "../../directive/alert.directive";
-import {BrowserModule} from "@angular/platform-browser";
+import {BrowserModule, By} from "@angular/platform-browser";
 import {HeaderModule} from "./header.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {DtoUser} from "../../dto/dto.user";
 import {AuthComponent} from "../../popup/auth/auth.component";
 import {CommonModule} from "@angular/common";
+import {ReCaptchaV3Service} from "ng-recaptcha";
+import {ErrorComponent} from "../../popup/error/error.component";
+import {SpinnerComponent} from "../spinner/spinner.component";
+import {NO_ERRORS_SCHEMA} from "@angular/core";
 
 class MockSpinnerService {
   spinner = of(true);
@@ -34,6 +38,14 @@ class MockUserService {
   user: DtoUser = {} as DtoUser;
 }
 
+class MockSpinnerComponent {
+
+}
+
+class MockErrorComponent {
+  isError: any;
+}
+
 describe('HeaderComponent', () => {
   let fixture:ComponentFixture<HeaderComponent>;
 
@@ -42,6 +54,9 @@ describe('HeaderComponent', () => {
   let userService: jasmine.SpyObj<UserService>;
   let errorService: jasmine.SpyObj<ErrorService>;
   let spinnerService: jasmine.SpyObj<SpinnerService>;
+
+  let spinnerComponent: jasmine.SpyObj<SpinnerComponent>;
+  let errorComponent: jasmine.SpyObj<ErrorComponent>;
 
   beforeEach((() => {
     TestBed.configureTestingModule({
@@ -53,6 +68,9 @@ describe('HeaderComponent', () => {
       ],
       providers: [
         HeaderComponent,
+        ErrorComponent,
+        // { provide: SpinnerComponent, useClass: MockSpinnerComponent },
+        // { provide: ErrorComponent, useClass: MockErrorComponent },
         { provide: UserService, useClass: MockUserService },
         { provide: ErrorService, useClass: MockErrorService },
         { provide: SpinnerService, useClass: MockSpinnerService },
@@ -65,6 +83,7 @@ describe('HeaderComponent', () => {
         SpinnerDirective,
         AlertDirective,
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
@@ -73,6 +92,9 @@ describe('HeaderComponent', () => {
     userService = TestBed.inject(UserService) as jasmine.SpyObj<UserService>;
     errorService = TestBed.inject(ErrorService) as jasmine.SpyObj<ErrorService>;
     spinnerService = TestBed.inject(SpinnerService) as jasmine.SpyObj<SpinnerService>;
+
+    // spinnerComponent = TestBed.inject(SpinnerComponent) as jasmine.SpyObj<SpinnerComponent>;
+    // errorComponent = TestBed.inject(ErrorComponent) as jasmine.SpyObj<ErrorComponent>;
 
     fixture.detectChanges();
   }))
@@ -87,30 +109,52 @@ describe('HeaderComponent', () => {
       headerComponent.ngOnInit();
     })
 
-    it('should have login query', () => {
+    it('should call error', () => {
+      let fixtureError = TestBed.createComponent(ErrorComponent);
 
-      activatedRoute.queryParams.subscribe((value) => {
-        // let invokeAuth = spyOn(headerComponent, 'invokeAuth').and.callThrough();
-        // headerComponent.appAuth = fixture.componentInstance.appAuth
-        // console.log(fixture.componentInstance.appAuth)
-        // headerComponent.invokeAuth();
-        // expect(invokeAuth).toHaveBeenCalled();
-      })
 
-      // headerComponent.invokeAuth();
-    });
+      console.log('!!!',fixture.debugElement.query(By.directive(ErrorDirective)))
+
+
+
+      // headerComponent.appError.viewContainerRef.createComponent(ErrorComponent)
+
+      // errorService.isErrorSubject.subscribe((err: DtoErrorPopup) => {
+      //
+      // })
+    })
+
+    // it('should have login query', () => {
+    //
+    //   // let auth: AuthDirective = fixture.componentInstance.appAuth;
+    //
+    //   // headerComponent.appAuth.viewContainerRef.createComponent(AuthComponent)
+    //   // headerComponent.appAuth =
+    //   //   fixture.debugElement.query(By.directive(AuthComponent)).componentInstance
+    //
+    //   let auth = TestBed.inject(AuthComponent)
+    //
+    //   activatedRoute.queryParams.subscribe((value) => {
+    //     // let invokeAuth = spyOn(headerComponent, 'invokeAuth').and.callThrough();
+    //     // headerComponent.appAuth = fixture.componentInstance.appAuth
+    //     // console.log(fixture.componentInstance.appAuth)
+    //     // headerComponent.invokeAuth();
+    //     // expect(invokeAuth).toHaveBeenCalled();
+    //
+    //   })
+    //   headerComponent.invokeAuth()
+    // });
 
     it('should call spinner', () => {
+
+
+
       // spinnerService.spinner.subscribe((bool: boolean) => {
       //
       // })
     })
 
-    it('should call error', () => {
-      // errorService.isErrorSubject.subscribe((err: DtoErrorPopup) => {
-      //
-      // })
-    })
+
   })
 
 
