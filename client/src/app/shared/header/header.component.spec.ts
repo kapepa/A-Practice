@@ -106,23 +106,26 @@ describe('HeaderComponent', () => {
   describe('HeaderComponent, ngOnInit()',() => {
 
     beforeEach(() => {
-      headerComponent.ngOnInit();
+      // headerComponent.ngOnInit();
+      // headerComponent.ngAfterContentInit()
     })
 
-    it('should call error', () => {
-      let fixtureError = TestBed.createComponent(ErrorComponent);
+    it('should call spinner', () => {
+      let fixture = TestBed.createComponent(HeaderComponent);
+      let component = fixture.componentInstance;
+
+      fixture.detectChanges();
+
+      // component.invokeAuth();
 
 
-      console.log('!!!',fixture.debugElement.query(By.directive(ErrorDirective)))
 
 
-
-      // headerComponent.appError.viewContainerRef.createComponent(ErrorComponent)
-
-      // errorService.isErrorSubject.subscribe((err: DtoErrorPopup) => {
+      // spinnerService.spinner.subscribe((bool: boolean) => {
       //
       // })
     })
+
 
     // it('should have login query', () => {
     //
@@ -145,15 +148,11 @@ describe('HeaderComponent', () => {
     //   headerComponent.invokeAuth()
     // });
 
-    it('should call spinner', () => {
-
-
-
-      // spinnerService.spinner.subscribe((bool: boolean) => {
-      //
-      // })
-    })
-
+    // it('should call error', () => {
+    //   // errorService.isErrorSubject.subscribe((err: DtoErrorPopup) => {
+    //   //
+    //   // })
+    // })
 
   })
 

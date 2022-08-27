@@ -9,7 +9,6 @@ import { SpinnerComponent } from "../spinner/spinner.component";
 import { ErrorComponent } from "../../popup/error/error.component";
 import { SpinnerModule } from "../spinner/spinner.module";
 
-
 @NgModule({
   declarations: [
     HeaderComponent,
