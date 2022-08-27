@@ -12,14 +12,11 @@ import {ErrorDirective} from "../../directive/error.directive";
 import {SpinnerDirective} from "../../directive/spinner.directive";
 import {AlertDirective} from "../../directive/alert.directive";
 import {BrowserModule, By} from "@angular/platform-browser";
-import {HeaderModule} from "./header.module";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {DtoUser} from "../../dto/dto.user";
-import {AuthComponent} from "../../popup/auth/auth.component";
 import {CommonModule} from "@angular/common";
 import {RECAPTCHA_V3_SITE_KEY, ReCaptchaV3Service} from "ng-recaptcha";
 import {ErrorComponent} from "../../popup/error/error.component";
-import {SpinnerComponent} from "../spinner/spinner.component";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {environment} from "../../../environments/environment";
 
@@ -100,38 +97,37 @@ describe('HeaderComponent', () => {
 
     beforeEach(() => {
       fixture.detectChanges();
+      component.ngOnInit();
     })
 
     it('should have login query', () => {
       activatedRoute.queryParams.subscribe((value) => {
-        console.log(value)
         let invokeAuth = spyOn(headerComponent, 'invokeAuth').and.callThrough();
         headerComponent.appAuth = fixture.componentInstance.appAuth
 
         headerComponent.invokeAuth();
         expect(invokeAuth).toHaveBeenCalled();
-        expect(value).toEqual({login: 'login'})
+        expect(value).toEqual({login: 'login'});
+        expect(component.login).toBeTruthy();
       })
-      component.ngOnInit();
     });
 
     it('should call spinner', () => {
 
-
-
-      let login = fixture.debugElement.query(By.css('#login'));
-      // spinnerService.spinner.subscribe((bool: boolean) => {
-      //
-      // })
+      spinnerService.spinner.subscribe((bool: boolean) => {
+        expect(bool).toBeTruthy();
+      })
     })
 
-    // it('should call error', () => {
-    //   // errorService.isErrorSubject.subscribe((err: DtoErrorPopup) => {
-    //   //
-    //   // })
-    // })
-
+    it('should call error', () => {
+      errorService.isErrorSubject.subscribe((err: DtoErrorPopup) => {
+        expect(err).toEqual({ open: true, title: 'TitleError', desc: 'DescError' });
+        expect(component.error).toBeTruthy();
+      })
+    })
   })
 
-
+  // it('clickAuth', () => {
+  //   let login = fixture.debugElement.query(By.css('#login'));
+  // })
 })

@@ -36,6 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild(AlertDirective, {static: true}) appAlert!: AlertDirective;
   @ViewChild(ErrorDirective, {static: true}) appError!: ErrorDirective;
   @ViewChild(SpinnerDirective, {static: true}) appSpinner!: SpinnerDirective;
+
   spinnerRef!: ViewContainerRef;
 
   test:boolean = false
@@ -49,7 +50,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-
     this.route.queryParams.subscribe(params => {
       if(params['login'] && (!this.login || this.login?.closed)) this.invokeAuth();
     });
@@ -58,15 +58,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if(!!this.spinnerRef) this.spinnerRef.clear();
 
       if(bool){
-        this.spinnerRef = this.appSpinner?.viewContainerRef;
+        this.spinnerRef = this.appSpinner.viewContainerRef;
         const spinnerComponent = this.spinnerRef?.createComponent(SpinnerComponent);
         spinnerComponent.instance.spinner = true;
       }
     })
 
     this.errorService.isErrorSubject.subscribe(( error: DtoErrorPopup ) => {
-      const errorRef = this.appError?.viewContainerRef;
-      const errorComponent = errorRef?.createComponent(ErrorComponent);
+      const errorRef = this.appError.viewContainerRef;
+      const errorComponent = errorRef.createComponent(ErrorComponent);
 
       errorComponent.instance.isError = error;
       this.error = errorComponent?.instance.close.subscribe(() => {
