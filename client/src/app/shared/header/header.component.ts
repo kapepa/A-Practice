@@ -32,13 +32,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   error!: Subscription;
   spinner!: Subscription;
 
-  @ViewChild(AuthDirective, {static: true, read: ViewContainerRef}) appAuth!: AuthDirective;
-  @ViewChild(AlertDirective, {static: true, read: ViewContainerRef}) appAlert!: AlertDirective;
-  @ViewChild(ErrorDirective, {static: true, read: ViewContainerRef}) appError!: ErrorDirective;
-  @ViewChild(SpinnerDirective, {static: true, read: ViewContainerRef}) appSpinner!: SpinnerDirective;
+  @ViewChild(AuthDirective, {static: true}) appAuth!: AuthDirective;
+  @ViewChild(AlertDirective, {static: true}) appAlert!: AlertDirective;
+  @ViewChild(ErrorDirective, {static: true}) appError!: ErrorDirective;
+  @ViewChild(SpinnerDirective, {static: true}) appSpinner!: SpinnerDirective;
   spinnerRef!: ViewContainerRef;
-
-  @ViewChild("measurementBoxStar") measurementBox!: ElementRef;
 
   test:boolean = false
 
