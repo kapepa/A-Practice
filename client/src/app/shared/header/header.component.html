@@ -17,7 +17,7 @@
         </li>
       </ul>
       <div appDrop class="nav-item dropdown" data-bs-toggle="dropdown">
-        <a *ngIf="!user.name; else Userlogin" class="nav-link" [routerLink]="[]" [queryParams]="{login: 'login'}">Login</a>
+        <a id="login" *ngIf="!user?.name; else Userlogin" class="nav-link" [routerLink]="[]" [queryParams]="{login: 'login'}">Login</a>
 
         <ng-template #Userlogin>
           <button class="btn btn-link" >
@@ -39,10 +39,10 @@
 <!--<app-error></app-error>-->
 <!--<app-spinner></app-spinner>-->
 
-<ng-template #appAuth></ng-template>
-<ng-template #appAlert></ng-template>
-<ng-template #appError></ng-template>
-<ng-template #appSpinner></ng-template>
+<ng-template [ngIf]="appAuth" #appAuth appAuth></ng-template>
+<ng-template [ngIf]="appAlert" #appAlert appAlert></ng-template>
+<ng-template [ngIf]="appError" #appError appError></ng-template>
+<ng-template [ngIf]="appSpinner" #appSpinner appSpinner></ng-template>
 
 
 
