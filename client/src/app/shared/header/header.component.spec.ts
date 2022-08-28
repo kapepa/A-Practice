@@ -31,9 +31,10 @@ class MockErrorService {
     desc: 'DescError'
   } as DtoErrorPopup);
 }
-
 class MockUserService {
+
   user: DtoUser = { name: '' } as DtoUser;
+  logoutUser = () => {};
 }
 
 describe('HeaderComponent', () => {
@@ -45,6 +46,8 @@ describe('HeaderComponent', () => {
   let userService: jasmine.SpyObj<UserService>;
   let errorService: jasmine.SpyObj<ErrorService>;
   let spinnerService: jasmine.SpyObj<SpinnerService>;
+
+  let userServiceSpy = jasmine.createSpyObj('UserService', ['logoutUser', 'user']);
 
   beforeEach((() => {
     TestBed.configureTestingModule({
@@ -62,7 +65,8 @@ describe('HeaderComponent', () => {
           provide: RECAPTCHA_V3_SITE_KEY,
           useValue: environment.recaptcha.siteKey,
         },
-        { provide: UserService, useClass: MockUserService },
+        // { provide: UserService, useClass: MockUserService },
+        { provide: UserService, useValue: userServiceSpy },
         { provide: ErrorService, useClass: MockErrorService },
         { provide: SpinnerService, useClass: MockSpinnerService },
         { provide: ActivatedRoute, useValue: { queryParams: of({login: 'login'}) }},
@@ -125,6 +129,36 @@ describe('HeaderComponent', () => {
         expect(component.error).toBeTruthy();
       })
     })
+  })
+
+  it('should all unsubscribe dynamic component', () => {
+    spyOn(component,'ngOnDestroy').and.callThrough();
+    component.ngOnDestroy()
+
+    expect(component.ngOnDestroy).toHaveBeenCalled();
+    expect(component.login.closed).toBeTruthy();
+    expect(component.error.closed).toBeTruthy();
+    expect(component.spinner.closed).toBeTruthy();
+  })
+
+  it('should click logout user, logoutUser()', () => {
+    userServiceSpy.user.and.returnValue({name: 'MyName'})
+
+    let click = fixture.debugElement.query(By.css('#logout'));
+    click.triggerEventHandler('click');
+
+    expect(userService.logoutUser).toHaveBeenCalled();
+  });
+
+
+  it('should get user', () => {
+    let profile = { name: 'MyName' };
+    spyOnProperty(component, 'user', 'get').and.returnValue(profile)
+
+    fixture.detectChanges();
+    let element = fixture.debugElement.query(By.css('#name'));
+
+    expect(element.nativeElement.textContent).toContain(profile.name)
   })
 
   // it('clickAuth', () => {
