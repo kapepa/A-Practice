@@ -61,6 +61,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.spinnerRef = this.appSpinner.viewContainerRef;
         const spinnerComponent = this.spinnerRef?.createComponent(SpinnerComponent);
         spinnerComponent.instance.spinner = true;
+
+        this.spinner = this.spinnerService.spinner.subscribe((bool) => {})
       }
     })
 
@@ -78,11 +80,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   }
 
-
   ngOnDestroy() {
-    if(!!this.alert) this.alert.unsubscribe();
     if(!!this.login) this.login.unsubscribe();
     if(!!this.error) this.error.unsubscribe();
+    if(!!this.spinner) this.spinner.unsubscribe();
   }
 
   logoutUser(e: Event) {
