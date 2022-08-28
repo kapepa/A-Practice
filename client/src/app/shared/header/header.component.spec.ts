@@ -161,7 +161,13 @@ describe('HeaderComponent', () => {
     expect(element.nativeElement.textContent).toContain(profile.name)
   })
 
-  // it('clickAuth', () => {
-  //   let login = fixture.debugElement.query(By.css('#login'));
-  // })
+  it('should create AuthComponent, invokeAuth()', () => {
+    spyOn(component, 'invokeAuth').and.callThrough();
+    component.invokeAuth();
+
+    expect(component.invokeAuth).toHaveBeenCalled();
+    activatedRoute.queryParams.subscribe((value) => {
+      expect(value).toEqual({login: 'login'})
+    })
+  })
 })
