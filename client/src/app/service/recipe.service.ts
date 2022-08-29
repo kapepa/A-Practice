@@ -83,10 +83,6 @@ export class RecipeService {
     return this.recipes;
   }
 
-  get getRecipeSelect() {
-    return this.recipe;
-  }
-
   getAllRecipe(query?: DtoQuery) {
     this.httpService.getAllRecipe(query).subscribe(( recipe: DtoRecipe[] ) => {
       this.recipes = recipe;
