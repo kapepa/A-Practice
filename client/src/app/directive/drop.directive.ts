@@ -11,7 +11,8 @@ export class DropDirective {
     private el: ElementRef,
   ) {}
 
-  @HostListener('click', ['$event']) onClick (event: Event) {
+  @HostListener('click', ['$event'])
+  onClick (event: Event) {
     event.stopPropagation()
     this.toggle = !this.toggle;
   }
