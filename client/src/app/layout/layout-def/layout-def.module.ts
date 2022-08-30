@@ -12,7 +12,7 @@ import { AccessEditGuard } from "../../guard/access-edit.guard";
 import { ErrorModule } from "../../popup/error/error.module";
 import { EditResolver } from "../../resolver/edit.resolver";
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: 'recipe', component: HomeComponent, children:
     [
       { path: '', component: RecipeDetailComponent},

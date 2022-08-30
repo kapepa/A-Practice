@@ -30,13 +30,15 @@ export class HttpService {
     private router: Router,
   ) { };
 
-  handleError(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      console.error('An error occurred:', error.error);
-    } else {
-      console.error(`Backend returned code ${error.status}, body was: `, error.error);
-    }
-    return throwError(() => new Error('Something bad happened; please try again later.'));
+  handleError(operation = 'operation') {
+    return (error: HttpErrorResponse): Observable<any> => {
+      if (error.error instanceof Event) {
+        throw error.error;
+      }
+
+      const message = `server returned code ${error.status} with body "${error.error}"`;
+      throw new Error(`${operation} failed: ${message}`);
+    };
   }
 
   clientError(error: { statusCode: number, message: string }): void {
@@ -63,7 +65,7 @@ export class HttpService {
         },
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError),
+      catchError(this.handleError('createUser')),
     );
   }
 
@@ -77,7 +79,7 @@ export class HttpService {
         },
         error: (error) => this.clientError(error),
       }),
-      catchError(this.handleError),
+      catchError(this.handleError('loginUser')),
     )
   }
 
@@ -86,7 +88,7 @@ export class HttpService {
       tap({
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('getOwnProfile'))
     )
   }
 
@@ -99,7 +101,7 @@ export class HttpService {
         },
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('getOneRecipe'))
     )
   }
 
@@ -112,7 +114,7 @@ export class HttpService {
         },
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('getEditRecipe'))
     )
   }
 
@@ -123,7 +125,7 @@ export class HttpService {
       tap({
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('getAllRecipe'))
     )
   }
 
@@ -133,7 +135,7 @@ export class HttpService {
         next: (data) => { if(data.response) this.clientError(data.response) },
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('createRecipe'))
     )
   }
 
@@ -153,7 +155,7 @@ export class HttpService {
         next: (data) => { if(data.response) this.clientError(data.response) },
         error: (error) => this.clientError(error),
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('deleteRecipe'))
     );
   }
 
@@ -163,7 +165,7 @@ export class HttpService {
       tap({
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('getAllIngredient'))
     )
   }
 
@@ -172,7 +174,7 @@ export class HttpService {
       tap({
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('createIngredient'))
     );
   }
 
@@ -181,7 +183,7 @@ export class HttpService {
       tap({
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('updateIngredient'))
     )
   }
 
@@ -190,11 +192,8 @@ export class HttpService {
       tap({
         error: (error) => this.clientError(error)
       }),
-      catchError(this.handleError)
+      catchError(this.handleError('deleteIngredient'))
     )
   }
 
-  getPosts(): Observable<any> {
-    return this.http.get<Post[]>(`https://jsonplaceholder.typicode.com/posts`,{headers: {} as any});
-  }
 }
