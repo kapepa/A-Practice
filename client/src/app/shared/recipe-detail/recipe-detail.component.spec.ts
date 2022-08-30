@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {By} from "@angular/platform-browser";
 import {routes} from "../../layout/layout-def/layout-def.module";
 import {Location} from "@angular/common";
+import {RecipeLinkDirective} from "../../directive/recipe-link.directive";
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
@@ -39,6 +40,7 @@ describe('RecipeDetailComponent', () => {
         RouterTestingModule.withRoutes(routes),
       ],
       providers: [
+        RecipeLinkDirective,
         RecipeDetailComponent,
         { provide: RecipeService, useValue: recipeServiceSpy },
         { provide: ActivatedRoute, useValue: { params: of({id: "testID"}) } },

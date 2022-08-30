@@ -45,10 +45,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.recipesSub.unsubscribe();
   }
 
-  recipeSelected (recipe: DtoRecipe) {
-    this.recipeService.recipe.next(recipe)
-  }
-
   newRouter() {
     this.router.navigate(['new'], {relativeTo: this.route});
   }
