@@ -19,7 +19,6 @@ describe('Http Server', () => {
   let errorService: jasmine.SpyObj<ErrorService>;
   let cookieService: jasmine.SpyObj<CookieService>;
 
-  let spyHttpClient = jasmine.createSpyObj('HttpClient', ['get']);
   let spyErrorService = jasmine.createSpyObj('ErrorService', ['setError']);
   let spyCookieService = jasmine.createSpyObj('ErrorService', ['get','set']);
   let spyMockRouter = { navigate: jasmine.createSpy('navigate') };
@@ -91,15 +90,6 @@ describe('Http Server', () => {
   it('should create authService', () => {
     expect(httpService).toBeTruthy();
   })
-
-  // it('should catch error with custom header', () => {
-  //   const apiUrl = 'https://jsonplaceholder.typicode.com/posts';
-  //   authService.getPosts().subscribe((data) => {
-  //     console.log(data)
-  //   });
-  //
-  //   httpMock.expectOne({ url: apiUrl, method: 'GET' }).flush([{test: true}]);
-  // });
 
   it('should crate query, and return query string, createQuery()', () => {
     // let query = spyOn(httpService, 'createQuery').and.returnValue('?take=5&skip=0');

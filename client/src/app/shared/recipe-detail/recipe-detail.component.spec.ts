@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed, waitForAsync} from "@angular/core/testing";
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from "@angular/core/testing";
 import {RecipeDetailComponent} from "./recipe-detail.component";
 import {HttpClientModule} from "@angular/common/http";
 import {RouterTestingModule} from "@angular/router/testing";
@@ -8,12 +8,15 @@ import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 import {of, ReplaySubject} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {By} from "@angular/platform-browser";
-import {HomeComponent} from "../../page/home/home.component";
+import {routes} from "../../layout/layout-def/layout-def.module";
+import {Location} from "@angular/common";
 
 describe('RecipeDetailComponent', () => {
   let component: RecipeDetailComponent;
   let fixture: ComponentFixture<RecipeDetailComponent>;
   let recipeService: jasmine.SpyObj<RecipeService>;
+  let router: Router;
+  let location: Location;
 
   let recipeServiceSpy = jasmine.createSpyObj('RecipeService',
     ['receiveRecipes', 'deleteRecipes'],
@@ -24,7 +27,7 @@ describe('RecipeDetailComponent', () => {
     id: 'recipeID',
     name: 'recipeName',
     description: 'recipeDesc',
-    image: 'recipeImage',
+    image: '',
     ingredients: [] as DtoIngredient[],
   } as DtoRecipe;
 
@@ -33,7 +36,7 @@ describe('RecipeDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes(routes),
       ],
       providers: [
         RecipeDetailComponent,
@@ -44,10 +47,13 @@ describe('RecipeDetailComponent', () => {
     }).compileComponents();
 
     recipeService = TestBed.inject(RecipeService) as jasmine.SpyObj<RecipeService>;
+    router = TestBed.inject(Router);
+    location = TestBed.inject(Location);
 
     fixture = TestBed.createComponent(RecipeDetailComponent);
     component = fixture.componentInstance;
 
+    router.initialNavigation();
     fixture.detectChanges();
   }));
 
@@ -73,7 +79,7 @@ describe('RecipeDetailComponent', () => {
     })
   })
 
-  it('should delete recipe, deleteRecipe()',() => {
+  it('should delete recipe, deleteRecipe()',fakeAsync(() => {
     component.recipeSelect = recipe;
     fixture.detectChanges();
     recipeServiceSpy.deleteRecipes.and.callThrough();
@@ -83,5 +89,8 @@ describe('RecipeDetailComponent', () => {
     btn.triggerEventHandler('click',{preventDefault : () => {}});
 
     expect(recipeServiceSpy.deleteRecipes).toHaveBeenCalled();
-  })
+    router.navigate(['recipe']);
+    tick();
+    expect(location.path()).toBe('/recipe');
+  }))
 })
