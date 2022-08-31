@@ -4,7 +4,7 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {DtoIngredient, DtoRecipe} from "../../dto/dto.recipe";
 import {Subject} from "rxjs";
 import {By} from "@angular/platform-browser";
-import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from "@angular/core";
 import {RecipeLinkDirective} from "../../directive/recipe-link.directive";
 
 describe('RecipeItemComponent', () => {
@@ -27,7 +27,7 @@ describe('RecipeItemComponent', () => {
       providers: [
         RecipeItemComponent,
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents()
 
     fixture = TestBed.createComponent(RecipeItemComponent);
@@ -36,7 +36,6 @@ describe('RecipeItemComponent', () => {
     component.recipe = recipe;
     component.index = 0;
     component.editFlagSubject = new Subject<boolean>();
-
   })
 
   it('should create', () => {
@@ -72,28 +71,15 @@ describe('RecipeItemComponent', () => {
     expect(desc.textContent).toEqual(recipe.description);
   })
 
-  describe('test', () => {
-    let linkDes: any
-    let routerLink: any
+  it('can click recipe link in template',() => {
+    fixture.detectChanges();
+    let linkDes = fixture.debugElement.queryAll(By.directive(RecipeLinkDirective));
+    let routerLink = linkDes.map((de: any) => de.injector.get(RecipeLinkDirective));
+    let htmlElem = fixture.debugElement.nativeElement.querySelector('a.list-group-item');
 
-    beforeEach(() => {
-      fixture.detectChanges();
-
-      linkDes = fixture.debugElement.queryAll(By.directive(RecipeLinkDirective));
-      routerLink = linkDes.map((de: any) => de.injector.get(RecipeLinkDirective));
-    })
-
-    it('can click recipe link in template',() => {
-      let heroesLinkDe = linkDes[0];
-      let heroesLink = routerLink[0];
-
-      let htmlElem = fixture.debugElement.nativeElement.querySelector('a.list-group-item')
-      htmlElem.click();
-      fixture.detectChanges();
-
-      expect(heroesLink.navigatedTo).toEqual(['/recipe', recipe.id]);
-    });
-  })
+    htmlElem.click();
+    expect(routerLink[0].navigatedTo).toEqual(['/recipe', recipe.id]);
+  });
 
 
 })
