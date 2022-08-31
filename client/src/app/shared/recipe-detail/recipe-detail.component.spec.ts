@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from "@angular/core/testing";
+import {ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
 import {RecipeDetailComponent} from "./recipe-detail.component";
 import {HttpClientModule} from "@angular/common/http";
 import {RouterTestingModule} from "@angular/router/testing";
@@ -81,7 +81,7 @@ describe('RecipeDetailComponent', () => {
     })
   })
 
-  it('should delete recipe, deleteRecipe()',fakeAsync(() => {
+  it('should delete recipe, deleteRecipe()', fakeAsync(() => {
     component.recipeSelect = recipe;
     fixture.detectChanges();
     recipeServiceSpy.deleteRecipes.and.callThrough();

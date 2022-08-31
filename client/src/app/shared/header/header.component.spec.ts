@@ -31,11 +31,6 @@ class MockErrorService {
     desc: 'DescError'
   } as DtoErrorPopup);
 }
-class MockUserService {
-
-  user: DtoUser = { name: '' } as DtoUser;
-  logoutUser = () => {};
-}
 
 describe('HeaderComponent', () => {
   let fixture:ComponentFixture<HeaderComponent>;
@@ -65,7 +60,6 @@ describe('HeaderComponent', () => {
           provide: RECAPTCHA_V3_SITE_KEY,
           useValue: environment.recaptcha.siteKey,
         },
-        // { provide: UserService, useClass: MockUserService },
         { provide: UserService, useValue: userServiceSpy },
         { provide: ErrorService, useClass: MockErrorService },
         { provide: SpinnerService, useClass: MockSpinnerService },
