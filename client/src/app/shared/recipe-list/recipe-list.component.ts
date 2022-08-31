@@ -46,7 +46,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   newRouter() {
-    // this.router.navigate(['new'], {relativeTo: this.route});
+    this.router.navigate(['new'], {relativeTo: this.route});
   }
 
   addEdit (data: {id: string, index: number | null}) {

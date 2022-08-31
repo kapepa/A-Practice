@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed} from "@angular/core/testing";
+import {ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
 import {RecipeListComponent} from "./recipe-list.component";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
@@ -8,6 +8,8 @@ import {Observable, of, ReplaySubject, Subject} from "rxjs";
 import {DtoIngredient, DtoRecipe} from "../../dto/dto.recipe";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {routes} from "../../layout/layout-def/layout-def.module";
+import {By} from "@angular/platform-browser";
+import {Location} from "@angular/common";
 
 describe('RecipeListComponent', () => {
   let component: RecipeListComponent;
@@ -18,6 +20,10 @@ describe('RecipeListComponent', () => {
 
   let router: Router;
   let routerSpy: any;
+
+  let location: Location;
+
+  let activatedRouteSpy: jasmine.SpyObj<ActivatedRoute>;
 
   let recipes = {
     id: 'recipeID',
@@ -30,12 +36,14 @@ describe('RecipeListComponent', () => {
   beforeEach(() => {
 
     recipeServiceSpy = jasmine.createSpyObj('RecipeService',
-      ['getAllRecipe'],
+      ['getAllRecipe', 'setIndex', 'getRecipeEdit'],
       {
         recipesList: new ReplaySubject<DtoRecipe[]>(),
         getRecipesAll: [recipes],
       }
     );
+
+    activatedRouteSpy = jasmine.createSpyObj(jasmine.createSpyObj('ActivatedRoute',['navigate']));
 
     class MockServices {
       public events = of( new NavigationEnd(0, '/recipe/someID/edit', '/recipe/someID/edit'));
@@ -44,20 +52,21 @@ describe('RecipeListComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        // RouterTestingModule.withRoutes(routes),
+        RouterTestingModule.withRoutes(routes),
       ],
       declarations: [
         RecipeListComponent,
       ],
       providers: [
-        { provide: ActivatedRoute, useValue: jasmine.createSpyObj('ActivatedRoute',['navigate'])},
+        { provide: ActivatedRoute, useValue: activatedRouteSpy },
         { provide: RecipeService, useValue: recipeServiceSpy },
-        { provide: Router, useClass: MockServices },
+        // { provide: Router, useClass: MockServices },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
-    router = TestBed.inject(Router)
+    router = TestBed.inject(Router);
+    location = TestBed.inject(Location);
     recipeService = TestBed.inject(RecipeService) as jasmine.SpyObj<RecipeService>;
 
     fixture = TestBed.createComponent(RecipeListComponent);
@@ -66,7 +75,6 @@ describe('RecipeListComponent', () => {
     component.editFlag = false;
     fixture.detectChanges();
 
-    // router.initialNavigation();
   })
 
   it('should create RecipeListComponent', () => {
@@ -85,7 +93,6 @@ describe('RecipeListComponent', () => {
 
       expect(component.recipes).toEqual([recipes]);
       expect(recipeServiceSpy.getAllRecipe).toHaveBeenCalled();
-      console.log(component.recipesSub)
     })
 
     it('should get DtoRecipe[] Subject', () => {
@@ -95,9 +102,6 @@ describe('RecipeListComponent', () => {
       expect(component.recipesSub).toBeTruthy();
     })
 
-    it('router events', fakeAsync(() => {
-      expect(component.editFlag).toBeTrue()
-    }))
   })
 
   describe('ngOnDestroy()', () => {
@@ -107,8 +111,35 @@ describe('RecipeListComponent', () => {
 
     it('should do unsubscribe from recipeService, method recipesList Subject', () => {
       recipeServiceSpy.recipesList.next([recipes]);
-      // console.log(component.recipesSub)
+
+      expect(component.recipesSub.closed).toBeTrue();
     })
   })
+
+  it('should add to edit form recipe', () => {
+    fixture.detectChanges();
+    let props = {id: 'someID', index: 0};
+    spyOn(component, 'addEdit');
+
+    recipeServiceSpy.setIndex.and.callThrough();
+    recipeServiceSpy.setIndex(props.index);
+
+    component.addEdit(props);
+
+    expect(component.addEdit).toHaveBeenCalled();
+    expect(recipeServiceSpy.setIndex).toHaveBeenCalled();
+  })
+
+  it('should should routing on rout /new', fakeAsync( () => {
+    let htmlBtn = fixture.debugElement.query(By.css('#new-recipe'));
+    spyOn(component, 'newRouter').and.callThrough();
+    router.navigate(['recipe','new']);
+
+    tick();
+    htmlBtn.triggerEventHandler('click');
+
+    expect(component.newRouter).toHaveBeenCalled();
+    expect(location.path()).toEqual('/recipe/new')
+  }))
 
 })
