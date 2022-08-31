@@ -42,11 +42,11 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.recipesSub.unsubscribe();
+    if(!!this.recipesSub) this.recipesSub.unsubscribe();
   }
 
   newRouter() {
-    this.router.navigate(['new'], {relativeTo: this.route});
+    // this.router.navigate(['new'], {relativeTo: this.route});
   }
 
   addEdit (data: {id: string, index: number | null}) {
