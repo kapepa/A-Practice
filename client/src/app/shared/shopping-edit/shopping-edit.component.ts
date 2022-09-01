@@ -23,11 +23,6 @@ export class ShoppingEditComponent implements OnInit {
     })
   }
 
-  addShopping() {
-
-    // this.addIngredient.emit({name, amount: Number(amount)});
-  }
-
   formCreate( form: {id?: string | null, name: string, amount: number} ): FormGroup {
     return new FormGroup({
       id: new FormControl(form.id),
@@ -46,7 +41,7 @@ export class ShoppingEditComponent implements OnInit {
     if( !!listData.id.trim() ){
       this.shoppingService.updateIngredient( formData, this.onReset.bind(this));
     } else {
-      this.shoppingService.createIngredient(formData, this.onReset.bind(this));
+      this.shoppingService.createIngredient( formData, this.onReset.bind(this));
     }
   }
 
@@ -58,10 +53,13 @@ export class ShoppingEditComponent implements OnInit {
     this.shoppingService.deleteIngredient(this.onReset.bind(this));
   }
 
-  get name() { return this.shoppingForm.get('name'); }
+  get name() { return this.shoppingForm.get('name') };
 
-  get amount() { return this.shoppingForm.get('amount'); }
+  get amount() { return this.shoppingForm.get('amount') };
 
-  get update() { return this.shoppingService.editIndex$ }
+  get update() { return this.shoppingService.editIndex$ };
 
+  // addShopping() {
+  //   this.addIngredient.emit({name, amount: Number(amount)});
+  // }
 }
