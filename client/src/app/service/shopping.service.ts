@@ -78,4 +78,7 @@ export class ShoppingService {
     this.editIngredient.next(index !== null ? this.ingredientList[index] : {} as DtoIngredient);
   }
 
+  get getIngredientList() {
+    return this.ingredientList;
+  }
 }
