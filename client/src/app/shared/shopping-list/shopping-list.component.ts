@@ -1,6 +1,5 @@
 import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {DtoIngredient, DtoRecipe} from "../../dto/dto.recipe";
-import { RecipeService } from "../../service/recipe.service";
 import {ShoppingService} from "../../service/shopping.service";
 import {Subscription} from "rxjs";
 
@@ -14,12 +13,11 @@ export class ShoppingListComponent implements OnInit {
   private ngIngredient!: Subscription;
 
   constructor(
-    private recipeService: RecipeService,
     private shoppingService: ShoppingService
   ) {}
 
   ngOnInit(): void {
-    this.ingredients = this.shoppingService.ingredientList;
+    // this.ingredients = this.shoppingService.getIngredientList;
     this.shoppingService.ingredient.subscribe((ingredients: DtoIngredient[]) => {
       this.ingredients = ingredients;
     })
