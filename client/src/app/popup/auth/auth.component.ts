@@ -44,6 +44,7 @@ export class AuthComponent implements OnInit {
 
   closePopUp(e: Event) {
     const elem = e.target as HTMLDataElement;
+    console.log('click')
     if( elem.classList.contains('popup__zone') || elem.classList.contains('popup__x-close') ) this.close.emit();
   }
 
