@@ -16,4 +16,5 @@ describe('AuthComponent', () => {
   it('should create', () => {
     expect([AuthComponent]).toBeTruthy();
   });
+
 });
