@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {ShoppingListComponent} from "./shopping-list.component";
 import {RecipeService} from "../../service/recipe.service";
 import {ShoppingService} from "../../service/shopping.service";
-import {Subject} from "rxjs";
+import {of, Subject} from "rxjs";
 import {DtoIngredient, DtoRecipe} from "../../dto/dto.recipe";
 import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 
@@ -36,12 +36,15 @@ describe('ShoppingListComponent',() => {
         { provide: ShoppingService, useValue: shoppingServiceMoc },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    })
+    }).compileComponents()
 
     shoppingService = TestBed.inject(ShoppingService) as jasmine.SpyObj<ShoppingService>;
 
     fixture = TestBed.createComponent(ShoppingListComponent);
     component = fixture.componentInstance;
+
+    shoppingServiceMoc.getIngredientList = [ingredient] as DtoIngredient[]
+
     fixture.detectChanges();
   })
 
@@ -51,12 +54,11 @@ describe('ShoppingListComponent',() => {
 
   describe('ngOnInit, ShoppingListComponent', () => {
     beforeEach(() => {
-      // spyOnProperty(shoppingService, 'getIngredientList', 'get').and.returnValue([ingredient] as DtoIngredient[])
-     component.ngOnInit();
+      component.ngOnInit();
     })
 
     it('should be get current list ingredient from ShoppingService', () => {
-      //need make examination
+      expect(shoppingServiceMoc.getIngredientList).toEqual([ingredient]);
     })
 
     it('should be dynamic change ingredient arr from ShoppingService, Subject',() => {

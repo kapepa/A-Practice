@@ -17,5 +17,4 @@ export class AlertComponent implements OnInit {
   close(e: Event) {
     this.closeAlert.emit(true);
   }
-
 }
