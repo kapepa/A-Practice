@@ -5,12 +5,11 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { UserService } from "../../service/user.service";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import {RECAPTCHA_V3_SITE_KEY, RecaptchaModule, RecaptchaV3Module, ReCaptchaV3Service} from "ng-recaptcha";
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaModule, RecaptchaV3Module } from "ng-recaptcha";
 import { environment } from "../../../environments/environment";
-import {BrowserModule, By} from "@angular/platform-browser";
-import {ActivatedRoute, Router} from "@angular/router";
-import {Observable, of, Subject} from "rxjs";
-import createSpyObj = jasmine.createSpyObj;
+import { BrowserModule, By } from "@angular/platform-browser";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Subject } from "rxjs";
 
 describe('AuthComponent', () => {
   let component: AuthComponent;
@@ -26,7 +25,6 @@ describe('AuthComponent', () => {
   )
 
   beforeEach((() => {
-
     TestBed.configureTestingModule({
       imports: [
         BrowserModule,
@@ -68,12 +66,47 @@ describe('AuthComponent', () => {
     })
   })
 
-  it('should close popup auth on click',() => {
+  it('should close popup auth on click', fakeAsync(() => {
+    spyOn(component, 'closePopUp').and.callThrough();
     let authPopup = fixture.debugElement.query(By.css('.popup__zone'));
 
-    authPopup.triggerEventHandler('click');
+    component.close.pipe().subscribe((attr) => {
+      expect(attr).toBeUndefined()
+    })
+
+    tick();
+    authPopup.triggerEventHandler('mousedown', {
+      target: {
+        classList: {
+          contains: (alias: string) => alias === 'popup__zone',
+        }
+      }});
+    expect(component.closePopUp).toHaveBeenCalled();
+  }))
+
+  it('should switch popup to registration, switchMode()', () => {
+    let mode = 'registration';
+    let turnMonde = spyOn(component, 'switchMode').and.callThrough();
+
+    component.switchMode(mode);
+    expect(turnMonde).toHaveBeenCalled();
+    expect(component.popupLogin).toEqual(mode);
+  })
+
+  it('should be open file loader, clickAvatar()', () => {
+    let clickAvatar = spyOn(component, 'clickAvatar').and.callThrough();
+    component.switchMode('registration');
     fixture.detectChanges();
-    // expect(spyOn(component, 'closePopUp')).toHaveBeenCalled();
+
+    let btnAvatar = fixture.debugElement.query(By.css('#clickAvatar'));
+    let fileAvatar = fixture.debugElement.query(By.css('#fileAvatar'));
+
+    btnAvatar.triggerEventHandler('click', fileAvatar)
+    expect(clickAvatar).toHaveBeenCalled();
+  })
+
+  it('should be success create profile user, onSubmit()', () => {
+
   })
 
 });

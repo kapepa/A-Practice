@@ -1,4 +1,4 @@
-<div class="popup__zone" (mousedown)="closePopUp($event)">
+<div class="popup__zone" (mousedown)="closePopUp($event)" >
   <div class="popup popup-auth">
     <div class="popup__x-close"></div>
     <div class="popup-auth__frame">
@@ -58,7 +58,6 @@
               #captchaLogRef="reCaptcha"
               [siteKey]="siteKey"
               size="invisible"
-              (resolved)="$event && submitLogin($event)"
             ></re-captcha>
             <div class="mb-3">
               <button [disabled]="!profileLogin.valid" (click)="captchaLogRef.execute()" class="btn btn-success">Ok</button>
@@ -132,11 +131,13 @@
             </div>
             <div class="mb-3">
               <button
+                id="clickAvatar"
                 type="button"
                 class="btn btn-success"
                 (click)="clickAvatar(fileAvatar)"
               >Avatar</button>
               <input
+                id="fileAvatar"
                 type="file"
                 class="form-control"
                 name="avatar"
@@ -150,7 +151,6 @@
               #captchaProfileRef="reCaptcha"
               [siteKey]="siteKey"
               size="invisible"
-              (resolved)="$event && submitProfile($event)"
             ></re-captcha>
             <div class="mb-3">
               <button

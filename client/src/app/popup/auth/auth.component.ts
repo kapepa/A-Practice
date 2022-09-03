@@ -44,7 +44,6 @@ export class AuthComponent implements OnInit {
 
   closePopUp(e: Event) {
     const elem = e.target as HTMLDataElement;
-    console.log('click')
     if( elem.classList.contains('popup__zone') || elem.classList.contains('popup__x-close') ) this.close.emit();
   }
 
@@ -66,14 +65,6 @@ export class AuthComponent implements OnInit {
     if( !!this.avatar ) form.append('avatar', this.avatar);
 
     this.userService.createUser(form, this.profileReset.bind(this))
-  }
-
-  public submitLogin(captchaResponse: string): void {
-    // if( captchaResponse ) form.click();
-  }
-
-  public submitProfile(captchaResponse: string): void {
-    // if( captchaResponse ) form.click();
   }
 
   public onLogin(e: Event) {
