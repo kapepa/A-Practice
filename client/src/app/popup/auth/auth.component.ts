@@ -101,5 +101,4 @@ export class AuthComponent implements OnInit {
   get emailLogin() { return this.profileLogin.get('email'); }
 
   get passwordLogin() { return this.profileLogin.get('password'); }
-
 }

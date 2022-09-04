@@ -10,13 +10,14 @@ import { environment } from "../../../environments/environment";
 import { BrowserModule, By } from "@angular/platform-browser";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subject } from "rxjs";
+import {DtoRecipe} from "../../dto/dto.recipe";
 
 describe('AuthComponent', () => {
   let component: AuthComponent;
   let fixture: ComponentFixture<AuthComponent>;
 
   let userServiceMock = jasmine.createSpyObj('UserService',
-    ['createUser'],
+    ['createUser', 'loginUser'],
   );
 
   let activatedRouteMock = jasmine.createSpyObj('ActivatedRoute',
@@ -105,7 +106,102 @@ describe('AuthComponent', () => {
     expect(clickAvatar).toHaveBeenCalled();
   })
 
-  it('should be success create profile user, onSubmit()', () => {
+  describe('everything to bind FormGroup', () => {
+    let profile = {
+      id: 'userID',
+      name: 'userName',
+      email: 'userEmail',
+      password: 'userPassword',
+      avatar: '',
+      recipe: [] as DtoRecipe[],
+      isActive: true,
+      created_at: new Date(),
+    }
+
+    beforeEach(() => {
+      component.name?.setValue(profile.name);
+      component.email?.setValue(profile.email);
+      component.password?.setValue(profile.password);
+
+      component.emailLogin?.setValue(profile.email);
+      component.passwordLogin?.setValue(profile.password);
+    });
+
+    it('should be success create profile user, onSubmit()', () => {
+      component.popupLogin = 'registration';
+      spyOn(component, 'onSubmit').and.callThrough();
+      fixture.detectChanges();
+
+      userServiceMock.createUser.and.callFake(() => { component.profileReset() });
+      let profileReset = spyOn(component,'profileReset').and.callThrough();
+      let formRegis = fixture.debugElement.query(By.css('#registration'));
+
+      formRegis.triggerEventHandler('submit');
+
+      expect(component.onSubmit).toHaveBeenCalled();
+      expect(userServiceMock.createUser).toHaveBeenCalled();
+      expect(profileReset).toHaveBeenCalled();
+      expect(component.name?.value).toBeNull();
+      expect(component.email?.value).toBeNull();
+      expect(component.password?.value).toBeNull();
+    });
+
+    it('should be success create profile user, onLogin()', () => {
+      userServiceMock.loginUser.and.callFake(() => { component.loginReset() });
+      let login = spyOn(component,'onLogin').and.callThrough();
+      let profileReset = spyOn(component,'loginReset').and.callThrough();
+      let formLogin = fixture.debugElement.query(By.css('#login'));
+
+      fixture.detectChanges();
+      formLogin.triggerEventHandler('submit',{preventDefault: () => {}});
+
+      expect(login).toHaveBeenCalled();
+      expect(userServiceMock.loginUser).toHaveBeenCalled();
+      expect(profileReset).toHaveBeenCalled();
+      expect(component.emailLogin?.value).toBeNull();
+      expect(component.passwordLogin?.value).toBeNull();
+    })
+
+    it('should reset profileForm FormGroup, profileReset()', () => {
+      let reset = spyOn(component, 'profileReset').and.callThrough();
+      component.profileReset();
+
+      expect(reset).toHaveBeenCalled();
+      expect(component.name?.value).toBeNull()
+    })
+
+    it('should reset profileForm FormGroup, loginReset()', () => {
+      let reset = spyOn(component, 'loginReset').and.callThrough();
+      component.loginReset();
+
+      expect(reset).toHaveBeenCalled();
+      expect(component.emailLogin?.value).toBeNull()
+    })
+
+    it('should getter name, name()', () => {
+      spyOnProperty(component, 'name', 'get').and.returnValue(component.profileForm.get('name'));
+      expect(component.name?.value).toEqual(profile.name);
+    })
+
+    it('should getter email, email()', () => {
+      spyOnProperty(component, 'email', 'get').and.returnValue(component.profileForm.get('email'));
+      expect(component.email?.value).toEqual(profile.email);
+    })
+
+    it('should getter password, password()', () => {
+      spyOnProperty(component, 'password', 'get').and.returnValue(component.profileForm.get('password'));
+      expect(component.password?.value).toEqual(profile.password);
+    })
+
+    it('should getter emailLogin, emailLogin()', () => {
+      spyOnProperty(component, 'emailLogin').and.returnValue(component.profileLogin.get('email'));
+      expect(component.emailLogin?.value).toEqual(profile.email);
+    })
+
+    it('should getter passwordLogin, passwordLogin()', () => {
+      spyOnProperty(component, 'passwordLogin').and.returnValue(component.profileLogin.get('password'))
+      expect(component.passwordLogin?.value).toEqual(profile.password);
+    })
 
   })
 
