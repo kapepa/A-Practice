@@ -13,7 +13,7 @@
         </div>
 
         <ng-container *ngIf="popupLogin === 'login'">
-          <form [formGroup]="profileLogin" (ngSubmit)="onLogin($event)">
+          <form [formGroup]="profileLogin" (ngSubmit)="onLogin($event)" id="login">
             <div class="mb-3">
               <label for="emailLogin" class="form-label">Email:</label>
               <input
@@ -67,7 +67,7 @@
         </ng-container>
 
         <ng-container *ngIf="popupLogin === 'registration'">
-          <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" id="registration">
             <div class="mb-3">
               <label for="nameReg" class="form-label">Name:</label>
               <input
