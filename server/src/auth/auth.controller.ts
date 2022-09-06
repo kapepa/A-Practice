@@ -14,9 +14,10 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalAuthGuard)
   @ApiResponse({ status: 200, description: 'Login user successfully, return token.', type: UserDto })
-  @ApiResponse({ status: 401, description: 'Unauthorized'})
-  async loginUser(@Req() req): Promise<{ access_token: string } | UnauthorizedException> {
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async loginUser(@Req() req): Promise<{ access_token: string } | UnauthorizedException > {
     try {
+      if (!req.user) return new UnauthorizedException();
       return this.authService.login(req.user);
     } catch (e) {
       return !!e ? e : new UnauthorizedException();
