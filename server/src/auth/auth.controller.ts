@@ -24,4 +24,9 @@ export class AuthController {
     }
   }
 
+  @Post('test')
+  async testUser(@Req() req): Promise<string> {
+    console.log(req.body)
+    return 'test'
+  }
 }
