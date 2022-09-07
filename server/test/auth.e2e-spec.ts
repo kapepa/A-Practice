@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import {INestApplication, UnauthorizedException} from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
@@ -21,15 +21,22 @@ describe('AuthController (e2e)', () => {
     it('should be success login user', () => {
       return request(app.getHttpServer())
         .post(url)
+        .set({ 'Accept': 'application/json' })
         .send({ email: 'myemail@gamil.com', password: '123456' })
         .expect(201)
+        .expect((res: Response) => {
+          expect(res.body['access_token']).toBeDefined();
+        })
     });
 
-    it('should be wrong entered data user', function () {
+    it('should be invalid entered data user', function () {
       return request(app.getHttpServer())
         .post(url)
         .send({ email: '', password: '' })
         .expect(401)
+        .expect((req: Response) => {
+          expect(req.body).toEqual(new UnauthorizedException()['response'])
+        })
     });
   })
 
