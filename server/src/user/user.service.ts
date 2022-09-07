@@ -1,11 +1,11 @@
-import {ConflictException, Injectable} from '@nestjs/common';
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import { UserDto } from "../dto/user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
 import { Repository } from "typeorm";
 import { FileService } from "../file/file.service";
 import { AuthService } from "../auth/auth.service";
-import {MailerService} from "../mailer/mailer.service";
+import { MailerService } from "../mailer/mailer.service";
 
 @Injectable()
 export class UserService {
@@ -33,4 +33,14 @@ export class UserService {
     return !! await this.usersRepository.save(this.usersRepository.create({...user, password, avatar: avatarUrl}));
   }
 
+  async updateUser(user: UserDto): Promise<UserDto> {
+    const { id, ...other } = user;
+    await this.usersRepository.update({id}, other);
+    return await this.findOne('id', id );
+  }
+
+  async deleteUser(id: string): Promise<boolean | NotFoundException> {
+    let del = await this.usersRepository.delete({ id });
+    return !!del ? true : new NotFoundException()
+  }
 }
