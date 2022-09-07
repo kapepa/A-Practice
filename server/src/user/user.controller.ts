@@ -1,9 +1,9 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
   NotFoundException,
-  NotImplementedException, Patch,
+  NotImplementedException, Param, Patch,
   Post, Req,
   UploadedFile, UseGuards,
   UseInterceptors
@@ -48,11 +48,24 @@ export class UserController {
 
   @Patch('/update')
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 201, description: 'Profile update successfully', type: UserDto })
+  @ApiResponse({
+    status: 201, description: 'Profile update successfully', type: UserDto })
   @ApiResponse({ status: 501, description: 'Not Found'})
-  async updateUser(@Body() body, @Req() req): Promise<void>{
+  async updateUser(@Body() body, @Req() req): Promise<UserDto>{
     try{
-      console.log(req.user)
+      return await this.userService.updateUser({ id: req.user.id, ...body });
+    } catch (e) {
+      return !!e ? e : new NotFoundException();
+    }
+  }
+
+  @Delete('/delete/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({ status: 201, description: 'delete profile successfully', type: UserDto })
+  @ApiResponse({ status: 404, description: 'Not Found'})
+  async deleteUser(@Param('id') param): Promise<boolean | NotFoundException>{
+    try {
+      return this.userService.deleteUser(param);
     } catch (e) {
       return !!e ? e : new NotFoundException();
     }
