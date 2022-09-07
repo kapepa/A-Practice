@@ -50,10 +50,10 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 201, description: 'Profile update successfully', type: UserDto })
-  @ApiResponse({ status: 501, description: 'Not Found'})
-  async updateUser(@Body() body, @Req() req): Promise<UserDto>{
+  @ApiResponse({ status: 404, description: 'Not Found'})
+  async updateUser(@Body() body): Promise<UserDto>{
     try{
-      return await this.userService.updateUser({ id: req.user.id, ...body });
+      return await this.userService.updateUser(body);
     } catch (e) {
       return !!e ? e : new NotFoundException();
     }
@@ -65,7 +65,7 @@ export class UserController {
   @ApiResponse({ status: 404, description: 'Not Found'})
   async deleteUser(@Param('id') param): Promise<boolean | NotFoundException>{
     try {
-      return this.userService.deleteUser(param);
+      return await this.userService.deleteUser(param);
     } catch (e) {
       return !!e ? e : new NotFoundException();
     }
