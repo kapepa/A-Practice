@@ -6,7 +6,7 @@ import {
   NotImplementedException, Param, Patch,
   Post, Req,
   UploadedFile, UseGuards,
-  UseInterceptors
+  UseInterceptors, UsePipes, ValidationPipe
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { UserDto } from "../dto/user.dto";
@@ -22,6 +22,7 @@ export class UserController {
   ) {}
 
   @Post('/create')
+  @UsePipes(new ValidationPipe({ transform: true }))
   @UseInterceptors(FileInterceptor('avatar'))
   @ApiResponse({ status: 201, description: 'Profile created successfully', type: UserDto })
   @ApiResponse({ status: 501, description: 'Not Implemented'})
@@ -37,7 +38,7 @@ export class UserController {
   @Get('/')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Get Profile', type: UserDto })
-  @ApiResponse({ status: 404, description: 'Not Implemented'})
+  @ApiResponse({ status: 401, description: 'Not Implemented'})
   async getUser(@Req() req): Promise<UserDto | NotFoundException> {
     try {
       return await this.userService.findOne('id', req.user.id);
@@ -49,8 +50,8 @@ export class UserController {
   @Patch('/update')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
-    status: 201, description: 'Profile update successfully', type: UserDto })
-  @ApiResponse({ status: 404, description: 'Not Found'})
+    status: 200, description: 'Profile update successfully', type: UserDto })
+  @ApiResponse({ status: 401, description: 'Not Found'})
   async updateUser(@Body() body): Promise<UserDto>{
     try{
       return await this.userService.updateUser(body);
@@ -61,7 +62,7 @@ export class UserController {
 
   @Delete('/delete/:id')
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 201, description: 'delete profile successfully', type: UserDto })
+  @ApiResponse({ status: 200, description: 'delete profile successfully', type: UserDto })
   @ApiResponse({ status: 404, description: 'Not Found'})
   async deleteUser(@Param('id') param): Promise<boolean | NotFoundException>{
     try {

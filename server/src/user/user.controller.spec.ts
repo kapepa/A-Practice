@@ -2,8 +2,8 @@ import { Test } from "@nestjs/testing";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { UserDto } from "../dto/user.dto";
-import {ConflictException, NotFoundException, UnauthorizedException} from "@nestjs/common";
-import {Recipe} from "../recipe/recipe.entity";
+import { ConflictException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { Recipe} from "../recipe/recipe.entity";
 
 
 describe('UserController', () => {
