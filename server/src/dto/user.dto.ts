@@ -1,6 +1,6 @@
 import {ApiProperty} from "@nestjs/swagger";
 import {RecipeDto} from "./recipe.dto";
-import {IsEmail, IsNotEmpty, MinLength} from "class-validator";
+import {IsEmail, IsNotEmpty, IsNumberString, MinLength} from "class-validator";
 
 export class UserDto {
   @ApiProperty()
