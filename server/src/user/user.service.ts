@@ -24,7 +24,7 @@ export class UserService {
   async createUser(user: UserDto, avatar: Express.Multer.File): Promise<boolean> {
     const existUser = await this.findOne('email', user.email);
 
-    if(!!existUser) throw new ConflictException()
+    if(!!existUser) throw new ConflictException();
 
     const avatarUrl = !!avatar ? await this.fileService.writeFile(avatar) : '';
     const password = await this.authService.bcryptHash(user.password);
