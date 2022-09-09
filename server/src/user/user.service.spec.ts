@@ -7,6 +7,7 @@ import {getRepositoryToken} from "@nestjs/typeorm";
 import {User} from "./user.entity";
 import {Recipe} from "../recipe/recipe.entity";
 import {UserDto} from "../dto/user.dto";
+import {ConflictException} from "@nestjs/common";
 
 describe('UserService', () => {
   let userService: UserService;
@@ -88,9 +89,43 @@ describe('UserService', () => {
 
     it('should be return error what such email already exist!', async () => {
       jest.spyOn(mockRepository, 'findOne').mockImplementation(() => (profile));
+      try {
+        await userService.createUser(data, undefined);
+      } catch (err) {
+        expect(err['response']).toEqual({ statusCode: 409, message: 'Conflict' });
+      }
+    })
 
-      let create = await userService.createUser(data, undefined);
+  })
 
+  it('should be update profile and return profile after update', async () => {
+    let newProfile = {...profile, name: 'NewName'};
+    jest.spyOn(mockRepository, 'findOne').mockImplementation(() => (newProfile));
+
+    let update = await userService.updateUser(newProfile);
+
+    expect(update).toEqual(newProfile);
+    expect(mockRepository.update).toHaveBeenCalled();
+  })
+
+
+  describe('delete profile, deleteUser()', () => {
+    it('should be delete profile, and return boolean true', async () => {
+      jest.spyOn(mockRepository, 'delete').mockImplementation(() => ({delete: true}));
+
+      let del = await userService.deleteUser('userID');
+
+      expect(del).toBeTruthy();
+      expect(mockRepository.delete).toHaveBeenCalled();
+    })
+
+    it('should be not found such profile', async () => {
+      jest.spyOn(mockRepository, 'delete').mockImplementation(() => undefined);
+
+      let del = await userService.deleteUser('userID');
+
+      expect(del['response']).toEqual({ statusCode: 404, message: 'Not Found' });
+      expect(mockRepository.delete).toHaveBeenCalled();
     })
   })
 
