@@ -86,7 +86,12 @@ describe('UserService', () => {
       expect(mockRepository.save).toHaveBeenCalled();
     })
 
-    it('should be return error what such email already exist!')
+    it('should be return error what such email already exist!', async () => {
+      jest.spyOn(mockRepository, 'findOne').mockImplementation(() => (profile));
+
+      let create = await userService.createUser(data, undefined);
+
+    })
   })
 
 });
