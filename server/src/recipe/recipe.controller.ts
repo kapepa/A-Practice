@@ -76,6 +76,7 @@ export class RecipeController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
   @ApiResponse({ status: 201, description: 'Recipe update successfully', type: RecipeDto })
+  @ApiResponse({ status: 404, description: 'Not Found'})
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async updateRecipe(@Body() body, @UploadedFile() image: Express.Multer.File, @Req() req): Promise<RecipeDto>{
     try {
@@ -88,6 +89,8 @@ export class RecipeController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Recipe delete successfully', type: RecipeDto })
+  @ApiResponse({ status: 401, description: 'Unauthorized'})
+  @ApiResponse({ status: 404, description: 'Not Found'})
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async deleteRecipe(@Param() param, @Req() req): Promise<{ delete: boolean }> {
     try {
@@ -112,6 +115,8 @@ export class RecipeController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(AnyFilesInterceptor())
   @ApiResponse({ status: 201, description: 'Ingredient created successfully', type: RecipeDto })
+  @ApiResponse({ status: 401, description: 'Unauthorized'})
+  @ApiResponse({ status: 404, description: 'Not found'})
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async createIngredient(@Body() body): Promise<DtoIngredient> {
     try {
@@ -125,6 +130,8 @@ export class RecipeController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(AnyFilesInterceptor())
   @ApiResponse({ status: 200, description: 'Recipe update successfully', type: RecipeDto })
+  @ApiResponse({ status: 401, description: 'Unauthorized'})
+  @ApiResponse({ status: 404, description: 'Not found'})
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async updateIngredients(@Body() body, @Req() req): Promise<DtoIngredient>{
     try {
@@ -137,6 +144,8 @@ export class RecipeController {
   @Delete('/ingredient/:id')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Recipe delete successfully', type: RecipeDto })
+  @ApiResponse({ status: 401, description: 'Unauthorized'})
+  @ApiResponse({ status: 404, description: 'Not found'})
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async deleteIngredient(@Param() param, @Req() req): Promise<{ delete: boolean }> {
     try {
