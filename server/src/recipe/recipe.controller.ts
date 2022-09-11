@@ -13,7 +13,7 @@ import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { DtoIngredient, RecipeDto } from "../dto/recipe.dto";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { RecipeService } from "./recipe.service";
-import {AnyFilesInterceptor, FileInterceptor} from "@nestjs/platform-express";
+import { AnyFilesInterceptor, FileInterceptor } from "@nestjs/platform-express";
 
 @ApiTags('recipe')
 @Controller('/api/recipe')
@@ -26,6 +26,7 @@ export class RecipeController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('image'))
   @ApiResponse({ status: 201, description: 'Recipe created successfully', type: RecipeDto })
+  @ApiResponse({ status: 401, description: 'Unauthorized'})
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async createRecipe(@Body() body, @UploadedFile() image: Express.Multer.File, @Req() req): Promise<RecipeDto |  NotImplementedException> {
     try {
@@ -123,7 +124,7 @@ export class RecipeController {
   @Patch('/ingredient/update')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(AnyFilesInterceptor())
-  @ApiResponse({ status: 201, description: 'Recipe update successfully', type: RecipeDto })
+  @ApiResponse({ status: 200, description: 'Recipe update successfully', type: RecipeDto })
   @ApiResponse({ status: 501, description: 'Not Implemented'})
   async updateIngredients(@Body() body, @Req() req): Promise<DtoIngredient>{
     try {
