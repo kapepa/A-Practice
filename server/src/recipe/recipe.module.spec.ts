@@ -36,8 +36,8 @@ describe('RecipeService', () => {
     name: 'recipeName',
     description: 'recipeDesc',
     image: '',
-    user: {} as UserDto,
-    ingredients: [] as DtoIngredient[],
+    user: profile as UserDto,
+    ingredients: [ingredient] as DtoIngredient[],
     created_at: new Date(),
   } as RecipeDto
 
@@ -47,12 +47,20 @@ describe('RecipeService', () => {
 
   let mockRepositoryRecipe = {
     save: jest.fn().mockImplementation((data) => {
-      recipeArr.push(data)
-      return Promise.resolve(data);
+      if (data.id.trim()){
+        let recipeIndex = recipeArr.findIndex(recipe => recipe.id === data.id);
+        let update = {...recipeArr[recipeIndex], ...data};
+        recipeArr.splice(recipeIndex,1, update);
+        return Promise.resolve(update);
+      } else {
+        let recipe = { id : Date.now().toString(), ...data} as RecipeDto;
+        recipeArr.push(recipe)
+        return Promise.resolve(recipe);
+      }
     }),
     create: jest.fn().mockImplementation((recipe: Recipe) => {
       return {
-        id: Date.now().toString(),
+        id: '',
         name: recipe.name,
         description: recipe.description,
         image: recipe.image,
@@ -60,11 +68,29 @@ describe('RecipeService', () => {
         ingredients: recipe.ingredients,
         created_at: new Date(),
       } as RecipeDto;
+    }),
+    findOne: jest.fn().mockImplementation(( arg) => {
+      let { where } = arg;
+      let keys = Object.keys(where)[0];
+      return recipeArr.find(recipe => recipe[keys] === where[keys])
     })
   }
 
   let mockRepositoryIngredients = {
-    save: jest.fn().mockImplementation((data) => Promise.resolve(data)),
+    save: jest.fn().mockImplementation((data) => {
+      Array.isArray(data) ? ingredientArr.push(...data) : ingredientArr.push(data);
+      return Promise.resolve(data);
+    }),
+    create: jest.fn().mockImplementation((ingredients: DtoIngredient) => {
+      return {
+        id: Date.now().toString(),
+        name: ingredients.name,
+        amount: ingredients.amount,
+        public: false,
+        recipe: [] as RecipeDto[],
+        created_at: new Date(),
+      } as DtoIngredient
+    })
   }
 
   let mockFileService = {
@@ -93,7 +119,6 @@ describe('RecipeService', () => {
     }).compile();
 
     recipeService = moduleRef.get<RecipeService>(RecipeService);
-    // jest.resetAllMocks();
   })
 
   it('should be defined UserService', () => {
@@ -101,8 +126,29 @@ describe('RecipeService', () => {
   })
 
   it('should be success create new recipe', async () => {
-    let recipe = await recipeService.createRecipe({ name: 'New Recipe', description: 'some desc', image: '', ingredients: [] }, undefined, profile)
-    expect(recipeArr.length).toEqual(2)
+    let create = await recipeService.createRecipe({ name: 'New Recipe', description: 'some desc', image: '', ingredients: [] }, undefined, profile)
+    expect(recipeArr.find(recipe => recipe.id === create.id)).toEqual(create);
   })
 
+  it('should create ingredients', async () => {
+    let create = await recipeService.createIngredients([{ name: 'New Ingredients', amount: 4}], recipe);
+    expect(ingredientArr.find(ingredient => ingredient.id === create[0].id));
+  })
+
+  it('should be create ingredient', async () => {
+    let create = await recipeService.createIngredient({ name: 'New Ingredient', amount: 4});
+    expect(ingredientArr.find(ingredient => ingredient.id === create.id)).toEqual(create);
+  })
+
+  describe('updateRecipe()', () => {
+    it('should be update recipe', async () => {
+      let update = await recipeService.updateRecipe({id: recipe.id, name: 'Update Name'} as RecipeDto,undefined, profile);
+      expect(recipeArr.find(recipe => recipe.id === update.id)).toEqual(update)
+    })
+
+    it('should be ConflictException when update', async () => {
+      let update = await recipeService.updateRecipe({id: recipe.id, name: 'Update Name'} as RecipeDto,undefined, {...profile, id: '11'});
+      console.log(update)
+    })
+  })
 })
