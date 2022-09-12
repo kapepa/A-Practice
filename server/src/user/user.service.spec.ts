@@ -7,7 +7,6 @@ import {getRepositoryToken} from "@nestjs/typeorm";
 import {User} from "./user.entity";
 import {Recipe} from "../recipe/recipe.entity";
 import {UserDto} from "../dto/user.dto";
-import {ConflictException} from "@nestjs/common";
 
 describe('UserService', () => {
   let userService: UserService;
