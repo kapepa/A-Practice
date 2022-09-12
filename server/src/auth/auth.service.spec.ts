@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import {getRepositoryToken} from "@nestjs/typeorm";
 import {UserService} from "../user/user.service";
 import {JwtModule} from "@nestjs/jwt";
 import {UserDto} from "../dto/user.dto";
