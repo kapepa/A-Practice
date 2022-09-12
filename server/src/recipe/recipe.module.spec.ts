@@ -7,6 +7,7 @@ import {RecipeService} from "./recipe.service";
 import {DtoIngredient, RecipeDto} from "../dto/recipe.dto";
 import {UserDto} from "../dto/user.dto";
 import { v4 as uuid } from 'uuid';
+import {ConflictException} from "@nestjs/common";
 
 describe('RecipeService', () => {
   let recipeService: RecipeService;
@@ -78,18 +79,37 @@ describe('RecipeService', () => {
 
   let mockRepositoryIngredients = {
     save: jest.fn().mockImplementation((data) => {
-      Array.isArray(data) ? ingredientArr.push(...data) : ingredientArr.push(data);
-      return Promise.resolve(data);
+      if(Array.isArray(data)) {
+        let mapIngredient = data.map((ingredient, i) => ({...ingredient, id: Date.now().toString() + i}))
+        ingredientArr.push(...mapIngredient)
+        return Promise.resolve(mapIngredient);
+      } else {
+        if(data.id.trim()){
+          let index = ingredientArr.findIndex(ingredient => ingredient.id === data.id);
+          let update = {...ingredientArr[index], ...data}
+          ingredientArr.splice(index, 1, update);
+          return Promise.resolve(ingredient);
+        } else {
+          let ingredient = { ...data , id: Date.now().toString()} as DtoIngredient
+          ingredientArr.push(ingredient);
+          return Promise.resolve(ingredient);
+        }
+      }
     }),
     create: jest.fn().mockImplementation((ingredients: DtoIngredient) => {
       return {
-        id: Date.now().toString(),
+        id: '',
         name: ingredients.name,
         amount: ingredients.amount,
         public: false,
         recipe: [] as RecipeDto[],
         created_at: new Date(),
       } as DtoIngredient
+    }),
+    findOneIngredient: jest.fn().mockImplementation((arg) => {
+      let { where } = arg;
+      let keys = Object.keys(where)[0];
+      return ingredientArr.find(ingredient => ingredient[keys] === where[keys])
     })
   }
 
@@ -146,9 +166,24 @@ describe('RecipeService', () => {
       expect(recipeArr.find(recipe => recipe.id === update.id)).toEqual(update)
     })
 
-    it('should be ConflictException when update', async () => {
-      let update = await recipeService.updateRecipe({id: recipe.id, name: 'Update Name'} as RecipeDto,undefined, {...profile, id: '11'});
-      console.log(update)
+    it('should be ConflictException', async () => {
+      try {
+        await recipeService.updateRecipe({id: recipe.id, name: 'Update Name'} as RecipeDto,undefined, {...profile, id: '11'});
+      } catch (err) {
+        expect(err).toBeInstanceOf(ConflictException)
+      }
     })
   })
+
+  describe('updateIngredient()', () => {
+    it('should be update ingredient', async () => {
+      try {
+        await recipeService.updateIngredient(recipe as RecipeDto, {...profile, id: '111'} as UserDto);
+      } catch (err) {
+        expect(err).toBeInstanceOf(ConflictException);
+      }
+    })
+  })
+
+
 })
