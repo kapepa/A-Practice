@@ -7,7 +7,8 @@ import {RecipeService} from "./recipe.service";
 import {DtoIngredient, RecipeDto} from "../dto/recipe.dto";
 import {UserDto} from "../dto/user.dto";
 import { v4 as uuid } from 'uuid';
-import {ConflictException} from "@nestjs/common";
+import {ConflictException, ForbiddenException} from "@nestjs/common";
+import {isDeepStrictEqual} from "util";
 
 describe('RecipeService', () => {
   let recipeService: RecipeService;
@@ -74,6 +75,18 @@ describe('RecipeService', () => {
       let { where } = arg;
       let keys = Object.keys(where)[0];
       return recipeArr.find(recipe => recipe[keys] === where[keys])
+    }),
+    find: jest.fn().mockImplementation((arg) => {
+      let { take, skip, where } = arg;
+      let select = !!where
+        ? recipeArr.filter( recipe => recipe.name === where.name).slice(skip, take)
+        : recipeArr.slice(skip, take);
+      return Promise.resolve(select);
+    }),
+    delete: jest.fn().mockImplementation(({ id }) => {
+      let index = recipeArr.findIndex(recipe => recipe.id === id);
+      recipeArr.splice(index, 1);
+      return Promise.resolve({ delete: true });
     })
   }
 
@@ -106,10 +119,22 @@ describe('RecipeService', () => {
         created_at: new Date(),
       } as DtoIngredient
     }),
-    findOneIngredient: jest.fn().mockImplementation((arg) => {
+    findOne: jest.fn().mockImplementation((arg) => {
       let { where } = arg;
       let keys = Object.keys(where)[0];
       return ingredientArr.find(ingredient => ingredient[keys] === where[keys])
+    }),
+    find: jest.fn().mockImplementation((arg) => {
+      let { take, skip, where } = arg;
+      let select = !!where
+        ? ingredientArr.filter( ingredient => ingredient.name === where.name ).slice(skip, take)
+        : ingredientArr.slice(skip, take);
+      return Promise.resolve(select);
+    }),
+    delete: jest.fn().mockImplementation(({ id }) => {
+      let index = ingredientArr.findIndex( ingredient => ingredient.id === id );
+      ingredientArr.splice(index, 1);
+      return Promise.resolve({ delete: true });
     })
   }
 
@@ -185,5 +210,34 @@ describe('RecipeService', () => {
     })
   })
 
+  it('should be receive recipe on entries query', async () => {
+    let find = await recipeService.allRecipe({ take: 1, skip: 0, where: recipeArr[0].name });
+    expect(find).toEqual([recipeArr[0]]);
+  })
+
+  it('should be receive ingredient on entries query', async () => {
+    let find = await recipeService.allIngredient({ take: 1, skip: 0, where: ingredientArr[0].name });
+    expect(find).toEqual([ingredientArr[0]]);
+  })
+
+  describe('deleteRecipe()', () => {
+    it('should delete recipe on id', async () => {
+      let del = await recipeService.deleteRecipe(recipe.id, profile.id);
+      expect(del).toBeTruthy();
+    })
+
+    it('should be ForbiddenExceptio',async () => {
+      try {
+        await recipeService.deleteRecipe(recipe.id, '111');
+      } catch (err) {
+        expect(err).toBeInstanceOf(ConflictException);
+      }
+    })
+  })
+
+  it('should delete ingredient on id', async () => {
+    let del = await recipeService.deleteIngredient(ingredient.id, profile.id);
+    expect(del).toBeTruthy();
+  })
 
 })

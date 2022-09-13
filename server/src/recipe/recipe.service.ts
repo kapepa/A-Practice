@@ -90,7 +90,8 @@ export class RecipeService {
 
   async deleteRecipe(id: string, userID: string): Promise<boolean> {
     const recipe = await this.findOne('id', id, { relations: ['user'] } );
-    if( recipe.user.id !== userID ) throw new ForbiddenException();
+
+    if( recipe?.user.id !== userID ) throw new ConflictException();
 
     return !! await this.recipeRepository.delete({id});
   }
