@@ -3,16 +3,32 @@ import { AuthService } from './auth.service';
 import {UserService} from "../user/user.service";
 import {JwtModule} from "@nestjs/jwt";
 import {UserDto} from "../dto/user.dto";
+import {Recipe} from "../recipe/recipe.entity";
+import {NotFoundException, UnauthorizedException} from "@nestjs/common";
 
 describe('AuthService', () => {
   let loginPassword = '123456';
-  let loginEmail = 'myemail@gamil.com';
-  let hashPassword = '$2b$10$9gZLYELCDLOeLcy2vXGTIuvll/ofuX5d1rF0vDdljDUEEe16F4AUm'
 
   let service: AuthService;
 
+  let profile = {
+    id: 'userID',
+    name: 'userName',
+    email: 'user@email.com',
+    password: '$2b$10$stN.HV8TE4ouCKwNsGh/oOezhP8sy1LxI4mvCEMGlrAdBoT9bfjEO',
+    avatar: '',
+    recipe: [] as Recipe[],
+    isActive: true,
+    created_at: new Date(),
+  }
+
+  let userArr = [profile]
+
   let userServiceMock = {
-    findOne: jest.fn((attr) => attr),
+    findOne: jest.fn(async (key, val) => {
+      let find = userArr.find(profile => ( profile[key] === val ));
+      return find ? Promise.resolve(find) : Promise.reject( new NotFoundException() );
+    }),
   }
 
   beforeEach(async () => {
@@ -44,25 +60,28 @@ describe('AuthService', () => {
   })
 
   it('should be return true when compare hash and password', async () => {
-    let compared = await service.bcryptCompare(loginPassword, hashPassword);
-    expect(compared).toBeTruthy()
+    let compared = await service.bcryptCompare(loginPassword, profile.password);
+    expect(compared).toBeTruthy();
   })
 
   describe('validate user login and compered password and hash, validateUser()', () => {
     it('should be success login',async () => {
-      jest.spyOn(userServiceMock, 'findOne').mockImplementation(() => ({ email: loginEmail, password: hashPassword }));
-      let login = await service.validateUser(loginEmail, loginPassword);
+      let validate = await service.validateUser(profile.email, loginPassword);
+      let { password, ...other } = profile;
+      expect(validate).toEqual(other);
+    });
 
-      expect(userServiceMock.findOne).toHaveBeenCalled();
-      expect(login).toEqual({ email: loginEmail});
+    it('should be wrong password when compered', async () => {
+      let validate = await service.validateUser(profile.email, 'aaasdasd');
+      expect(validate).toBeNull();
     })
 
-    it('should be error when find or compered password', async () => {
-      jest.spyOn(userServiceMock, 'findOne').mockImplementation( () => ({ email: 'error@gamil.com', password: '111111' }));
-      let login = await service.validateUser(loginEmail, loginPassword);
-
-      expect(userServiceMock.findOne).toHaveBeenCalled();
-      expect(login).toBeNull();
+    it('should be NotFoundException', async () => {
+      try {
+        await service.validateUser('test@mail.com', loginPassword);
+      } catch (err) {
+        expect(err).toBeInstanceOf(NotFoundException);
+      }
     })
   })
 

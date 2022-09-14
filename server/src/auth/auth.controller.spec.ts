@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from "./auth.service";
 import {UnauthorizedException} from "@nestjs/common";
+import {Recipe} from "../recipe/recipe.entity";
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -9,7 +10,10 @@ describe('AuthController', () => {
   let unauthorized = new UnauthorizedException();
 
   let authServiceMock = {
-    login: jest.fn((attr) => attr),
+    login: jest.fn(async ({id, name, email}) => {
+      console.log('login', name, email);
+      return (!!name && !!email) ? Promise.resolve({ access_token: 'some_token' }) : Promise.reject( new UnauthorizedException());
+    }),
   }
 
   let reqMock = {} as unknown as Request;
@@ -34,25 +38,23 @@ describe('AuthController', () => {
   });
 
   describe('login()', () => {
-    it('should be return status 400', async () => {
-      jest.spyOn(controller, 'loginUser').mockRejectedValue(() => unauthorized );
+    let reqMock = { user: { id: 'userID', name: 'MyName', email: 'MyEmail', password: 'MyPassword' } } as unknown as Request;
+
+    it('should be return access_token', async () => {
       try {
-       await controller.loginUser(reqMock);
+        let login = await controller.loginUser(reqMock);
+        expect(login).toEqual({ access_token: 'some_token' });
       } catch (err) {
-        expect(err).toBeTruthy();
+        expect(err).toBeInstanceOf(unauthorized)
       }
     })
 
-    it('should be return access_token', async () => {
-      let token = {access_token: 'MyToken'};
-      let reqMock = { user: { name: 'MyName', email: 'MyEmail', password: 'MyPassword' } } as unknown as Request;
-      jest.spyOn(authServiceMock, 'login').mockImplementation(() => (token) );
-
+    it('should be return UnauthorizedException', async () => {
+      jest.spyOn(controller, 'loginUser').mockRejectedValue(new UnauthorizedException());
       try {
-        let login = await controller.loginUser(reqMock);
-        expect(login).toEqual(token);
+        await controller.loginUser(reqMock);
       } catch (err) {
-        expect(err).toBeInstanceOf(unauthorized)
+        expect(err).toBeInstanceOf(UnauthorizedException);
       }
     })
   })
