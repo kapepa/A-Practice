@@ -75,7 +75,7 @@ describe('UserController (e2e)', () => {
         .expect((res: Response) => {
           expect(res.body).toEqual({ create: true });
         })
-    })
+    });
 
     it('should be error validation', () => {
       jest.spyOn(userService,'createUser').mockImplementation(() => false);
