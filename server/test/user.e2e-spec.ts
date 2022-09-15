@@ -62,7 +62,7 @@ describe('UserController (e2e)', () => {
           expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' });
         })
     })
-  })
+  });
 
   describe('/create create user profile', () => {
     it('should be success create new profile', () => {
