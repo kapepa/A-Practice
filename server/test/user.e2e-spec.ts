@@ -97,7 +97,7 @@ describe('UserController (e2e)', () => {
           );
         })
     })
-  })
+  });
 
   describe('/update update profile user',() => {
     let newName = 'NewName'
