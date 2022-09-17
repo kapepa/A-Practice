@@ -40,7 +40,7 @@ describe('UserController (e2e)', () => {
 
     app = moduleRef.createNestApplication();
     await app.init();
-  })
+  });
 
   describe('/ get user profile', () => {
     it('should be success receive profile', () => {
@@ -61,7 +61,7 @@ describe('UserController (e2e)', () => {
         .expect((res: Response) => {
           expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' });
         })
-    })
+    });
   });
 
   describe('/create create user profile', () => {
