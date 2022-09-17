@@ -40,7 +40,7 @@ describe('UserController (e2e)', () => {
 
     app = moduleRef.createNestApplication();
     await app.init();
-  })
+  });
 
   describe('/ get user profile', () => {
     it('should be success receive profile', () => {
