@@ -51,7 +51,7 @@ describe('UserController (e2e)', () => {
         .expect((res: Response) => {
           expect(res.body['id']).toEqual(profile.id);
         })
-    })
+    });
 
     it('should be return not found, no set bearer token', () => {
       return request(app.getHttpServer())
