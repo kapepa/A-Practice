@@ -8,7 +8,6 @@ import {AppModule} from "../src/app.module";
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
-  let notFound = new NotFoundException();
 
   let profile = {
     id: 'userID',
