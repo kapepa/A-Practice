@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  server:
+    container_name: server
+    hostname: server
+    restart: always
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      MYSQL_HOST: db
+    env_file:
+      - ./server/.env
+    command: npm run start:prod
+    depends_on:
+      - db
+  db:
+    container_name: db
+    hostname: db
+    image: mysql:8.0.28
+    restart: always
+    ports:
+      - '3307:3306'
+    env_file:
+      - ./server/.env
+    volumes:
+      - db_data:/var/lib/mysql
+volumes:
+  db_data: {}
