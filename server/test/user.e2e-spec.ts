@@ -19,7 +19,7 @@ describe('UserController (e2e)', () => {
     recipe: [] as Recipe[],
     isActive: true,
     created_at: new Date(),
-  }
+  };
 
   let userService = {
     createUser: () => {},
