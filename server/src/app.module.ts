@@ -25,8 +25,8 @@ dotenv.config();
       host: process.env.MYSQL_HOST,
       port: Number(process.env.MYSQL_POST),
       username: process.env.MYSQL_USERNAME,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DB,
+      password: process.env.MYSQL_ROOT_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
       entities: [
         User,
         Recipe,
