@@ -26,5 +26,17 @@
         ]
       }
     }
+  ],
+  "dataGroups": [
+    {
+      "name": "MyAPI",
+      "urls": ["http://127.0.0.1:5000/**"],
+      "cacheConfig": {
+        "maxAge": "1h",
+        "timeout": "5s",
+        "maxSize": 20,
+        "strategy": "freshness"
+      }
+    }
   ]
 }

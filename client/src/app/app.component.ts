@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import {UserService} from "./service/user.service";
+import { UserService } from "./service/user.service";
+import { SwUpdate } from "@angular/service-worker";
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,12 @@ export class AppComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-  ) {}
+    private updates: SwUpdate
+  ) {
+    updates.versionUpdates.subscribe(evt => {
+      document.location.reload();
+    })
+  }
 
   ngOnInit() {
     const user = this.route.snapshot.data['user'];
