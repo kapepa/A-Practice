@@ -12,9 +12,9 @@
         <li routerLinkActive="link--active" class="nav-item link__li">
           <a class="nav-link" routerLinkActive="active" routerLink="/shopping">Shopping list</a>
         </li>
-        <li routerLinkActive="link--active" class="nav-item link__li">
-          <button (click)="clickDynamic()" class="btn btn-link" >Dynamic Alert</button>
-        </li>
+<!--        <li routerLinkActive="link&#45;&#45;active" class="nav-item link__li">-->
+<!--          <button (click)="clickDynamic()" class="btn btn-link" >Dynamic Alert</button>-->
+<!--        </li>-->
       </ul>
       <div appDrop class="nav-item dropdown" data-bs-toggle="dropdown">
         <a id="login" *ngIf="!user?.name; else Userlogin" class="nav-link" [routerLink]="[]" [queryParams]="{login: 'login'}">Login</a>
