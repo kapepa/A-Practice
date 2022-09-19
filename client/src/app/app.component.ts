@@ -1,7 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from "./service/user.service";
-import { SwUpdate } from "@angular/service-worker";
+import {SwUpdate, VersionReadyEvent} from "@angular/service-worker";
+import {filter} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit{
     private updates: SwUpdate
   ) {
     updates.versionUpdates.subscribe(evt => {
-      document.location.reload();
+      if ( evt.type === 'VERSION_DETECTED' ) document.location.reload();
     })
   }
 

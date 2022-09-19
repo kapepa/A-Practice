@@ -33,7 +33,7 @@
       "urls": ["http://127.0.0.1:5000/**"],
       "cacheConfig": {
         "maxAge": "1h",
-        "timeout": "5s",
+        "timeout": "30s",
         "maxSize": 20,
         "strategy": "freshness"
       }
