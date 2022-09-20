@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  client:
+    container_name: client
+    hostname: client
+    restart: always
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+      - db
   server:
     container_name: server
     hostname: server
