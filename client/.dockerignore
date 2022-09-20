@@ -1,0 +1,14 @@
+.git
+.gitignore
+.vscode
+docker-compose*.yml
+Dockerfile
+node_modules
+
+.docker
+
+.env/
+.venv/
+venv/
+
+data/

@@ -1,8 +1,7 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from "./service/user.service";
-import {SwUpdate, VersionReadyEvent} from "@angular/service-worker";
-import {filter} from "rxjs";
+import { SwUpdate } from "@angular/service-worker";
 
 @Component({
   selector: 'app-root',
