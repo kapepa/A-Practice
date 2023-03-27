@@ -14,13 +14,13 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   recipes!: DtoRecipe[];
   recipesSub!: Subscription;
   editFlag: boolean = false;
-  editFlagSubject: Subject<boolean> = new Subject<boolean>()
+  editFlagSubject: Subject<boolean> = new Subject<boolean>();
   // @Output() selectRecipe = new EventEmitter<DtoRecipe>()
 
   constructor(
     private recipeService: RecipeService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -35,7 +35,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         const edit = urlAfterRedirects.split('/').pop() === 'edit';
         if ( this.editFlag !== edit ) {
           this.editFlag = ! this.editFlag;
-          this.editFlagSubject.next(this.editFlag)
+          this.editFlagSubject.next(this.editFlag);
         }
       };
     })
