@@ -14,9 +14,11 @@ export class RecipeItemComponent implements OnInit {
   @Input() editFlagSubject!: Subject<boolean>;
   @Input() recipe!: DtoRecipe;
   @Input() index!: number;
-  @Output() addEdit = new EventEmitter<{id: string, index: number}>()
+  @Output() addEdit = new EventEmitter<{id: string, index: number}>();
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.editFlagSubject.subscribe((bool: boolean) => {
@@ -25,6 +27,6 @@ export class RecipeItemComponent implements OnInit {
   }
 
   selectEdit(){
-    this.addEdit.emit({id: this.recipe.id, index: this.index})
+    this.addEdit.emit({id: this.recipe.id, index: this.index});
   }
 }
