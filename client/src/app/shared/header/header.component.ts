@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   spinnerRef!: ViewContainerRef;
 
-  test:boolean = false
+  test:boolean = false;
 
   constructor(
     private router: Router,
@@ -99,10 +99,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     const authComponent = loginRef.createComponent(AuthComponent);
 
-    this.login = authComponent.instance.close.subscribe(() => {
+    this.login = authComponent.instance.close.subscribe(async () => {
       this.login.unsubscribe();
       loginRef.clear();
-      this.router.navigate([], { queryParams: { }});
+      await this.router.navigate([], { queryParams: { }});
     })
   }
 
