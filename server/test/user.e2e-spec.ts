@@ -1,10 +1,13 @@
 import * as request from 'supertest';
 import {UserService} from "../src/user/user.service";
 import {Test} from "@nestjs/testing";
-import {UserModule} from "../src/user/user.module";
-import {INestApplication, NotFoundException} from "@nestjs/common";
+import {INestApplication} from "@nestjs/common";
 import {Recipe} from "../src/recipe/recipe.entity";
 import {AppModule} from "../src/app.module";
+import {JwtService} from "@nestjs/jwt";
+import * as dotenv from 'dotenv'
+
+dotenv.config();
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
@@ -27,15 +30,19 @@ describe('UserController (e2e)', () => {
     deleteUser: () => {},
   };
 
-  let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGE2MDBiLTU5NmQtNGU2NS05NmVjLWZjNjgzMWY2NDRkNyIsIm5hbWUiOiJNeU5hbWUiLCJpYXQiOjE2NjI1NzIwNzAsImV4cCI6MTY2NTE2NDA3MH0.8kJfUsN3vJ5pYaemXW3LX6j_m88qGKqgDPV7THNtwuw'
+  let token = new JwtService({secret: process.env.JWT_TOKEN}).sign({ id: profile.id, name: profile.name })
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        AppModule,
+      ],
     })
       .overrideProvider(UserService)
       .useValue(userService)
       .compile();
+
+
 
     app = moduleRef.createNestApplication();
     await app.init();

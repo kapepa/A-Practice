@@ -11,7 +11,6 @@ describe('AuthController', () => {
 
   let authServiceMock = {
     login: jest.fn(async ({id, name, email}) => {
-      console.log('login', name, email);
       return (!!name && !!email) ? Promise.resolve({ access_token: 'some_token' }) : Promise.reject( new UnauthorizedException());
     }),
   }
