@@ -7,6 +7,7 @@ import {DtoIngredient, RecipeDto} from "../src/dto/recipe.dto";
 import {UserDto} from "../src/dto/user.dto";
 import {JwtService} from "@nestjs/jwt";
 import * as dotenv from 'dotenv'
+import DoneCallback = jest.DoneCallback;
 
 describe('RecipeController (e2e)', () => {
   let app: INestApplication;
@@ -61,7 +62,7 @@ describe('RecipeController (e2e)', () => {
   describe('/api/recipe/create post create recipe, createRecipe()', () => {
     let createBody = {name: recipe.name, description: recipe.description}
 
-    it('should be success create recipe', () => {
+    it('should be success create recipe', (done: DoneCallback) => {
       jest.spyOn(recipeServiceMock, 'createRecipe').mockImplementation(() => (recipe));
 
       return request(app.getHttpServer())
@@ -71,6 +72,7 @@ describe('RecipeController (e2e)', () => {
         .expect(201)
         .expect((res: Response) => {
           expect(res.body).toEqual(recipe);
+          done()
         })
     })
 
