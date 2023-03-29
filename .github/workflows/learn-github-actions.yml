@@ -16,4 +16,4 @@ jobs:
         working-directory: ./server
         run: npm install
       - name: server test jest
-        run: npm run test npm run test:e2e
+        run: npm run test
