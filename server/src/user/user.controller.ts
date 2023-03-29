@@ -35,16 +35,12 @@ export class UserController {
     }
   }
 
-  @Get('/')
+  @Get('/one')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({ status: 200, description: 'Get Profile', type: UserDto })
   @ApiResponse({ status: 401, description: 'Not Implemented'})
   async getUser(@Req() req): Promise<UserDto | NotFoundException> {
-    try {
-      return await this.userService.findOne('id', req.user.id);
-    } catch (e) {
-      return !!e ? e : new NotFoundException();
-    }
+    return await this.userService.findOne('id', req.user.id);
   }
 
   @Patch('/update')

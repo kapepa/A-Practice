@@ -13,7 +13,7 @@ export class AppComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private userService: UserService,
-    private updates: SwUpdate
+    private updates: SwUpdate,
   ) {
     updates.versionUpdates.subscribe(evt => {
       if ( evt.type === 'VERSION_DETECTED' ) document.location.reload();

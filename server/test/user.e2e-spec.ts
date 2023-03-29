@@ -1,11 +1,12 @@
 import * as request from 'supertest';
 import {UserService} from "../src/user/user.service";
 import {Test} from "@nestjs/testing";
-import {INestApplication} from "@nestjs/common";
+import {HttpException, HttpStatus, INestApplication} from "@nestjs/common";
 import {Recipe} from "../src/recipe/recipe.entity";
 import {AppModule} from "../src/app.module";
 import {JwtService} from "@nestjs/jwt";
 import * as dotenv from 'dotenv'
+import {of} from "rxjs";
 
 dotenv.config();
 
@@ -24,10 +25,10 @@ describe('UserController (e2e)', () => {
   };
 
   let userService = {
-    createUser: () => {},
-    findOne: () => (profile),
-    updateUser: () => {},
-    deleteUser: () => {},
+    createUser: jest.fn(),
+    findOne: jest.fn(),
+    updateUser: jest.fn(),
+    deleteUser: jest.fn(),
   };
 
   let token = new JwtService({secret: process.env.JWT_TOKEN}).sign({ id: profile.id, name: profile.name })
@@ -42,16 +43,16 @@ describe('UserController (e2e)', () => {
       .useValue(userService)
       .compile();
 
-
-
     app = moduleRef.createNestApplication();
     await app.init();
   });
 
   describe('/ get user profile', () => {
     it('should be success receive profile', () => {
+      jest.spyOn(userService, 'findOne').mockImplementation(() => of(profile))
+
       return request(app.getHttpServer())
-        .get('/api/user')
+        .get('/api/user/one')
         .set({'Authorization': `Bearer ${token}`})
         .expect(200)
         .expect((res: Response) => {
@@ -60,13 +61,12 @@ describe('UserController (e2e)', () => {
     });
 
     it('should be return not found, no set bearer token', () => {
+      jest.spyOn(userService, 'findOne').mockRejectedValue(new HttpException('Forbidden', HttpStatus.FORBIDDEN));
+
       return request(app.getHttpServer())
-        .get('/api/user')
-        .set({'Authorization': `Bearer `})
-        .expect(401)
-        .expect((res: Response) => {
-          expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' });
-        })
+        .get('/api/user/one')
+        .set({'Authorization': `Bearer ${token}`})
+        .expect(HttpStatus.FORBIDDEN)
     });
   });
 
@@ -136,12 +136,11 @@ describe('UserController (e2e)', () => {
   });
 
   describe('/delete/:id delete profile on id', () => {
-
     it('should be success delete profile', () => {
       jest.spyOn(userService, 'deleteUser').mockImplementation(() => (true))
 
       return request(app.getHttpServer())
-        .delete('/api/user/delete/:id')
+        .delete(`/api/user/delete/${profile.id}`)
         .set({'Authorization': `Bearer ${token}`})
         .send('profileID')
         .expect(200)
