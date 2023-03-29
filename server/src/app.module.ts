@@ -27,12 +27,6 @@ dotenv.config();
       username: process.env.MYSQL_USERNAME,
       password: process.env.MYSQL_ROOT_PASSWORD,
       database: process.env.MYSQL_DATABASE,
-      ssl: true,
-      extra: {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-      },
       entities: [
         User,
         Recipe,
