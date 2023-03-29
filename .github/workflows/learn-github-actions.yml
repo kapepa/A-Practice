@@ -15,8 +15,6 @@ jobs:
       - name: server install
         working-directory: ./server
         run: npm install
-      - name: load database
-        run: docker-compose up
       - name: server test jest
         working-directory: ./server
         run: npm run test:e2e

@@ -27,6 +27,5 @@ describe('AppController (e2e)', () => {
       .post('/api/auth/test')
       .expect(201)
       .expect('test');
-
   });
 });

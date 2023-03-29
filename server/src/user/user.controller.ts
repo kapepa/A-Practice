@@ -35,12 +35,13 @@ export class UserController {
     }
   }
 
-  @Get('/')
-  @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 200, description: 'Get Profile', type: UserDto })
-  @ApiResponse({ status: 401, description: 'Not Implemented'})
+  @Get('/one')
+  // @UseGuards(JwtAuthGuard)
+  // @ApiResponse({ status: 200, description: 'Get Profile', type: UserDto })
+  // @ApiResponse({ status: 401, description: 'Not Implemented'})
   async getUser(@Req() req): Promise<UserDto | NotFoundException> {
     try {
+      console.log(req)
       return await this.userService.findOne('id', req.user.id);
     } catch (e) {
       return !!e ? e : new NotFoundException();
