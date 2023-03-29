@@ -59,10 +59,14 @@ describe('RecipeController (e2e)', () => {
     await app.init();
   });
 
+  afterAll(() => {
+    app.close()
+  })
+
   describe('/api/recipe/create post create recipe, createRecipe()', () => {
     let createBody = {name: recipe.name, description: recipe.description}
 
-    it('should be success create recipe', (done: DoneCallback) => {
+    it('should be success create recipe', () => {
       jest.spyOn(recipeServiceMock, 'createRecipe').mockImplementation(() => (recipe));
 
       return request(app.getHttpServer())
@@ -72,7 +76,6 @@ describe('RecipeController (e2e)', () => {
         .expect(201)
         .expect((res: Response) => {
           expect(res.body).toEqual(recipe);
-          done()
         })
     })
 
