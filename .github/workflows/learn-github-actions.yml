@@ -21,6 +21,6 @@ jobs:
       - name: server test jest
         working-directory: ./server
         run: npm run test
-#      - name: server test e2e
-#        working-directory: ./server
-#        run: npm run test:e2e
+      - name: server test e2e
+        working-directory: ./server
+        run: npm run test:e2e
