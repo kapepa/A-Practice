@@ -2,7 +2,7 @@ import { Test } from "@nestjs/testing";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { UserDto } from "../dto/user.dto";
-import { ConflictException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {ConflictException, HttpException, HttpStatus, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import { Recipe} from "../recipe/recipe.entity";
 
 
@@ -75,18 +75,14 @@ describe('UserController', () => {
   describe('get /, getUser()', () => {
     it('should be return profile user on id', async () => {
       jest.spyOn(userService, 'findOne').mockImplementation(async () => (profile));
-      try {
-        let req = { user: profile } as unknown as Request;
-        let user = await userController.getUser(req);
-        expect(userService.findOne).toHaveBeenCalled();
-        expect(user).toEqual(profile);
-      } catch (err) {
-        expect(err).toBeInstanceOf(notFoundException);
-      }
+      let req = { user: profile } as unknown as Request;
+      let user = await userController.getUser(req);
+      expect(userService.findOne).toHaveBeenCalled();
+      expect(user).toEqual(profile);
     })
 
     it('should be return profile not fond', async () => {
-      jest.spyOn(userService, 'findOne').mockRejectedValue(notFoundException);
+      jest.spyOn(userService, 'findOne').mockImplementation(async () => notFoundException )
       let req = { user: profile } as unknown as Request;
       let user = await userController.getUser(req);
 
@@ -109,7 +105,7 @@ describe('UserController', () => {
     })
 
     it('should be return user not found', async () => {
-      jest.spyOn(userService, 'updateUser').mockRejectedValue(notFoundException);
+      jest.spyOn(userService, 'updateUser').mockImplementation(async () => notFoundException);
       let user = await userController.updateUser({id: profile.id, name: 'ChangeName'} as UserDto);
 
       expect(userService.updateUser).toHaveBeenCalled();
@@ -132,7 +128,7 @@ describe('UserController', () => {
     })
 
     it('should be not found profile user for delete', async () => {
-      jest.spyOn(userServiceMock, 'deleteUser').mockRejectedValue(notFoundException);
+      jest.spyOn(userServiceMock, 'deleteUser').mockImplementation(async () => notFoundException);
 
       let user = await userController.deleteUser( { id : profile.id } );
 
