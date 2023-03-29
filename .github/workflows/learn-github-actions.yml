@@ -18,4 +18,6 @@ jobs:
       - name: server test jest
         working-directory: ./server
         run: npm run test
-
+      - name: client install
+        working-directory: ./client
+        run: npm run test
