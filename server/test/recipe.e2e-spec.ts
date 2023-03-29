@@ -60,7 +60,7 @@ describe('RecipeController (e2e)', () => {
   });
 
   afterAll(() => {
-    app.close()
+    app.close();
   })
 
   describe('/api/recipe/create post create recipe, createRecipe()', () => {
