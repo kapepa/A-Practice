@@ -61,41 +61,41 @@ describe('RecipeController (e2e)', () => {
   describe('/api/recipe/create post create recipe, createRecipe()', () => {
     let createBody = {name: recipe.name, description: recipe.description}
 
-    // it('should be success create recipe', () => {
-    //   jest.spyOn(recipeServiceMock, 'createRecipe').mockImplementation(() => (recipe));
-    //
-    //   return request(app.getHttpServer())
-    //     .post('/api/recipe/create')
-    //     .set({'Authorization': `Bearer ${token}`})
-    //     .send(createBody)
-    //     .expect(201)
-    //     .expect((res: Response) => {
-    //       expect(res.body).toEqual(recipe);
-    //     })
-    // })
-
-    it('should be return user not user token', () => {
-      return request(app.getHttpServer())
-        .post('/api/recipe/create')
-        .set({'Authorization': `Bearer`})
-        .send(createBody)
-        .expect(401)
-        .expect((res: Response) => {
-          expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' })
-        })
-    })
-
-    it('should be NotImplementedException', () => {
-      jest.spyOn(recipeServiceMock, 'createRecipe').mockImplementation(async () => {throw new NotFoundException()});
+    it('should be success create recipe', () => {
+      jest.spyOn(recipeServiceMock, 'createRecipe').mockImplementation(() => (recipe));
 
       return request(app.getHttpServer())
         .post('/api/recipe/create')
         .set({'Authorization': `Bearer ${token}`})
+        .send(createBody)
         .expect(201)
         .expect((res: Response) => {
-          expect(res.body['response']).toEqual({ statusCode: 501, message: 'Not Implemented' })
+          expect(res.body).toEqual(recipe);
         })
     })
+
+    // it('should be return user not user token', () => {
+    //   return request(app.getHttpServer())
+    //     .post('/api/recipe/create')
+    //     .set({'Authorization': `Bearer`})
+    //     .send(createBody)
+    //     .expect(401)
+    //     .expect((res: Response) => {
+    //       expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' })
+    //     })
+    // })
+    //
+    // it('should be NotImplementedException', () => {
+    //   jest.spyOn(recipeServiceMock, 'createRecipe').mockImplementation(async () => {throw new NotFoundException()});
+    //
+    //   return request(app.getHttpServer())
+    //     .post('/api/recipe/create')
+    //     .set({'Authorization': `Bearer ${token}`})
+    //     .expect(201)
+    //     .expect((res: Response) => {
+    //       expect(res.body['response']).toEqual({ statusCode: 501, message: 'Not Implemented' })
+    //     })
+    // })
   })
 
   // describe('/api/one/:id get edit recipe on id, getEditRecipe()', () => {
