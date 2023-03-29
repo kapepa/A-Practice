@@ -15,19 +15,23 @@ describe('AuthController (e2e)', () => {
     await app.init();
   });
 
+  afterAll(() => {
+    app.close()
+  })
+
   describe('Login user /api/auth/login POST', () => {
     let url = '/api/auth/login';
 
-    // it('should be success login user', () => {
-    //   return request(app.getHttpServer())
-    //     .post(url)
-    //     .set({ 'Accept': 'application/json' })
-    //     .send({ email: 'myemail@gamil.com', password: '123456' })
-    //     .expect(201)
-    //     .expect((res: Response) => {
-    //       expect(res.body['access_token']).toBeDefined();
-    //     })
-    // });
+    it('should be success login user', () => {
+      return request(app.getHttpServer())
+        .post(url)
+        .set({ 'Accept': 'application/json' })
+        .send({ email: 'myemail@gamil.com', password: '123456' })
+        .expect(201)
+        .expect((res: Response) => {
+          expect(res.body['access_token']).toBeDefined();
+        })
+    });
 
     it('should be invalid entered data user', function () {
       return request(app.getHttpServer())
