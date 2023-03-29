@@ -9,13 +9,11 @@ jobs:
         node-version: [ 18.x ]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-        working-directory: ./server
+      - uses: actions/setup-node@v3
       - name: server install
+        working-directory: ./server
         run: npm install
       - name: server test jest
-        run: npm run test
-      - name: server test e2e
-        run: npm run test:e2e
+        run: npm run test npm run test:e2e
