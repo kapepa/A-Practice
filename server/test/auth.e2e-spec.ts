@@ -33,7 +33,6 @@ describe('AuthController (e2e)', () => {
   })
 
   describe('Login user /api/auth/login POST', () => {
-    let url = '/api/auth/login';
 
     it('should be success login user', () => {
       let mockUser = { id: 'userID', name: 'userName' };
@@ -56,7 +55,7 @@ describe('AuthController (e2e)', () => {
       jest.spyOn(MockAuthService, 'login').mockRejectedValue(new UnauthorizedException())
 
       return request(app.getHttpServer())
-        .post(url)
+        .post('/api/auth/login')
         .send({ email: '', password: '' })
         .expect(401)
         .expect((req: Response) => {
