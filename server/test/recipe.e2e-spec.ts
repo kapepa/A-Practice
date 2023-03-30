@@ -6,8 +6,6 @@ import {AppModule} from "../src/app.module";
 import {DtoIngredient, RecipeDto} from "../src/dto/recipe.dto";
 import {UserDto} from "../src/dto/user.dto";
 import {JwtService} from "@nestjs/jwt";
-import * as dotenv from 'dotenv'
-import DoneCallback = jest.DoneCallback;
 
 describe('RecipeController (e2e)', () => {
   let app: INestApplication;
