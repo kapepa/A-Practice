@@ -53,13 +53,14 @@ describe('AuthController (e2e)', () => {
 
     it('should be invalid entered data user', function () {
       jest.spyOn(MockAuthService, 'validateUser').mockImplementation(() => (new UnauthorizedException()));
+      jest.spyOn(MockAuthService, 'login').mockRejectedValue(new UnauthorizedException())
 
       return request(app.getHttpServer())
         .post(url)
         .send({ email: '', password: '' })
         .expect(401)
         .expect((req: Response) => {
-          expect(req.body).toEqual(new UnauthorizedException()['response'])
+          expect(req.text).toEqual("{\"statusCode\":401,\"message\":\"Unauthorized\"}")
         })
     });
   })
