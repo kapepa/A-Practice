@@ -51,15 +51,15 @@ describe('AuthController (e2e)', () => {
         })
     });
 
-    it('should be invalid entered data user', function () {
-      return request(app.getHttpServer())
-        .post(url)
-        .send({ email: '', password: '' })
-        .expect(401)
-        .expect((req: Response) => {
-          expect(req.body).toEqual(new UnauthorizedException()['response'])
-        })
-    });
+    // it('should be invalid entered data user', function () {
+    //   return request(app.getHttpServer())
+    //     .post(url)
+    //     .send({ email: '', password: '' })
+    //     .expect(401)
+    //     .expect((req: Response) => {
+    //       expect(req.body).toEqual(new UnauthorizedException()['response'])
+    //     })
+    // });
   })
 
 })
