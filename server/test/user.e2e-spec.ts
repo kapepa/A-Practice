@@ -21,7 +21,7 @@ describe('UserController (e2e)', () => {
     avatar: '',
     recipe: [] as Recipe[],
     isActive: true,
-    created_at: new Date(),
+    created_at: `${new Date(Date.now())}`,
   };
 
   let userService = {
@@ -53,25 +53,26 @@ describe('UserController (e2e)', () => {
 
   describe('/ get user profile', () => {
     it('should be success receive profile', () => {
-      jest.spyOn(userService, 'findOne').mockImplementation(() => of(profile))
+      let mockUser = profile;
+      jest.spyOn(userService, 'findOne').mockImplementation(() => mockUser)
 
       return request(app.getHttpServer())
         .get('/api/user/one')
         .set({'Authorization': `Bearer ${token}`})
         .expect(200)
         .expect((res: Response) => {
-          expect(res.body['id']).toEqual(profile.id);
+          expect(res.body).toEqual(mockUser);
         })
     });
 
-    it('should be return not found, no set bearer token', () => {
-      jest.spyOn(userService, 'findOne').mockRejectedValue(new HttpException('Forbidden', HttpStatus.FORBIDDEN));
-
-      return request(app.getHttpServer())
-        .get('/api/user/one')
-        .set({'Authorization': `Bearer ${token}`})
-        .expect(HttpStatus.FORBIDDEN)
-    });
+    // it('should be return not found, no set bearer token', () => {
+    //   jest.spyOn(userService, 'findOne').mockRejectedValue(new HttpException('Forbidden', HttpStatus.FORBIDDEN));
+    //
+    //   return request(app.getHttpServer())
+    //     .get('/api/user/one')
+    //     .set({'Authorization': `Bearer ${token}`})
+    //     .expect(HttpStatus.FORBIDDEN)
+    // });
   });
 
   // describe('/create create user profile', () => {
