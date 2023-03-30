@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {INestApplication, UnauthorizedException} from '@nestjs/common';
+import {HttpException, INestApplication, UnauthorizedException} from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import {AuthService} from "../src/auth/auth.service";
@@ -51,15 +51,17 @@ describe('AuthController (e2e)', () => {
         })
     });
 
-    // it('should be invalid entered data user', function () {
-    //   return request(app.getHttpServer())
-    //     .post(url)
-    //     .send({ email: '', password: '' })
-    //     .expect(401)
-    //     .expect((req: Response) => {
-    //       expect(req.body).toEqual(new UnauthorizedException()['response'])
-    //     })
-    // });
+    it('should be invalid entered data user', function () {
+      jest.spyOn(MockAuthService, 'validateUser').mockImplementation(() => (new UnauthorizedException()));
+
+      return request(app.getHttpServer())
+        .post(url)
+        .send({ email: '', password: '' })
+        .expect(401)
+        .expect((req: Response) => {
+          expect(req.body).toEqual(new UnauthorizedException()['response'])
+        })
+    });
   })
 
 })
