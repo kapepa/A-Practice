@@ -118,9 +118,9 @@ describe('RecipeController (e2e)', () => {
 
       return request(app.getHttpServer())
         .get(`/api/recipe/one/${recipe.id}`)
-        .expect(200)
+        .expect(404)
         .expect((res: Response) => {
-          expect(res.body['response']).toEqual({ statusCode: 404, message: 'Not Found' })
+          expect(res.text).toEqual(JSON.stringify({ statusCode: 404, message: 'Not Found' }))
         })
     })
   })
