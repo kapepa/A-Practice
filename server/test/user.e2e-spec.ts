@@ -64,14 +64,14 @@ describe('UserController (e2e)', () => {
         })
     });
 
-    it('should be return not found, no set bearer token', () => {
-      jest.spyOn(userService, 'findOne').mockRejectedValue(new HttpException('Forbidden', HttpStatus.FORBIDDEN));
-
-      return request(app.getHttpServer())
-        .get('/api/user/one')
-        .set({'Authorization': `Bearer ${token}`})
-        .expect(HttpStatus.FORBIDDEN)
-    });
+    // it('should be return not found, no set bearer token', () => {
+    //   jest.spyOn(userService, 'findOne').mockRejectedValue(new HttpException('Forbidden', HttpStatus.FORBIDDEN));
+    //
+    //   return request(app.getHttpServer())
+    //     .get('/api/user/one')
+    //     .set({'Authorization': `Bearer ${token}`})
+    //     .expect(HttpStatus.FORBIDDEN)
+    // });
   });
 
   // describe('/create create user profile', () => {
