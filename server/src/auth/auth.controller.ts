@@ -16,11 +16,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Login user successfully, return token.', type: UserDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async loginUser(@Req() req): Promise<{ access_token: string } | UnauthorizedException > {
-    try {
-      return await this.authService.login(req.user);
-    } catch (e) {
-      return !!e ? e : new UnauthorizedException();
-    }
+    return await this.authService.login(req.user);
   }
 
   @Post('test')

@@ -47,6 +47,10 @@ describe('UserController (e2e)', () => {
     await app.init();
   });
 
+  afterAll(() => {
+    app.close()
+  })
+
   describe('/ get user profile', () => {
     it('should be success receive profile', () => {
       jest.spyOn(userService, 'findOne').mockImplementation(() => of(profile))

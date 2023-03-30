@@ -1,4 +1,4 @@
-name: learn-github-actions
+name: github-actions
 run-name: ${{ github.actor }} GitHub Actions
 on: [push]
 jobs:
@@ -7,14 +7,29 @@ jobs:
     strategy:
       matrix:
         node-version: [ 18.x ]
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_HOST: '127.0.0.1'
+          MYSQL_DATABASE: 'a-recipe'
+          MYSQL_USERNAME: 'root'
+          MYSQL_ROOT_PASSWORD: 'Admin12345'
+          JWT_TOKEN: 'my_token'
+          BCRYPT_SALT: 10
+        ports:
+          - 3306:3306
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: actions/setup-node@v3
       - name: server install
         working-directory: ./server
         run: npm install
+      - name: server build
+        working-directory: ./server
+        run: npm run build
       - name: server test jest
         working-directory: ./server
         run: npm run test

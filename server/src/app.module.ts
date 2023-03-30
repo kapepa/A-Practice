@@ -22,11 +22,11 @@ dotenv.config();
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '127.0.0.1',
-      port: 3306,
-      username: 'root',
-      password: 'Admin12345',
-      database: 'a-recipe',
+      host: process.env.MYSQL_HOST,
+      port: Number(process.env.MYSQL_POST),
+      username: process.env.MYSQL_USERNAME,
+      password: process.env.MYSQL_ROOT_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
       entities: [
         User,
         Recipe,
