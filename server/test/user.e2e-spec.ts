@@ -6,7 +6,6 @@ import {Recipe} from "../src/recipe/recipe.entity";
 import {AppModule} from "../src/app.module";
 import {JwtService} from "@nestjs/jwt";
 import * as dotenv from 'dotenv'
-import {of} from "rxjs";
 
 dotenv.config();
 
@@ -48,7 +47,7 @@ describe('UserController (e2e)', () => {
   });
 
   afterAll(() => {
-    app.close()
+    app.close();
   })
 
   describe('/ get user profile', () => {
