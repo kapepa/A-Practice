@@ -40,11 +40,7 @@ export class RecipeController {
   @ApiResponse({ status: 200, description: 'Get one Recipe', type: RecipeDto })
   @ApiResponse({ status: 404, description: 'Not found'})
   async getOneRecipe(@Param() param): Promise<RecipeDto | NotFoundException> {
-    try {
-      return await this.recipeService.findOne('id', param.id, { relations: ['ingredients'] });
-    } catch (e) {
-      return !!e ? e : new NotFoundException();
-    }
+    return await this.recipeService.findOne('id', param.id, { relations: ['ingredients'] });
   }
 
   @Get('/edit/:id')
