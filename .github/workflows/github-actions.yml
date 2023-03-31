@@ -1,6 +1,12 @@
 name: github-actions
 run-name: ${{ github.actor }} GitHub Actions
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull-request:
+    branches:
+      - master
 jobs:
   init:
     runs-on: ubuntu-latest
