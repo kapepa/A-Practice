@@ -35,7 +35,7 @@ jobs:
         run: npm run test
       - name: server test e2e
         working-directory: ./server
-        run: npm run test:e2e
+        run: npm run test:e2e --forceExit
       - name: client install
         working-directory: ./client
         run: npm install
