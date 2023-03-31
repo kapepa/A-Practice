@@ -38,7 +38,7 @@ jobs:
         run: npm run test:e2e
       - name: client install
         working-directory: ./client
-        run: npm run install
+        run: npm install
       - name: client test
         working-directory: ./client
         run: npm run test
