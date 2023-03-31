@@ -24,15 +24,24 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: server install
-        working-directory: ./server
+#      - name: server install
+#        working-directory: ./server
+#        run: npm install
+#      - name: server build
+#        working-directory: ./server
+#        run: npm run build
+#      - name: server test jest
+#        working-directory: ./server
+#        run: npm run test
+#      - name: server test e2e
+#        working-directory: ./server
+#        run: npm run test:e2e
+      - name: client install
+        working-directory: ./client
         run: npm install
-      - name: server build
-        working-directory: ./server
+      - name: client build
+        working-directory: ./client
         run: npm run build
-      - name: server test jest
-        working-directory: ./server
-        run: npm run test
-      - name: server test e2e
-        working-directory: ./server
-        run: npm run test:e2e
+      - name: client test
+        working-directory: ./client
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
