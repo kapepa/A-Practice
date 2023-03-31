@@ -36,6 +36,9 @@ jobs:
       - name: server test e2e
         working-directory: ./server
         run: npm run test:e2e
+      - name: client install
+        working-directory: ./client
+        run: npm run install
       - name: client test
         working-directory: ./client
         run: npm run test
