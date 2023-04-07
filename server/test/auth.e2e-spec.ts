@@ -29,7 +29,7 @@ describe('AuthController (e2e)', () => {
   });
 
   afterAll(() => {
-    app.close()
+    app.close();
   })
 
   describe('Login user /api/auth/login POST', () => {
@@ -62,6 +62,5 @@ describe('AuthController (e2e)', () => {
           expect(req.text).toEqual("{\"statusCode\":401,\"message\":\"Unauthorized\"}")
         })
     });
-  })
-
+  });
 })
