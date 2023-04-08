@@ -10,7 +10,6 @@ import {JwtService} from "@nestjs/jwt";
 describe('RecipeController (e2e)', () => {
   let app: INestApplication;
 
-
   let ingredient = {
     id: 'ingredientID',
     name: 'ingredientName',
@@ -18,7 +17,7 @@ describe('RecipeController (e2e)', () => {
     public: true,
     recipe: [] as RecipeDto[],
     created_at: Date.now(),
-  }
+  };
 
   let recipe = {
     id: 'recipeID',
@@ -28,7 +27,7 @@ describe('RecipeController (e2e)', () => {
     user: {id: 'userID'} as UserDto,
     ingredients: [] as DtoIngredient[],
     created_at: Date.now(),
-  }
+  };
 
   let token = new JwtService({secret: process.env.JWT_TOKEN}).sign({ id: 'userID', name: 'userName' })
 
@@ -42,7 +41,7 @@ describe('RecipeController (e2e)', () => {
     createIngredient: jest.fn(() => {}),
     updateIngredient: jest.fn(() => {}),
     deleteIngredient: jest.fn(() => {}),
-  }
+  };
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -59,7 +58,7 @@ describe('RecipeController (e2e)', () => {
 
   afterAll(() => {
     app.close();
-  })
+  });
 
   describe('/api/recipe/create post create recipe, createRecipe()', () => {
     let createBody = {name: recipe.name, description: recipe.description}
@@ -74,8 +73,8 @@ describe('RecipeController (e2e)', () => {
         .expect(201)
         .expect((res: Response) => {
           expect(res.body).toEqual(recipe);
-        })
-    })
+        });
+    });
 
     it('should be return user not user token', () => {
       return request(app.getHttpServer())
@@ -85,8 +84,8 @@ describe('RecipeController (e2e)', () => {
         .expect(401)
         .expect((res: Response) => {
           expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' })
-        })
-    })
+        });
+    });
 
     it('should be NotImplementedException', () => {
       jest.spyOn(recipeServiceMock, 'createRecipe').mockImplementation(async () => {throw new NotFoundException()});
@@ -97,8 +96,8 @@ describe('RecipeController (e2e)', () => {
         .expect(201)
         .expect((res: Response) => {
           expect(res.body['response']).toEqual({ statusCode: 501, message: 'Not Implemented' })
-        })
-    })
+        });
+    });
   })
 
   describe('/api/one/:id get edit recipe on id, getEditRecipe()', () => {
