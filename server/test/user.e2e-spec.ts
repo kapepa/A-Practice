@@ -106,7 +106,7 @@ describe('UserController (e2e)', () => {
             }
           );
         })
-    })
+    });
   });
 
   describe('/update update profile user',() => {
@@ -122,8 +122,8 @@ describe('UserController (e2e)', () => {
         .expect(200)
         .expect((res: Response) => {
           expect(res.body['name']).toEqual(newName)
-        })
-    })
+        });
+    });
 
     it('should be not found, no have token', () => {
       jest.spyOn(userService, 'updateUser').mockImplementation(() => ({...profile, name: newName}));
@@ -135,8 +135,8 @@ describe('UserController (e2e)', () => {
         .expect(401)
         .expect((res: Response) => {
           expect(res.body).toEqual({ statusCode: 401, message: 'Unauthorized' })
-        })
-    })
+        });
+    });
   });
 
   describe('/delete/:id delete profile on id', () => {
@@ -148,7 +148,7 @@ describe('UserController (e2e)', () => {
         .set({'Authorization': `Bearer ${token}`})
         .send('profileID')
         .expect(200)
-    })
+    });
 
     it('should be not found, no have token', () => {
       jest.spyOn(userService, 'deleteUser').mockImplementation(() => (true))
@@ -160,7 +160,7 @@ describe('UserController (e2e)', () => {
         .expect(401)
         .expect((res: Response) => {
           expect(res.body).toEqual({ statusCode: 401, message: 'Unauthorized' })
-        })
-    })
-  })
-})
+        });
+    });
+  });
+});
