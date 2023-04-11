@@ -220,9 +220,9 @@ describe('RecipeController (e2e)', () => {
         .expect(404)
         .expect((res: Response) => {
           expect(res.body).toEqual({ statusCode: 404, message: 'Not Found' })
-        })
-    })
-  })
+        });
+    });
+  });
 
   describe('/api/recipe/:id delete, delete recipe on id, deleteRecipe()', () => {
     it('should delete recipe success on id', () => {
@@ -234,8 +234,8 @@ describe('RecipeController (e2e)', () => {
         .expect(200)
         .expect((res: Response) => {
           expect(res.body).toEqual({delete: { delete: true }});
-        })
-    })
+        });
+    });
 
     it('should be return user not user token Unauthorized', () => {
       return request(app.getHttpServer())
@@ -244,8 +244,8 @@ describe('RecipeController (e2e)', () => {
         .expect(401)
         .expect((res: Response) => {
           expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' })
-        })
-    })
+        });
+    });
 
     it('should be NotFoundException', () => {
       jest.spyOn(recipeServiceMock, 'deleteRecipe').mockImplementation(async () => {throw new NotFoundException()});
@@ -256,9 +256,9 @@ describe('RecipeController (e2e)', () => {
         .expect(200)
         .expect((res: Response) => {
           expect(res.body['response']).toEqual({ statusCode: 404, message: 'Not Found' })
-        })
-    })
-  })
+        });
+    });
+  });
 
   describe('/api/recipe/ingredients get, receive ingredients on query parma, getAllIngredients()', () => {
     it('should be return ingredients which select on query params', () => {
@@ -269,8 +269,8 @@ describe('RecipeController (e2e)', () => {
         .expect(200)
         .expect((res: Response) => {
           expect(res.body).toEqual([ingredient])
-        })
-    })
+        });
+    });
 
     it('should be NotFoundException', () => {
       jest.spyOn(recipeServiceMock, 'allIngredient').mockImplementation(async () => {throw new NotFoundException()});
@@ -281,9 +281,9 @@ describe('RecipeController (e2e)', () => {
         .expect(404)
         .expect((res: Response) => {
           expect(res.body).toEqual({ statusCode: 404, message: 'Not Found' })
-        })
-    })
-  })
+        });
+    });
+  });
 
   describe('/api/recipe/ingredient/create post, create ingredient, createIngredient()', () => {
     it('should be success create ingredient', () => {
