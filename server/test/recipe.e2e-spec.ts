@@ -296,8 +296,8 @@ describe('RecipeController (e2e)', () => {
         .expect(201)
         .expect((res: Response) => {
           expect(res.body).toEqual(ingredient)
-        })
-    })
+        });
+    });
 
     it('should be return user not user token Unauthorized', () => {
       return request(app.getHttpServer())
@@ -306,8 +306,8 @@ describe('RecipeController (e2e)', () => {
         .expect(401)
         .expect((res: Response) => {
           expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' })
-        })
-    })
+        });
+    });
 
     it('should be NotFoundException', () => {
       jest.spyOn(recipeServiceMock, 'createIngredient').mockImplementation(async () => {throw new NotFoundException()});
@@ -319,9 +319,9 @@ describe('RecipeController (e2e)', () => {
         .expect(201)
         .expect((res: Response) => {
           expect(res.body['response']).toEqual({ statusCode: 404, message: 'Not Found' })
-        })
-    })
-  })
+        });
+    });
+  });
 
   describe('/api/recipe/ingredient/update patch, update ingredients, updateIngredients()', () => {
     let newIngredient = {name: 'New Name', id: ingredient.id};
@@ -335,8 +335,8 @@ describe('RecipeController (e2e)', () => {
         .expect(200)
         .expect((res: Response) => {
           expect(res.body).toEqual({...ingredient, ...newIngredient})
-        })
-    })
+        });
+    });
 
     it('should be return user not user token Unauthorized', () => {
       return request(app.getHttpServer())
@@ -345,8 +345,8 @@ describe('RecipeController (e2e)', () => {
         .expect(401)
         .expect((res: Response) => {
           expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' })
-        })
-    })
+        });
+    });
 
     it('should be NotFoundException', () => {
       jest.spyOn(recipeServiceMock, 'updateIngredient').mockImplementation(async () => {throw new NotFoundException()});
@@ -358,9 +358,9 @@ describe('RecipeController (e2e)', () => {
         .expect(404)
         .expect((res: Response) => {
           expect(res.body).toEqual({ statusCode: 404, message: 'Not Found' })
-        })
-    })
-  })
+        });
+    });
+  });
 
   describe('/api/recipe/ingredient/:id delete, delete ingredient, deleteIngredient()', () => {
     it('should be success delete ingredient on params id', () => {
@@ -372,8 +372,8 @@ describe('RecipeController (e2e)', () => {
         .expect(200)
         .expect((res: Response) => {
           expect(res.body).toEqual({ delete: { delete: true } })
-        })
-    })
+        });
+    });
 
     it('should be return user not user token Unauthorized', () => {
       return request(app.getHttpServer())
@@ -382,8 +382,8 @@ describe('RecipeController (e2e)', () => {
         .expect(401)
         .expect((res: Response) => {
           expect(res.body).toEqual( { statusCode: 401, message: 'Unauthorized' })
-        })
-    })
+        });
+    });
 
     it('should be NotFoundException', () => {
       jest.spyOn(recipeServiceMock, 'deleteIngredient').mockImplementation(async () => {throw new NotFoundException()});
@@ -394,7 +394,7 @@ describe('RecipeController (e2e)', () => {
         .expect(200)
         .expect((res: Response) => {
           expect(res.body['response']).toEqual({ message: "Not Found", statusCode: 404 })
-        })
-    })
-  })
+        });
+    });
+  });
 });
