@@ -30,7 +30,7 @@ describe('UserController (e2e)', () => {
     deleteUser: jest.fn(),
   };
 
-  let token = new JwtService({secret: process.env.JWT_TOKEN}).sign({ id: profile.id, name: profile.name })
+  let token = new JwtService({secret: process.env.JWT_TOKEN}).sign({ id: profile.id, name: profile.name });
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -84,7 +84,7 @@ describe('UserController (e2e)', () => {
         .expect(201)
         .expect((res: Response) => {
           expect(res.body).toEqual({ create: true });
-        })
+        });
     });
 
     it('should be error validation', () => {
@@ -105,7 +105,7 @@ describe('UserController (e2e)', () => {
             error: 'Bad Request'
             }
           );
-        })
+        });
     });
   });
 
