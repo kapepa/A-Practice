@@ -47,7 +47,7 @@ describe('AuthController (e2e)', () => {
         .expect(201)
         .expect((res: Response) => {
           expect(res.body['access_token']).toBeDefined();
-        })
+        });
     });
 
     it('should be invalid entered data user', function () {
@@ -60,7 +60,7 @@ describe('AuthController (e2e)', () => {
         .expect(401)
         .expect((req: Response) => {
           expect(req.text).toEqual("{\"statusCode\":401,\"message\":\"Unauthorized\"}")
-        })
+        });
     });
   });
 })
