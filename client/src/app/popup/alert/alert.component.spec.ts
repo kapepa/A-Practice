@@ -9,7 +9,7 @@ describe('AlertComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AlertComponent ]
+      declarations: [ AlertComponent ],
     })
     .compileComponents();
 
@@ -27,8 +27,8 @@ describe('AlertComponent', () => {
 
     component.closeAlert.pipe().subscribe((attr: Boolean) => {
       expect(attr).toBeTrue();
-    })
+    });
 
     htmlAlert.triggerEventHandler('click');
-  })
+  });
 });
